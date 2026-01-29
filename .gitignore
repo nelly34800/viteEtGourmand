@@ -1,0 +1,11 @@
+# Fichiers d'environnement
+.env
+.env.prod
+
+# Dossiers et volumes Docker
+*/node_modules/
+db_data/
+mongo_data/
+
+# Autres fichiers
+doc
