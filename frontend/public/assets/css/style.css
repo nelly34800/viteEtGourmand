@@ -1,4 +1,96 @@
-.navbar {
-    background-color: var(--primary);
+a.nav-link:hover {
+    background-color: var(--secondary);
+    border-radius: 20px;
 }
 
+  .navbar-brand:hover {
+    color: var(--primary);
+    background-color: var(--secondary);
+    border-radius: 20px;
+    padding: 5px 10px;
+  }
+
+.navbar-toggler-icon{
+    color: var(--secondary);
+    filter: invert(1);
+}
+
+.logo-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+}
+
+.logo {
+  width: 100%;
+  display: block;
+}
+
+.logo-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.logo-wrapper:hover .logo-hover {
+  opacity: 1;
+}
+
+.logo-wrapper:hover .logo-default {
+  opacity: 0;
+}
+
+footer {
+  margin-top: 30px;
+}
+
+footer::before {
+  content: "";
+  display: block;
+  height: 8px;
+  background: linear-gradient(
+    to right,
+    #b99528 5%,
+    #d4af37 25%,
+    #fff2c2 50%,
+    #d4af37 75%,
+    #b99528 100%
+  );
+}
+@media screen and (max-width: 680px) {
+  footer::before {
+    height: 3px;
+  }
+}
+
+.hero-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.map {
+  display: flex;
+  justify-content: center;
+}
+
+.fake-map {
+  width: 620px;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+}
+
+.fake-map-header {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: var(--secondary);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}

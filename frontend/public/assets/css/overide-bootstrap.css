@@ -13,6 +13,7 @@
   --bs-link-hover-bg: var(--primary);
   --bs-body-font-family: "Inter", "Roboto", sans-serif;
   --bs-heading-font-family: "Playfair Display","Libre Baskerville", serif;
+  --bs-font-size: 20px;
 }
 
 .btn-primary {
@@ -21,11 +22,11 @@
   --bs-btn-border-color: var(--primary);
   --bs-btn-hover-color: var(--primary);
   --bs-btn-hover-bg: var(--secondary);
-  --bs-btn-hover-border-color: var(--secondary);
+  --bs-btn-hover-border-color: var(--primary);
   --bs-btn-focus-shadow-rgb: 49, 132, 253;
   --bs-btn-active-color: var(--primary);
   --bs-btn-active-bg: var(--secondary);
-  --bs-btn-active-border-color:  var(--primary);
+  --bs-btn-active-border-color:  var(--secondary);
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #4f4f4f;
@@ -49,10 +50,43 @@
   --bs-btn-disabled-border-color: #343434;
 }
 
+.navbar-nav {
+  --bs-nav-link-color: var(--secondary);
+  --bs-nav-link-hover-color: var(--primary);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--bs-heading-font-family);
 }
 
 .playfair {
   font-family: var(--bs-heading-font-family);
+}
+body {
+  color: var(--primary);
+  text-align: center;
+  font-weight: 700;
+}
+.secondary {
+  color: var(--secondary);
+}
+.bgc-primary {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.btn {
+  border: 3px solid var(--primary);
+   font-weight: 700;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--secondary);
+  background-color: var(--primary);
+  padding: 10px;
+  border-radius: 20px;
 }

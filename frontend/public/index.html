@@ -13,17 +13,74 @@
     <title>vite & gourmand</title>
 </head>
 <body>
-    <header>
-        <p>header</p>
-    </header>
-    <main id="main-page">
-        <!--le contenue de la page sera injecté ici-->
-    </main>
-    <footer>
-        <p>footer</p>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-        <script type="module" src="Router/router.js"></script>
-    </footer>
+  <header>
+    <nav class="navbar navbar-expand-lg bgc-primary">
+      <div class="container-fluid">
+        <a href="/" class="logo-wrapper">
+          <img src="assets/img/logo_sn.png" class="logo logo-default" alt="logo vite & gourmand: une toque de chef et 2 couteaux">
+          <img src="assets/img/logo_clair_sn.png" class="logo logo-hover" alt="logo vite & gourmand: une toque de chef et 2 couteaux">
+        </a>
+        <a class="navbar-brand secondary playfair mx-3 px-2" href="/">Vite & Gourmand</a>
+        <button class="navbar-toggler secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse secondary" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Accueil</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Les menus</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Mon compte</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="#">Inscription</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Connexion</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-page">
+    <!--le contenue de la page sera injecté ici-->
+  </main>
+  <footer>
+    <div class="bgc-primary">
+      <div class="container">
+        <div class="row align-items-center text-center">
+          <div class="col-12 col-lg-4">
+            <p class="playfair">Du mardi au dimanche <br> de 11h00 à 22h00</p>
+          </div>
+          <div class="col-6 col-lg-4">
+              <a href="/" class="logo-wrapper">
+              <img src="assets/img/logo_sn.png" class="logo logo-default" alt="logo vite & gourmand: une toque de chef et 2 couteaux">
+              <img src="assets/img/logo_clair_sn.png" class="logo logo-hover" alt="logo vite & gourmand: une toque de chef et 2 couteaux">
+            </a>
+          </div>
+          <div class="col-6 col-lg-4">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link playfair" href="/mentions">mentions légales</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link playfair" href="/cgv">CGV</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script type="module" src="Router/router.js"></script>
 </body>
 </html>
-
