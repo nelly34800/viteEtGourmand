@@ -1,9 +1,69 @@
-a.nav-link:hover {
+/* Layout global 
+ ========================= */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  color: var(--primary);
+  text-align: center;
+  font-weight: 700;
+}
+main {
+    flex: 1;
+}
+
+/* Typographie Couleurs
+ ========================= */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--bs-heading-font-family);
+}
+
+.playfair {
+  font-family: var(--bs-heading-font-family);
+}
+
+.secondary {
+  color: var(--secondary);
+}
+
+.dark {
+  color: var(--dark);
+}
+
+.bgc-primary {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.bgc-secondary {
+  background-color: var(--secondary);
+  color: var(--primary);
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--secondary);
+  background-color: var(--primary);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+/* Navbar
+ ========================= */
+
+a.nav-link:hover, button.nav-link:hover {
     background-color: var(--secondary);
     border-radius: 20px;
 }
 
-  .navbar-brand:hover {
+.navbar-brand:hover {
     color: var(--primary);
     background-color: var(--secondary);
     border-radius: 20px;
@@ -15,6 +75,8 @@ a.nav-link:hover {
     filter: invert(1);
 }
 
+/* Logo
+ ========================= */
 .logo-wrapper {
   position: relative;
   display: inline-block;
@@ -23,7 +85,6 @@ a.nav-link:hover {
 
 .logo {
   width: 100%;
-  display: block;
 }
 
 .logo-hover {
@@ -42,49 +103,63 @@ a.nav-link:hover {
   opacity: 0;
 }
 
-footer {
-  margin-top: 30px;
+/* Composant UI
+ ========================= */
+
+.btn:hover {
+  border: 3px solid var(--primary);
+   font-weight: 700;
 }
 
-footer::before {
-  content: "";
-  display: block;
-  height: 8px;
-  background: linear-gradient(
-    to right,
-    #b99528 5%,
-    #d4af37 25%,
-    #fff2c2 50%,
-    #d4af37 75%,
-    #b99528 100%
-  );
+.card-gold {
+  position: relative;
+  padding: 8px; /* épaisseur du liseret */
+  background: var(--gradient-gold);
 }
-@media screen and (max-width: 680px) {
-  footer::before {
-    height: 3px;
-  }
+
+.card-content {
+  background: var(--secondary);
+  padding: 1.5rem;
 }
+
+.card-content-primary{
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.d-block {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.input-qty {
+  width: 60px;
+}
+
+fieldset {
+  padding-bottom: 10px;
+}
+
+/* Contenu/pages
+ ========================= */
 
 .hero-scene {
-  display: block;
   width: 100%;
-  height: auto;
 }
 
 .map {
-  display: flex;
-  justify-content: center;
-}
-
-.fake-map {
-  width: 620px;
-  max-width: 100%;
-  height: auto;
-  margin: 0 auto;
   position: relative;
+  width: 620px;
+  margin: 0 auto;
 }
 
-.fake-map-header {
+.map iframe{
+  width: 100%;
+  border: 0;
+}
+
+.map-address {  /*fausse addresse sur contact */
   position: absolute;
   top: 10px;
   left: 20px;
@@ -93,4 +168,49 @@ footer::before {
   border-radius: 6px;
   font-weight: 600;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Utilitaires
+ ========================= */
+
+.bi-star-fill {
+  color: var(--primary);
+}
+
+.card-body {
+  text-align: left;
+}
+
+input.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: lightgrey;
+  opacity: 1;
+}
+
+/* tableau
+ ========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Footer
+ ========================= */
+
+footer::before {
+  content: "";
+  display: block;
+  height: 10px;
+  background: var(--gradient-gold);
+}
+
+footer  {
+  width: 100%;
+  margin-top: 50px;
+}
+
+@media screen and (max-width: 680px) {
+  footer::before {
+    height: 3px;
+  }
 }
