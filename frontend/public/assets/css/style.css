@@ -10,6 +10,7 @@ body {
   color: var(--primary);
   text-align: center;
   font-weight: 700;
+  font-size: var(--bs-font-size);
 }
 main {
     flex: 1;
@@ -55,10 +56,14 @@ a:hover {
   border-radius: 10px;
 }
 
+.btn {
+  font-size: var(--bs-font-size);
+}
+
 /* Navbar
  ========================= */
 
-a.nav-link:hover, button.nav-link:hover {
+a.nav-link:hover {
     background-color: var(--secondary);
     border-radius: 20px;
 }
@@ -66,13 +71,18 @@ a.nav-link:hover, button.nav-link:hover {
 .navbar-brand:hover {
     color: var(--primary);
     background-color: var(--secondary);
+    font-size: (--bs-font-size);
     border-radius: 20px;
     padding: 5px 10px;
   }
 
-.navbar-toggler-icon{
+.navbar-toggler-icon {
     color: var(--secondary);
     filter: invert(1);
+}
+
+.navbar-brand {
+font-size: 28px;
 }
 
 /* Logo
@@ -137,6 +147,10 @@ a.nav-link:hover, button.nav-link:hover {
   width: 60px;
 }
 
+#menuTheme {
+width: 170px;
+}
+
 fieldset {
   padding-bottom: 10px;
 }
@@ -155,7 +169,7 @@ fieldset {
 }
 
 .map iframe{
-  width: 100%;
+  width: auto;
   border: 0;
 }
 
@@ -166,14 +180,32 @@ fieldset {
   background: var(--secondary);
   padding: 10px 14px;
   border-radius: 6px;
-  font-weight: 600;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.allNotices {
+  color: var(--secondary);
+  font-family:  var(--bs-body-font-family);
+  font-size: var(--bs-font-size);
+}
+
+.signature {
+  font-style: italic;
+  font-size: var(--bs-font-size);
+}
+
+.bi-star, .bi-star-fill {
+  padding-left: 5px;
+}
+
+dl dt {
+  font-weight: 900;
 }
 
 /* Utilitaires
  ========================= */
 
-.bi-star-fill {
+.card-body .bi-star-fill {
   color: var(--primary);
 }
 
@@ -212,5 +244,13 @@ footer  {
 @media screen and (max-width: 680px) {
   footer::before {
     height: 3px;
+  }
+
+  .map {
+  width: 320px;
+  }
+
+  .navbar-brand {
+font-size: 20px;
   }
 }
