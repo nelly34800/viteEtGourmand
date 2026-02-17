@@ -1,3 +1,5 @@
+# redirige les requête vers index.php
+
 RewriteEngine On
 
 # Rediriger tout vers index.php

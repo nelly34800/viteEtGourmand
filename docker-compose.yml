@@ -41,6 +41,7 @@ services:
       - "${DATA_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./backend/config:/docker-entrypoint-initdb.d
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
