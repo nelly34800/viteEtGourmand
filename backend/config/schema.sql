@@ -3,7 +3,7 @@ SET CHARACTER SET utf8mb4;
 
 CREATE TABLE role(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   role_name VARCHAR(50) NOT NULL UNIQUE
+   role_name enum('client', 'employé', 'admin') NOT NULL DEFAULT 'client'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `role` ( `role_name`) VALUES 
@@ -13,14 +13,15 @@ INSERT INTO `role` ( `role_name`) VALUES
 
 CREATE TABLE schedule(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+   schedule_name VARCHAR(255) NOT NULL,
    first_day VARCHAR(50) NOT NULL,
    last_day VARCHAR(50) NOT NULL,
    opening_time TIME NOT NULL,
    closing_time TIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `schedule` (`first_day`, `last_day`, `opening_time`, `closing_time`) VALUES
-('Mardi', 'Dimanche', '11:00:00', '22:00:00');
+INSERT INTO `schedule` (`schedule_name`,`first_day`, `last_day`, `opening_time`, `closing_time`) VALUES
+('horaires classiques','Mardi', 'Dimanche', '11:00:00', '22:00:00');
 
 CREATE TABLE diet(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
@@ -48,7 +49,7 @@ INSERT INTO `allergen` (`allergen_name`) VALUES
 
 CREATE TABLE category_dish(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   category_name VARCHAR(50) NOT NULL
+   category_name enum('Entrées', 'Plats principaux', 'Accompagnements', 'Desserts', 'Fromage') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `category_dish` (`category_name`) VALUES
@@ -96,7 +97,7 @@ INSERT INTO `menu` (`menu_name`, `description`, `minimum_people`, `price_per_per
 
 CREATE TABLE material_category(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   material_category_name VARCHAR(50) NOT NULL
+   material_category_name enum('vaisselle', 'linge de table', 'verrerie', 'décoration de table', 'équipement') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `material_category` (`material_category_name`) VALUES
@@ -165,6 +166,7 @@ CREATE TABLE condition_menu(
    condition_type VARCHAR(255) NOT NULL,
    description TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO `condition_menu` (`condition_type`, `description`) VALUES
 ('Délai de commande :', '5 jours avant l’événement'),
 ('Délai de commande :', 'ajustement du nombre jusqu’à 72h avant l’événement'),
@@ -183,25 +185,35 @@ CREATE TABLE user(
    first_name VARCHAR(50) NOT NULL,
    email VARCHAR(255) NOT NULL UNIQUE,
    password VARCHAR(255) NOT NULL,
-   postal_address VARCHAR(50) NOT NULL,
+   postal_address VARCHAR(255) NOT NULL,
    city VARCHAR(50) NOT NULL,
    postal_code VARCHAR(50) NOT NULL,
-   telephone VARCHAR(50) NOT NULL,
+   phone VARCHAR(50) NOT NULL,
    id_role CHAR(36) NOT NULL,
    FOREIGN KEY(id_role) REFERENCES role(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_address`, `city`, `postal_code`, `telephone`, `id_role`) VALUES
+INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_address`, `city`, `postal_code`, `phone`, `id_role`) VALUES
 ('Test', 'Mathieu', 'mathieu@test.com', 'Test12345!', '123 Rue de la Paix', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Marie', 'marie@test.com', 'Test12345!', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Elise', 'elise@test.com', 'Test12345!', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
 ('Admin', 'José', 'jose.admin@test.com', 'Admin12345!', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
 
+CREATE TABLE user_tokens (
+    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+    token CHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
 CREATE TABLE orders(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
    order_date DATE NOT NULL,
    service_date DATETIME NOT NULL,
-   delivery_address VARCHAR(50) NOT NULL,
+   delivery_address VARCHAR(255) NOT NULL,
+   city VARCHAR(50) NOT NULL,
+   postal_code VARCHAR(50) NOT NULL,
    number_of_people INT NOT NULL,
    total_order_price DECIMAL(10,2) NOT NULL,
    status VARCHAR(50) NOT NULL,
@@ -212,10 +224,10 @@ CREATE TABLE orders(
    ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `number_of_people`, `total_order_price`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
-('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix, Bordeaux', 50, 1750.00, 'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
-('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs, Bordeaux', 30, 900.00, 'Confirmé', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
-('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel, Bordeaux', 20, 600.00, 'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'elise@test.com'));
+INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `number_of_people`, `total_order_price`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
+('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 50, 1750.00, 'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
+('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000', 30, 900.00, 'Confirmé', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
+('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 25, 655.55, 'Confirmé', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
 
 CREATE TABLE notice(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),

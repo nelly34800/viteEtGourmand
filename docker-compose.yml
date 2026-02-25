@@ -16,6 +16,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.back
+    ports:
+      - "${BACK_PORT}:80"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
