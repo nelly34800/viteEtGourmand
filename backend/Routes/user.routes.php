@@ -4,6 +4,7 @@ use App\Controller\UserController;
 use App\Middleware\AuthMiddleware;
 
 $router->get('/user/{id}', function($id) {
+      AuthMiddleware::requireAuth();
     (new UserController())->show($id);
 });
 
@@ -13,10 +14,12 @@ $router->post('/user', function() {
 });
 
 $router->put('/user/{id}', function($id) {
+    AuthMiddleware::requireAuth();
     (new UserController())->update($id);
 });
 
 $router->delete('/user/{id}', function($id) {
+    AuthMiddleware::requireAuth();
     (new UserController())->delete($id);
 });
 

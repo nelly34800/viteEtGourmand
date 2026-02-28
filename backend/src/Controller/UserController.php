@@ -134,7 +134,6 @@ class UserController
             $data['id_role'],
             null, // roleName
             $id   // id
-            
         );
         // appel du repository pour mettre à jour en base
         $this->repository->update($user);

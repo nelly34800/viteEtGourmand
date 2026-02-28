@@ -39,6 +39,8 @@ $router = new Router();
 require_once '../routes/schedule.routes.php';
 require_once '../routes/user.routes.php';
 require_once '../routes/auth.routes.php';
+require_once '../routes/dish.routes.php';
+require_once '../routes/categoryDish.routes.php';
 
 $router->dispatch($method, $uri);
 

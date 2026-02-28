@@ -49,7 +49,7 @@ INSERT INTO `allergen` (`allergen_name`) VALUES
 
 CREATE TABLE category_dish(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   category_name enum('Entrées', 'Plats principaux', 'Accompagnements', 'Desserts', 'Fromage') NOT NULL
+   category_name enum('Entrées', 'Plats principaux', 'Accompagnements', 'Desserts', 'Fromages') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `category_dish` (`category_name`) VALUES
@@ -57,26 +57,26 @@ INSERT INTO `category_dish` (`category_name`) VALUES
 ('Plats principaux'),
 ('Accompagnements'),
 ('Desserts'),
-('Fromage');
+('Fromages');
 
 CREATE TABLE dish(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
    dish_title VARCHAR(50) NOT NULL,
    description TEXT NOT NULL,
    picture VARCHAR(50) NOT NULL,
-   id_Category_dish CHAR(36) NOT NULL,
-   FOREIGN KEY(id_Category_dish) REFERENCES category_dish(id)
+   id_category_dish CHAR(36) NOT NULL,
+   FOREIGN KEY(id_category_dish) REFERENCES category_dish(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_Category_dish`) VALUES
+INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_category_dish`) VALUES
 ('Velouté de potimarron', 'Velouté onctueux de potimarron rôti, relevé d’une pointe de crème et parsemé de noisettes torréfiées.', 'velouté_potimarron_noisette.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
 ('Salade de chèvre chaud sur toast', 'Jeunes pousses, toasts croustillants au chèvre fondant, vinaigrette maison au miel.', 'salade_chevre.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
 ('Houmous de pois chiches et légumes croquants', 'Purée de pois chiches au sésame, citron et huile d’olive, accompagnée de légumes frais.', 'Houmous_legume.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
 ('Suprême de volaille fermière, sauce forestière', 'Suprême de volaille rôtie, sauce crémeuse aux champignons, gratin dauphinois maison.', 'Supreme_volaille.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
 ('Gambas flambées au pastis, riz basmati parfumé', 'Gambas sautées et flambées au pastis, servies avec un riz basmati délicatement parfumé.', 'gambas.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
 ('Curry de légumes de saison au lait de coco', 'Mélange de légumes frais mijotés dans un curry doux au lait de coco.', 'curry.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
-('Plateau de fromages affinés', 'Sélection de fromages régionaux affinés.', 'assiette_fromage.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromage')),
-('Alternative végétale aux noix de cajou', 'Préparation végétale crémeuse à base de noix de cajou.', 'preparation_vegetale.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromage')),
+('Plateau de fromages affinés', 'Sélection de fromages régionaux affinés.', 'assiette_fromage.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
+('Alternative végétale aux noix de cajou', 'Préparation végétale crémeuse à base de noix de cajou.', 'preparation_vegetale.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
 ('Tarte fine aux pommes caramélisées', 'Pommes fondantes caramélisées sur pâte croustillante.', 'tarte.jpg', (SELECT id FROM category_dish WHERE category_name = 'Desserts')),
 ('Brownie végan au chocolat', 'Brownie fondant au chocolat noir, sans ingrédient d’origine animale.', 'brownie_vegan.jpg', (SELECT id FROM category_dish WHERE category_name = 'Desserts'));
 
@@ -198,14 +198,6 @@ INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_addr
 ('Test', 'Marie', 'marie@test.com', 'Test12345!', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Elise', 'elise@test.com', 'Test12345!', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
 ('Admin', 'José', 'jose.admin@test.com', 'Admin12345!', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
-
-CREATE TABLE user_tokens (
-    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-    token CHAR(64) NOT NULL,
-    expires_at DATETIME NOT NULL,
-    user_id CHAR(36) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-);
 
 CREATE TABLE orders(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
