@@ -11,7 +11,7 @@ $router->get('/schedule/{id}', function($id) {
     (new ScheduleController())->show($id);
 });
 
-$allowedRoles = ['admin', 'employe'];
+$allowedRoles = ['admin', 'employé'];
 
 $router->post('/schedule', function() use ($allowedRoles) {
     AuthMiddleware::requireRole($allowedRoles);

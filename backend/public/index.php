@@ -37,6 +37,8 @@ $router = new Router();
  * On charge les fichiers de routes
  */
 require_once '../routes/schedule.routes.php';
+require_once '../routes/user.routes.php';
+require_once '../routes/auth.routes.php';
 
 $router->dispatch($method, $uri);
 

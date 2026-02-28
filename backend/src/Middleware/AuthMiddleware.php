@@ -2,23 +2,25 @@
 
 namespace App\Middleware;
 
+use App\Helper\ResponseHelper;
+
 class AuthMiddleware
 {
-    public static function requireRole(array $roles)
+    public static function requireAuth(): void
     {
-
         if (!isset($_SESSION['user'])) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Non authentifié']);
-            exit;
+            ResponseHelper::json(['error' => 'Non authentifié'], 401);
         }
+    }
+
+    public static function requireRole(array $roles): void
+    {
+        self::requireAuth(); // ← on appelle l’auth ici
 
         $userRole = $_SESSION['user']['role'];
 
         if (!in_array($userRole, $roles)) {
-            http_response_code(403);
-            echo json_encode(['error' => 'Accès refusé']);
-            exit;
+            ResponseHelper::json(['error' => 'Accès refusé'], 403);
         }
     }
 }

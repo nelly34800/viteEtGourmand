@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Repository\ScheduleRepository;
 use App\Entity\Schedule;
+use App\Helper\RequestHelper;
+use App\Helper\ResponseHelper;
+use App\Helper\ValidatorHelper;
 use Database;
 use InvalidArgumentException;
 use RuntimeException;
@@ -42,7 +45,7 @@ class ScheduleController
             ];
         }, $schedules);
 
-        echo json_encode($response);
+        ResponseHelper::json($response);
     }
 
        /**
@@ -52,13 +55,15 @@ class ScheduleController
     {
 
         //si l'id n'a pas le format UUID retourne une erreur
-        if (!preg_match('/^[0-9a-fA-F-]{36}$/', $id)) {
-            throw new InvalidArgumentException("Invalid ID format");
-        }
+        ValidatorHelper::validateUuid($id);
         // Appel du repository pour récupérer l'horaire par son id et affichage au format JSON
         $schedule = $this->repository->findById($id);
+
+        if (!$schedule) {
+            ResponseHelper::json(['error' => 'Not found'], 404);
+        }
         // Transformation en array pour JSON (hydratation inverse)
-        echo json_encode([
+        $response =([
             'id' => $schedule->getId(),
             'schedule_name' => $schedule->getScheduleName(),
             'first_day' => $schedule->getFirstDay(),
@@ -66,6 +71,7 @@ class ScheduleController
             'opening_time' => $schedule->getOpeningTime(),
             'closing_time' => $schedule->getClosingTime()
         ]);
+        ResponseHelper::json($response);
     }
     /**
      * Crée un nouvel horaire.
@@ -73,9 +79,9 @@ class ScheduleController
     public function store(): void
     {
         // Lecture du JSON envoyé
-        $data = json_decode(file_get_contents("php://input"), true);
+        $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if(!$data || !isset($data['schedule_name'], $data['first_day'], $data['last_day'], $data['opening_time'], $data['closing_time'])) {
+        if(!isset($data['schedule_name'], $data['first_day'], $data['last_day'], $data['opening_time'], $data['closing_time'])) {
             throw new InvalidArgumentException('Invalid input');
         }
         // Création de l'entité Schedule à partir des données reçues
@@ -89,8 +95,7 @@ class ScheduleController
         //  appel du repository pour l'enregistrer en base
         $this->repository->create($schedule);
 
-        http_response_code(201);
-        echo json_encode(['message' => 'Created']);
+        ResponseHelper::json(['message' => 'Schedule created'], 201);
     }
     /**
      * Met à jour un horaire.
@@ -98,13 +103,11 @@ class ScheduleController
     public function update(string $id): void
     {
         //si l'id n'a pas le format UUID retourne une erreur
-        if (!preg_match('/^[0-9a-fA-F-]{36}$/', $id)) {
-            throw new InvalidArgumentException("Invalid ID format");
-        }
+        ValidatorHelper::validateUuid($id);
         // Lecture du JSON
-        $data = json_decode(file_get_contents("php://input"), true);
+        $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if (!$data || !isset($data['first_day'], $data['last_day'], $data['opening_time'], $data['closing_time'])) {
+        if (!isset($data['schedule_name'], $data['first_day'], $data['last_day'], $data['opening_time'], $data['closing_time'])) {
             throw new InvalidArgumentException('Invalid input');
         }
         // Création de l'entité Schedule à partir des données reçues 
@@ -119,7 +122,7 @@ class ScheduleController
         // appel du repository pour mettre à jour en base
         $this->repository->update($schedule);
 
-        echo json_encode(['message' => 'Updated']);
+        ResponseHelper::json(['message' => 'Updated']);
     }
      /**
      * Supprime un horaire.
@@ -127,13 +130,10 @@ class ScheduleController
     public function delete(string $id): void
     {
         //si l'id n'a pas le format UUID retourne une erreur
-        if (!preg_match('/^[0-9a-fA-F-]{36}$/', $id)) {
-            throw new InvalidArgumentException("Invalid ID format");
-        }
+        ValidatorHelper::validateUuid($id);
         // Appel du repository pour supprimer l'horaire en base
         $this->repository->delete($id);
 
-        http_response_code(200);
-        echo json_encode(['message' => 'Deleted']);
+        ResponseHelper::json(['message' => 'Deleted']);
     }
 }
