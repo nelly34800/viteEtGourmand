@@ -4,10 +4,9 @@ use App\Controller\UserController;
 use App\Middleware\AuthMiddleware;
 
 $router->get('/user/{id}', function($id) {
-      AuthMiddleware::requireAuth();
+    AuthMiddleware::requireAuth();
     (new UserController())->show($id);
 });
-
 
 $router->post('/user', function() {
     (new UserController())->store();

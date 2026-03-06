@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Repository;
 
 use PDO;
 use App\Entity\Schedule;
 use RuntimeException;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Repository responsable de l'accès aux données
@@ -21,36 +23,33 @@ class ScheduleRepository
         $this->pdo = $pdo;
     }
 
-    public function hydrate(array $data): Schedule
+    public function mapRowToSchedule(array $row): Schedule
     {
-        // Transforme le tableau de la bdd en une instance de Schedule (objet)
+        // Transforme une ligne SQL de la table`schedule` en objet Schedule
         return new Schedule(
-            $data['schedule_name'],
-            $data['first_day'],
-            $data['last_day'],
-            $data['opening_time'],
-            $data['closing_time'],
-            $data['id']
+          $row['id'],
+            $row['schedule_name'],
+            $row['first_day'],
+            $row['last_day'],
+            $row['opening_time'],
+            $row['closing_time']
         );
     }
     /**
-     * Retourne un  tableau tous les horaires.
-     *
-     * @return array
+     * Retourne un tableau tous les horaires.
      */
     public function findAll(): array
     {
         $stmt = $this->pdo->query("SELECT * FROM schedule");
-        $results =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows =  $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $schedules = [];
 
-        foreach ($results as $row) {
-            $schedules[] = $this->hydrate($row);
+        foreach ($rows as $row) {
+            $schedules[] = $this->mapRowToSchedule($row);
         }
         return $schedules;
     }
-
     /**
      * Retourne un horaire par son ID.
      */
@@ -59,27 +58,31 @@ class ScheduleRepository
         $stmt = $this->pdo->prepare("SELECT * FROM schedule WHERE id = ?");
         $stmt->execute([$id]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$row) {
             // Si aucun résultat n'est trouvé lance une exception
             throw new RuntimeException('Schedule not found');
         }
 
-        return $this->hydrate($result);
+        return $this->mapRowToSchedule($row);
     }
-
     /**
      * Insère un nouvel horaire.
      */
     public function create(Schedule $schedule): void
     {
+        // Génération UUID côté PHP
+        $scheduleId = Uuid::uuid4()->toString();
+        $schedule->setId($scheduleId);
+
         $stmt = $this->pdo->prepare("
-            INSERT INTO schedule (schedule_name, first_day, last_day, opening_time, closing_time)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO schedule (id, schedule_name, first_day, last_day, opening_time, closing_time)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
+            $schedule->getId(),
             $schedule->getScheduleName(),
             $schedule->getFirstDay(),
             $schedule->getLastDay(),
@@ -87,7 +90,6 @@ class ScheduleRepository
             $schedule->getClosingTime()
         ]);
     }
-
     /**
      * Met à jour un horaire existant.
      */

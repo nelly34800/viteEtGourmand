@@ -12,6 +12,7 @@ class RequestHelper
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         ResponseHelper::json(['error' => 'Invalid JSON'], 400);
+        exit;
     }
 
     return $data ?? [];

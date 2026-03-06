@@ -21,6 +21,7 @@ class User
     private ?string $roleName;
 
     public function __construct(
+        ?string $id,
         string $lastName,
         string $firstName,
         string $email,
@@ -30,8 +31,7 @@ class User
         string $postalCode,
         string $phone,
         string $idRole,
-        ?string $roleName = null,
-        ?string $id = null
+        ?string $roleName = null
     ) {
         $this->id = $id;
         $this->lastName = $lastName;
@@ -47,7 +47,7 @@ class User
     }
 
     // Getters: permet d'accéder aux propriétés privées de l'objet
-    public function getId(): ?string { return $this->id; }
+    public function getId(): string { return $this->id; }
     public function getLastName(): string { return $this->lastName; }
     public function getFirstName(): string { return $this->firstName; }
     public function getEmail(): string { return $this->email; }

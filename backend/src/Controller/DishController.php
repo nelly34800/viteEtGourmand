@@ -30,9 +30,9 @@ class DishController
     public function index(): void
     {
         // Appel du repository pour récupérer tous les plats et affichage au format JSON
-        $dishs = $this->repository->findAll();
+        $dishes = $this->repository->findAll();
 
-        $response = array_map(function($dish) {
+        $response = array_map(function(Dish $dish) {
           // Transformation en array pour JSON (hydratation inverse)
             return [
                 'id' => $dish->getId(),
@@ -40,8 +40,10 @@ class DishController
                 'description' => $dish->getDescription(),
                 'picture' => $dish->getPicture(),
                 'id_category_dish' => $dish->getIdCategoryDish(),
+                'diets' => $dish->getDiets(),
+                'allergens' => $dish->getAllergens(),
             ];
-        }, $dishs);
+        }, $dishes);
 
         ResponseHelper::json($response);
     }
@@ -53,49 +55,62 @@ class DishController
 
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
-        // Appel du repository pour récupérer l'utilisateur par son id et affichage au format JSON
+        // Appel du repository pour récupérer le plat par son id et affichage au format JSON
         $dish = $this->repository->findById($id);
 
-        if (!$dish) {
-            ResponseHelper::json(['error' => 'Not found'], 404);
+        try {
+            $dish = $this->repository->findById($id);
+            // Transformation en array pour JSON (hydratation inverse)
+            $response =([
+                'id' => $dish->getId(),
+                'dish_title' => $dish->getDishTitle(),
+                'description' => $dish->getDescription(),
+                'picture' => $dish->getPicture(),
+                'id_category_dish' => $dish->getIdCategoryDish(),
+                'diet_id' => $dish->getDiets(),
+                'allergen_id' => $dish->getAllergens()
+            ]);
+            ResponseHelper::json($response);
+
+        } catch (RuntimeException $e) {
+        ResponseHelper::json(['error' => 'Not found'], 404);
         }
-        // Transformation en array pour JSON (hydratation inverse)
-        $response =([
-            'id' => $dish->getId(),
-            'dish_title' => $dish->getDishTitle(),
-            'description' => $dish->getDescription(),
-            'picture' => $dish->getPicture(),
-            'id_category_dish' => $dish->getIdCategoryDish()
-        ]);
-        ResponseHelper::json($response);
     }
+
     /**
      * Crée un nouveau plat.
      */
-    public function store(): void
-    {
-        // Lecture du JSON envoyé
-        $data = RequestHelper::getJson();
-        // Validation des champs obligatoires
-        if(!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
-            throw new InvalidArgumentException('Invalid input');
-        }
-        // Création de l'entité Dish à partir des données reçues
-        $dish = new Dish(
-            $data['dish_title'],
-            $data['description'],
-            $data['picture'],
-            $data['id_category_dish']
-        );
+public function store(): void
+{
+
+    $data = RequestHelper::getJson();
+    // Validation des champs obligatoires
+    if(!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
+        throw new InvalidArgumentException('Invalid input');
+    }
+    $dietIds = $data['diet_id'] ?? [];
+    $allergenIds = $data['allergen_id'] ?? [];
+    // Création de l'entité Dish à partir des données reçues
+    $dish = new Dish(
+        id: '', // l'UUID sera généré côté repository
+        dishTitle: $data['dish_title'],
+        description: $data['description'],
+        picture: $data['picture'],
+        idCategoryDish: $data['id_category_dish'],
+        categoryName: null, 
+        diets: $dietIds,
+        allergens: $allergenIds
+    );
         //  appel du repository pour l'enregistrer en base
         try {
             $this->repository->create($dish);
             ResponseHelper::json(['message' => 'Dish created'], 201);
 
         } catch (\Exception $e) {
-            ResponseHelper::json(['error' => 'Erreur lors de la création du plat', 'details' => $e->getMessage()], 500);
+            ResponseHelper::json(['error' => 'Error during dish creation', 'details' => $e->getMessage()], 500);
         }
     }
+
     /**
      * Met à jour un plat.
      */
@@ -109,14 +124,18 @@ class DishController
         if (!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+         $dietIds = $data['diet_id'] ?? [];
+        $allergenIds = $data['allergen_id'] ?? [];
         // Création de l'entité plat à partir des données reçues 
         $dish = new Dish(
+            $id,
             $data['dish_title'],
             $data['description'],
             $data['picture'],
             $data['id_category_dish'],
-            null, // idCategoryName
-            $id   // id
+            null, //category_name
+            $dietIds,
+            $allergenIds
         );
         // appel du repository pour mettre à jour en base
         $this->repository->update($dish);

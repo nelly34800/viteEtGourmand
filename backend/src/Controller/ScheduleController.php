@@ -47,13 +47,11 @@ class ScheduleController
 
         ResponseHelper::json($response);
     }
-
        /**
      * Affiche un horaire par ID.
      */
     public function show(string $id): void
     {
-
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
         // Appel du repository pour récupérer l'horaire par son id et affichage au format JSON
@@ -86,6 +84,7 @@ class ScheduleController
         }
         // Création de l'entité Schedule à partir des données reçues
         $schedule = new Schedule(
+            '',
             $data['schedule_name'],
             $data['first_day'],
             $data['last_day'],
@@ -94,7 +93,6 @@ class ScheduleController
         );
         //  appel du repository pour l'enregistrer en base
         $this->repository->create($schedule);
-
         ResponseHelper::json(['message' => 'Schedule created'], 201);
     }
     /**
@@ -112,12 +110,12 @@ class ScheduleController
         }
         // Création de l'entité Schedule à partir des données reçues 
         $schedule = new Schedule(
+            $id,
             $data['schedule_name'],
             $data['first_day'],
             $data['last_day'],
             $data['opening_time'],
-            $data['closing_time'],
-            $id
+            $data['closing_time']
         );
         // appel du repository pour mettre à jour en base
         $this->repository->update($schedule);

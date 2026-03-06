@@ -32,7 +32,7 @@ class UserController
         // Appel du repository pour récupérer tous les employés et affichage au format JSON
         $users = $this->repository->findAllEmploye();
 
-        $response = array_map(function($user) {
+        $response = array_map(function(User $user) {
           // Transformation en array pour JSON (hydratation inverse)
             return [
                 'id' => $user->getId(),
@@ -54,7 +54,6 @@ class UserController
      */
     public function show(string $id): void
     {
-
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
         // Appel du repository pour récupérer l'utilisateur par son id et affichage au format JSON
@@ -90,6 +89,7 @@ class UserController
         }
         // Création de l'entité User à partir des données reçues
         $user = new User(
+            '',
             $data['last_name'],
             $data['first_name'],
             $data['email'],
@@ -105,7 +105,7 @@ class UserController
             $this->repository->create($user);
             ResponseHelper::json(['message' => 'User created'], 201);
         } catch (\Exception $e) {
-            ResponseHelper::json(['error' => 'Erreur lors de la création de l\'utilisateur', 'details' => $e->getMessage()], 500);
+            ResponseHelper::json(['error' => 'Error creating user', 'details' => $e->getMessage()], 500);
         }
     }
     /**
@@ -123,6 +123,7 @@ class UserController
         }
         // Création de l'entité utilisateur à partir des données reçues 
         $user = new User(
+            $id,
             $data['last_name'],
             $data['first_name'],
             $data['email'],
@@ -133,7 +134,6 @@ class UserController
             $data['phone'],
             $data['id_role'],
             null, // roleName
-            $id   // id
         );
         // appel du repository pour mettre à jour en base
         $this->repository->update($user);

@@ -5,6 +5,7 @@ namespace App\Repository;
 use PDO;
 use App\Entity\User;
 use RuntimeException;
+use Ramsey\Uuid\Uuid;
 /**
  * Repository responsable de l'accès aux données
  * pour l'entité User.
@@ -12,48 +13,51 @@ use RuntimeException;
 class UserRepository
 {
     private PDO $pdo;
-
     /**
-     * Injection de la dépendance PDO.
+     * Injection de la dépendance PDO. 
      */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
 
-    private function hydrate(array $data): User
+    private function mapRowToUser(array $row): User
     {
-        // Transforme le tableau de la bdd en une instance de User (objet)
+      // transforme une ligne SQL de la table `user` en objet User
         return new User(
-            $data['last_name'],
-            $data['first_name'],
-            $data['email'],
-            $data['password'],
-            $data['postal_address'],
-            $data['city'],
-            $data['postal_code'],
-            $data['phone'],
-            $data['id_role'],
-            $data['role_name'],
-            $data['id']
+            $row['id'],
+            $row['last_name'],
+            $row['first_name'],
+            $row['email'],
+            $row['password'],
+            $row['postal_address'],
+            $row['city'],
+            $row['postal_code'],
+            $row['phone'],
+            $row['id_role'],
+            $row['role_name'] ?? null
         );
+    }
+
+    public function emailExists(string $email): bool
+    {
+        $stmt = $this->pdo->prepare("SELECT id FROM `user` WHERE email = ?");
+        $stmt->execute([$email]);
+
+        return (bool) $stmt->fetch();
     }
     /**
      * Retourne un  tableau tous les utilisateur qui ont le rôle employe.
-     *
-     * @return array
      */
     public function findAllEmploye(): array
     {
-        $stmt = $this->pdo->query("SELECT user.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE role.role_name = 'employé'");
-         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->query("SELECT `user`.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE role.role_name = 'employé'");
+         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $users = [];
-
-        foreach ($results as $row) {
-            $users[] = $this->hydrate($row);
+        foreach ($rows as $row) {
+            $users[] = $this->mapRowToUser($row);
         }
-
         return $users;
     }
     /**
@@ -61,54 +65,58 @@ class UserRepository
      */
     public function findById(string $id): User
     {
-        $stmt = $this->pdo->prepare("SELECT user.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE user.id = ?");
+        $stmt = $this->pdo->prepare("SELECT `user`.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE user.id = ?");
         $stmt->execute([$id]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$row) {
             // Si aucun résultat n'est trouvé lance une exception
             throw new RuntimeException('User not found');
         }
-
-        return $this->hydrate($result);
+        return $this->mapRowToUser($row);
     }
     /**
      * Insère un nouvel utilisateur.
      */
-    public function create(User $user): void
-    {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO user (last_name, first_name, email, password, postal_address, city, postal_code, phone, id_role)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        // exécute la requête avec les données de l'utilisateur
-        $stmt->execute([
-            $user->getLastName(),
-            $user->getFirstName(),
-            $user->getEmail(),
-            $user->getPassword(),
-            $user->getPostalAddress(),
-            $user->getCity(),
-            $user->getPostalCode(),
-            $user->getPhone(),
-            $user->getIdRole()
-        ]);
-        // récupère l'id généré par la base de données pour le nouvel utilisateur
-        $id = $this->pdo->query("SELECT id FROM user WHERE email = " . $this->pdo->quote($user->getEmail()))->fetchColumn();
-        $user->setId($id);
-        }
+public function create(User $user): void
+{
+    if ($this->emailExists($user->getEmail())) {
+        throw new RuntimeException("Email already used");
+    }
+
+    $userId = \Ramsey\Uuid\Uuid::uuid4()->toString();
+    $user->setId($userId);
+
+    $stmt = $this->pdo->prepare("
+        INSERT INTO `user` 
+        (id, last_name, first_name, email, password, postal_address, city, postal_code, phone, id_role)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->execute([
+        $user->getId(),
+        $user->getLastName(),
+        $user->getFirstName(),
+        $user->getEmail(),
+        $user->getPassword(),
+        $user->getPostalAddress(),
+        $user->getCity(),
+        $user->getPostalCode(),
+        $user->getPhone(),
+        $user->getIdRole()
+    ]);
+}
     /**
      * Met à jour un user existant.
      */
     public function update(User $user): void
     {
         $stmt = $this->pdo->prepare("
-            UPDATE user
-            SET last_name = ?, first_name = ?, email = ?, password = ?, postal_address = ?, city = ?, postal_code = ?, phone = ?
+            UPDATE `user`
+            SET last_name = ?, first_name = ?, email = ?, password = ?, postal_address = ?, city = ?, postal_code = ?, phone = ?, id_role = ?
             WHERE id = ?
         ");
-       
         $stmt->execute([
             $user->getLastName(),
             $user->getFirstName(),
@@ -118,19 +126,21 @@ class UserRepository
             $user->getCity(),
             $user->getPostalCode(),
             $user->getPhone(),
+            $user->getIdRole(),
             $user->getId()
+
         ]);
         // Si l'utilisateur n'existe pas retourne une erreur
         if ($stmt->rowCount() === 0) {
-            ResponseHelper::json(['debug' => 'rowcount 0'], 200);
-        }
+            throw new RuntimeException("User not found");
+      }
     }
     /**
      * Supprime un utilisateur.
      */
     public function delete(string $id): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM user WHERE id = ?");
+        $stmt = $this->pdo->prepare("DELETE FROM `user` WHERE id = ?");
         $stmt->execute([$id]);
 
         if ($stmt->rowCount() === 0) {
@@ -142,7 +152,7 @@ class UserRepository
      */
     public function findByEmail(string $email): User
     {
-        $stmt = $this->pdo->prepare("SELECT *, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE email = ?");
+        $stmt = $this->pdo->prepare("SELECT *, role.role_name FROM `user` JOIN role ON user.id_role = role.id WHERE email = ?");
         $stmt->execute([$email]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -151,7 +161,6 @@ class UserRepository
             // Si aucun résultat n'est trouvé lance une exception
             throw new RuntimeException('User not found');
         }
-
-        return $this->hydrate($result);
+        return $this->mapRowToUser($result);
     }
 }

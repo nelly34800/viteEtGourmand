@@ -21,7 +21,7 @@ class CategoryDishController
         $this->repository = new CategoryDishRepository($pdo);
     }
      /**
-     * Liste tous les employés.
+     * Liste tous les catégories de plats.
      */
     public function index(): void
     {

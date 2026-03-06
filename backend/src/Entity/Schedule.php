@@ -16,12 +16,12 @@ class Schedule
     private string $closingTime;
 
     public function __construct(
+        ?string $id,
         string $scheduleName,
         string $firstDay,
         string $lastDay,
         string $openingTime,
-        string $closingTime,
-        ?string $id = null
+        string $closingTime
     ) {
         if (empty($scheduleName)) {
         throw new InvalidArgumentException('Schedule name is required');
@@ -36,7 +36,7 @@ class Schedule
     }
 
     // Getters: permet d'accéder aux propriétés privées de l'objet
-    public function getId(): ?string { return $this->id; }
+    public function getId(): string { return $this->id; }
     public function getScheduleName(): string { return $this->scheduleName; }
     public function getFirstDay(): string { return $this->firstDay; }
     public function getLastDay(): string { return $this->lastDay; }

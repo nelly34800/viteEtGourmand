@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once '../config/database.php';
 
 session_start();
@@ -8,41 +9,25 @@ session_start();
 use App\Router\Router;
 
 try {
-    //fonction d'autoload pour charger les classes automatiquement
-    spl_autoload_register(function ($class) {
+    /**
+     * Récupération méthode et URI
+     */
+    $method = $_SERVER['REQUEST_METHOD'];
+    $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    $prefix = "App\\";
-    $baseDir = __DIR__ . '/../src/';
+    $router = new Router();
+    /**
+     * On charge les fichiers de routes
+     */
+    require_once '../routes/schedule.routes.php';
+    require_once '../routes/user.routes.php';
+    require_once '../routes/auth.routes.php';
+    require_once '../routes/dish.routes.php';
+    require_once '../routes/categoryDish.routes.php';
+    require_once '../routes/allergen.routes.php';
+    require_once '../routes/diet.routes.php';
 
-    $len = strlen($prefix);
-    if (strncmp($prefix, $class, $len) !== 0) {
-        return;
-    }
-
-    $relativeClass = substr($class, $len);
-    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
-
-    if (file_exists($file)) {
-        require $file;
-    }
-});
-/**
- * Récupération méthode et URI
- */
-$method = $_SERVER['REQUEST_METHOD'];
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-$router = new Router();
-/**
- * On charge les fichiers de routes
- */
-require_once '../routes/schedule.routes.php';
-require_once '../routes/user.routes.php';
-require_once '../routes/auth.routes.php';
-require_once '../routes/dish.routes.php';
-require_once '../routes/categoryDish.routes.php';
-
-$router->dispatch($method, $uri);
+    $router->dispatch($method, $uri);
 
 } catch (PDOException $e) {  //problème de bdd
 
