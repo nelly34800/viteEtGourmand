@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 /**
  * Représente l'entité Allergen correspondant
  * à la table `allergen` en base de données.

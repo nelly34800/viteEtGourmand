@@ -28,8 +28,6 @@ class AllergenRepository
     }
     /**
      * Retourne un  tableau tous les allergènes.
-     *
-     * @return array
      */
     public function findAll(): array
     {

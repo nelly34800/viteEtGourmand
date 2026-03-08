@@ -56,7 +56,6 @@ class DishController
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
         // Appel du repository pour récupérer le plat par son id et affichage au format JSON
-        $dish = $this->repository->findById($id);
 
         try {
             $dish = $this->repository->findById($id);

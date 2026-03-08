@@ -50,7 +50,7 @@ class DishRepository
                   ]);
             }
 
-            // Ajouter l'allergènesi  pas déjà présent
+            // Ajouter l'allergène si pas déjà présent
             if ($row['allergen_id'] !== null) {
             $dishes[$dishId]->addAllergen([
                   'id' => $row['allergen_id'],
@@ -58,7 +58,6 @@ class DishRepository
                   ]);
             }
         }
-
     // À la fin, $dishes contient tous les objets Dish avec leurs tableaux diet et allergen
     return array_values($dishes);
     }
@@ -119,6 +118,7 @@ class DishRepository
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (!$rows) {
+          // Si aucun résultat n'est trouvé lance une exception
             throw new RuntimeException('Dish not found');
         }
 
@@ -128,53 +128,52 @@ class DishRepository
      * Insère un nouveau plat.
      */
     public function create(Dish $dish): void
-{
-    // Génération UUID côté PHP
-    $dishId = Uuid::uuid4()->toString();
-    $dish->setId($dishId);
+    {
+        // Génération UUID côté PHP
+        $dishId = Uuid::uuid4()->toString();
+        $dish->setId($dishId);
 
-    try {
-        // démarrage de la transaction
-        $this->pdo->beginTransaction();
+        try {
+            // démarrage de la transaction
+            $this->pdo->beginTransaction();
 
-        // insertion du plat
-        $stmt = $this->pdo->prepare("
-            INSERT INTO dish (id, dish_title, description, picture, id_category_dish)
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([
-            $dish->getId(),
-            $dish->getDishTitle(),
-            $dish->getDescription(),
-            $dish->getPicture(),
-            $dish->getIdCategoryDish()
-        ]);
+            // insertion du plat
+            $stmt = $this->pdo->prepare("
+                INSERT INTO dish (id, dish_title, description, picture, id_category_dish)
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $dish->getId(),
+                $dish->getDishTitle(),
+                $dish->getDescription(),
+                $dish->getPicture(),
+                $dish->getIdCategoryDish()
+            ]);
 
-        // insertion dans table pivot diet
-        $stmtDiet = $this->pdo->prepare("
-            INSERT INTO diet_dish (id_diet, id_dish) VALUES (?, ?)
-        ");
-        foreach ($dish->getDiets() as $dietId) {
-            $stmtDiet->execute([$dietId, $dishId]);
+            // insertion dans table pivot diet_dish
+            $stmtDiet = $this->pdo->prepare("
+                INSERT INTO diet_dish (id_diet, id_dish) VALUES (?, ?)
+            ");
+            foreach ($dish->getDiets() as $dietId) {
+                $stmtDiet->execute([$dietId, $dishId]);
+            }
+
+            // insertion dans table pivot allergen_dish
+            $stmtAllergen = $this->pdo->prepare("
+                INSERT INTO allergen_dish (id_allergen, id_dish) VALUES (?, ?)
+            ");
+            foreach ($dish->getAllergens() as $allergenId) {
+                $stmtAllergen->execute([$allergenId, $dishId]);
+            }
+            // commit
+            $this->pdo->commit();
+
+        } catch (\Exception $e) {
+            // rollback en cas d’erreur
+            $this->pdo->rollBack();
+            throw new RuntimeException("Error while creating the dish : " . $e->getMessage());
         }
-
-        // insertion dans table pivot allergen
-        $stmtAllergen = $this->pdo->prepare("
-            INSERT INTO allergen_dish (id_allergen, id_dish) VALUES (?, ?)
-        ");
-        foreach ($dish->getAllergens() as $allergenId) {
-            $stmtAllergen->execute([$allergenId, $dishId]);
-        }
-
-        // commit
-        $this->pdo->commit();
-
-    } catch (\Exception $e) {
-        // rollback en cas d’erreur
-        $this->pdo->rollBack();
-        throw new RuntimeException("Error while creating the dish : " . $e->getMessage());
     }
-}
     /**
      * Met à jour un plat existant.
      */

@@ -4,7 +4,17 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once '../config/database.php';
 
+session_set_cookie_params([
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict'
+]);
+
 session_start();
+
+use App\Helper\CsrfHelper;
+
+CsrfHelper::generate();
  
 use App\Router\Router;
 
@@ -26,6 +36,8 @@ try {
     require_once '../routes/categoryDish.routes.php';
     require_once '../routes/allergen.routes.php';
     require_once '../routes/diet.routes.php';
+    require_once '../routes/menu.routes.php';
+    require_once '../routes/condition.routes.php';
 
     $router->dispatch($method, $uri);
 

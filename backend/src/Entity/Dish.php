@@ -51,17 +51,17 @@ class Dish
         $this->id = $id;
     }
 
-    public function addDiet(string $dietId): void
+    public function addDiet(array $diet): void
     {
-        if (!in_array($dietId, $this->diets)) {
-            $this->diets[] = $dietId;
+        if (!in_array($diet, $this->diets, true)) {
+            $this->diets[] = $diet;
         }
     }
 
-    public function addAllergen(string $allergenId): void
+    public function addAllergen(array $allergen): void
     {
-        if (!in_array($allergenId, $this->allergens)) {
-            $this->allergens[] = $allergenId;
+        if (!in_array($allergen, $this->allergens, true)) {
+            $this->allergens[] = $allergen;
         }
     }
 }

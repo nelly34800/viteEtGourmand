@@ -7,6 +7,7 @@ use App\Repository\AuthRepository;
 use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
 use App\Helper\ValidatorHelper;
+use App\Helper\CsrfHelper;
 use Database;
 use RuntimeException;
 
@@ -41,16 +42,20 @@ class AuthController
             if (!$user || !$user->verifyPassword($password)) {
                 throw new RuntimeException();
             }
+            // protection session fixation
+            session_regenerate_id(true);
+
+
             $_SESSION['user'] = [
                 'id' => $user->getId(),
                 'email' => $user->getEmail(),
                 'role' => $user->getRoleName()
             ];
 
-            ResponseHelper::json(['message' => 'Connexion réussie']);
+            ResponseHelper::json(['message' => 'Login successful','csrf_token' => CsrfHelper::generate()]);
 
         } catch (RuntimeException $e) {
-            ResponseHelper::json(['error' => 'Utilisateur ou mot de passe incorrect'], 401);
+            ResponseHelper::json(['error' => 'Incorrect username or password'], 401);
         }
     }
     /**
@@ -59,8 +64,9 @@ class AuthController
     public function logout(): void
     {
 
-        $_SESSION = [];
-        session_destroy();
-        ResponseHelper::json(['message' => 'Déconnexion réussie']);
+        $_SESSION = [];  // vide toutes les variables de session
+        session_destroy();  // supprime la session côté serveur
+
+        ResponseHelper::json(['message' => 'Logout successful']);
     }
 }
