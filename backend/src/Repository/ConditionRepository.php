@@ -43,7 +43,9 @@ class ConditionRepository
 
         return $conditions;
     }
-    // Retourne une condition par son ID.
+    /**
+     * Retourne une condition par son ID.
+     */
     public function findById(string $id): Condition
     {
         $stmt = $this->pdo->prepare("SELECT id, condition_type, `description` FROM condition_menu WHERE id = ?");

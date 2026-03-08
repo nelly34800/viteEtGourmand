@@ -36,7 +36,7 @@ class Dish
         $this->diets = $diets;
         $this->allergens = $allergens;
     }
-
+    // Getters: permet d'accéder aux propriétés privées de l'objet
     public function getId(): string { return $this->id; }
     public function getDishTitle(): string { return $this->dishTitle; }
     public function getDescription(): string { return $this->description; }
@@ -46,6 +46,7 @@ class Dish
     public function getDiets(): array { return $this->diets; }
     public function getAllergens(): array { return $this->allergens; }
 
+    //setters: permet de modifier l'id de l'objet généré par la bdd (après sa création)
     public function setId(string $id): void
     {
         $this->id = $id;

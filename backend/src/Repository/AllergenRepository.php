@@ -42,7 +42,9 @@ class AllergenRepository
 
         return $allergens;
     }
-    // Retourne un allergène par son ID.
+    /**
+     * Retourne un allergène par son ID.
+     */
     public function findById(string $id): Allergen
     {
         $stmt = $this->pdo->prepare("SELECT * FROM allergen WHERE id = ?");

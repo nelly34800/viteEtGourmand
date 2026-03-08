@@ -23,7 +23,7 @@ class UserRepository
 
     private function mapRowToUser(array $row): User
     {
-      // transforme une ligne SQL de la table `user` en objet User
+        // transforme une ligne SQL de la table `user` en objet User
         return new User(
             $row['id'],
             $row['last_name'],
@@ -47,12 +47,12 @@ class UserRepository
         return (bool) $stmt->fetch();
     }
     /**
-     * Retourne un  tableau tous les utilisateur qui ont le rôle employe.
+     * Retourne un tableau de tous les utilisateur qui ont le rôle employe.
      */
     public function findAllEmploye(): array
     {
-        $stmt = $this->pdo->query("SELECT `user`.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE role.role_name = 'employé'");
-         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->pdo->query("SELECT `user`.*, role.role_name FROM user JOIN `role` ON user.id_role = role.id WHERE role.role_name = 'employé'");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $users = [];
         foreach ($rows as $row) {
@@ -84,10 +84,10 @@ public function create(User $user): void
     if ($this->emailExists($user->getEmail())) {
         throw new RuntimeException("Email already used");
     }
-
+    // Génération UUID côté PHP
     $userId = \Ramsey\Uuid\Uuid::uuid4()->toString();
     $user->setId($userId);
-
+    // insertion de l'utilisateur
     $stmt = $this->pdo->prepare("
         INSERT INTO `user` 
         (id, last_name, first_name, email, password, postal_address, city, postal_code, phone, id_role)
@@ -140,6 +140,7 @@ public function create(User $user): void
      */
     public function delete(string $id): void
     {
+      //supprime l'utilisateur
         $stmt = $this->pdo->prepare("DELETE FROM `user` WHERE id = ?");
         $stmt->execute([$id]);
 

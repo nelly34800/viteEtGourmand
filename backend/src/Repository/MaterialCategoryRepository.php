@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use PDO;
 
-class CategoryDishRepository
+class MaterialCategoryRepository
 {    private PDO $pdo;
 
     /**
@@ -15,20 +15,19 @@ class CategoryDishRepository
         $this->pdo = $pdo;
     }
     /**
-     * Retourne un  tableau tous les catégories des plats.
+     * Retourne un  tableau tous les catégories de materiel.
      */
     public function findAll(): array
     {
-        $stmt = $this->pdo->query("SELECT id, category_name FROM category_dish");
+        $stmt = $this->pdo->query("SELECT id, material_category_name FROM material_category");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     /**
-     * Retourne une catégorie de plats par son id.
+     * Retourne une catégorie de matériel par son ID.
      */
-
     public function findById(string $id): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT id, category_name FROM category_dish WHERE id = ?");
+        $stmt = $this->pdo->prepare("SELECT id, material_category_name FROM material_category WHERE id = ?");
         $stmt->execute([$id]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);

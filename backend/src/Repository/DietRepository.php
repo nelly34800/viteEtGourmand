@@ -48,7 +48,9 @@ class DietRepository
         return $diets;
 
     }
-    // Retourne un régime alimentaire par son ID.
+    /**
+     * Retourne un régime alimentaire par son ID.
+     */
     public function findById(string $id): Diet
     {
         $stmt = $this->pdo->prepare("SELECT * FROM diet WHERE id = ?");

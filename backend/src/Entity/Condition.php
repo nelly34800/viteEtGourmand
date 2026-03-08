@@ -20,11 +20,12 @@ class Condition
         $this->conditionType = $conditionType;
         $this->description = $description;
     }
-
+    // Getters: permet d'accéder aux propriétés privées de l'objet
     public function getId(): string { return $this->id; }
     public function getConditionType(): string { return $this->conditionType; }
     public function getDescription(): string { return $this->description; }
 
+    //setters: permet de modifier l'id de l'objet généré par la bdd (après sa création)
     public function setId(string $id): void
     {
         $this->id = $id;

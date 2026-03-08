@@ -38,6 +38,8 @@ try {
     require_once '../routes/diet.routes.php';
     require_once '../routes/menu.routes.php';
     require_once '../routes/condition.routes.php';
+    require_once '../routes/materialCategory.routes.php';
+    require_once '../routes/material.routes.php';
 
     $router->dispatch($method, $uri);
 
