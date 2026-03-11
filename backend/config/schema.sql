@@ -197,7 +197,7 @@ INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_addr
 ('Test', 'Mathieu', 'mathieu@test.com', 'Test12345!', '123 Rue de la Paix', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Marie', 'marie@test.com', 'Test12345!', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Elise', 'elise@test.com', 'Test12345!', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
-('Admin', 'José', 'jose.admin@test.com', 'Admin12345!', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
+('Admin', 'José', 'jose.admin@test.com', '$2y$10$GxFGCM7acUe9BrMooaIxXeiAhLy10UuuS9KuGGdBQe/ATMaQTHtWu', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
 
 CREATE TABLE orders(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),

@@ -15,19 +15,19 @@ $router->get('/allergen/{id}', function($id) {
 $allowedRoles = ['admin', 'employé'];
 
 $router->post('/allergen', function() use ($allowedRoles) {
+      CsrfHelper::validate();
     AuthMiddleware::requireRole($allowedRoles);
-    CsrfHelper::validate();
     (new AllergenController())->store();
 });
 
 $router->put('/allergen/{id}', function($id) use ($allowedRoles) {
+      CsrfHelper::validate();
     AuthMiddleware::requireRole($allowedRoles);
-    CsrfHelper::validate();
     (new AllergenController())->update($id);
 });
 
 $router->delete('/allergen/{id}', function($id) use ($allowedRoles) {
+      CsrfHelper::validate();
     AuthMiddleware::requireRole($allowedRoles);
-    CsrfHelper::validate();
     (new AllergenController())->delete($id);
 });

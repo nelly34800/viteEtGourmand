@@ -40,6 +40,10 @@ try {
     require_once '../routes/condition.routes.php';
     require_once '../routes/materialCategory.routes.php';
     require_once '../routes/material.routes.php';
+    require_once '../routes/notice.routes.php';
+    require_once '../routes/drinkPackage.routes.php';
+    require_once '../routes/personalPackage.routes.php';
+    require_once '../routes/order.routes.php';
 
     $router->dispatch($method, $uri);
 

@@ -79,34 +79,34 @@ class UserRepository
     /**
      * Insère un nouvel utilisateur.
      */
-public function create(User $user): void
-{
-    if ($this->emailExists($user->getEmail())) {
-        throw new RuntimeException("Email already used");
-    }
-    // Génération UUID côté PHP
-    $userId = \Ramsey\Uuid\Uuid::uuid4()->toString();
-    $user->setId($userId);
-    // insertion de l'utilisateur
-    $stmt = $this->pdo->prepare("
-        INSERT INTO `user` 
-        (id, last_name, first_name, email, password, postal_address, city, postal_code, phone, id_role)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    public function create(User $user): void
+    {
+        if ($this->emailExists($user->getEmail())) {
+            throw new RuntimeException("Email already used");
+        }
+        // Génération UUID côté PHP
+        $userId = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $user->setId($userId);
+        // insertion de l'utilisateur
+        $stmt = $this->pdo->prepare("
+            INSERT INTO `user` 
+            (id, last_name, first_name, email, password, postal_address, city, postal_code, phone, id_role)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
 
-    $stmt->execute([
-        $user->getId(),
-        $user->getLastName(),
-        $user->getFirstName(),
-        $user->getEmail(),
-        $user->getPassword(),
-        $user->getPostalAddress(),
-        $user->getCity(),
-        $user->getPostalCode(),
-        $user->getPhone(),
-        $user->getIdRole()
-    ]);
-}
+        $stmt->execute([
+            $user->getId(),
+            $user->getLastName(),
+            $user->getFirstName(),
+            $user->getEmail(),
+            $user->getPassword(),
+            $user->getPostalAddress(),
+            $user->getCity(),
+            $user->getPostalCode(),
+            $user->getPhone(),
+            $user->getIdRole()
+        ]);
+    }
     /**
      * Met à jour un user existant.
      */
