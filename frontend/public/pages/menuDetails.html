@@ -1,6 +1,5 @@
 <div class="container p-4">
   <h1>Menu classique Gourmand</h1>
-  <h2>Thème du menu : classique</h2>
   <p>Description : Un menu équilibré et généreux, mettant à l’honneur des recettes traditionnelles revisitées, 
       adaptées à tous vos événements tout au long de l’année.</p>
 
@@ -15,7 +14,7 @@
   </div>
 
   <section class="text-start">
-    <h3>Entrées</h3>
+    <h2>Entrées</h2>
     <dl>
       <dt>Velouté de potimarron</dt>
       <dd>
@@ -32,7 +31,7 @@
       </dd>
     </dl>
 
-    <h3>Plats principaux</h3>
+    <h2>Plats principaux</h2>
     <dl>
       <dt>Suprême de volaille fermière, sauce forestière</dt>
       <dd>Suprême de volaille rôtie, sauce crémeuse aux champignons, gratin dauphinois maison.<br>
@@ -48,7 +47,7 @@
       </dd>
     </dl>
 
-    <h3>Fromages</h3>
+    <h2>Fromages</h2>
     <dl>
       <dt>Plateau de fromages affinés</dt>
       <dd>Sélection de fromages régionaux affinés.<br>
@@ -60,7 +59,7 @@
       </dd>
     </dl>
 
-    <h3>Desserts</h3>
+    <h2>Desserts</h2>
     <dl>
       <dt>Tarte fine aux pommes caramélisées</dt>
       <dd>Pommes fondantes caramélisées sur pâte croustillante.<br>
@@ -91,5 +90,22 @@
     </dl>
     <h3 class="text-center">Prix: 32 €</h3>
   </section>
-  <button class="btn btn-primary">Ajouter au panier</button>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal">Ajouter au panier</button>
+</div>
+
+<!-- Modal panier-->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="cartModalLabel">Le menu a été ajouté au panier : </h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-actions">
+        <a class="btn btn-primary" href="/menus">Ajouter d'autres menus</a>
+
+        <a class="btn btn-primary" href="/cart">Voir le panier</a>
+      </div>
+    </div>
+  </div>
 </div>

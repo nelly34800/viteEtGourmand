@@ -1,0 +1,68 @@
+<img src="../assets/img/bigTitleContact.jpg" class="hero-scene" alt="image décorative représentant des icônes de contact (email, téléphone, mobile et message) avec un liseret doré autour de l'image">
+
+<div class="container p-4">
+    <h1>Livraison</h1>
+    <p>les frais de livraison sont calculé sur un montant fixe de 5€ et un supplément de 0,59€ par killomètre.</p>
+    <h2>saisir l'adresse de livraison</h2>
+    <form action="">
+        <div>
+            <label for="address" form-label>adresse</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="numéro et rue">
+            <div class="invalid-feedback">
+                L'adresse est requise
+            </div>
+        </div>
+        <div>
+            <label for="postalCode" form-label>code postal</label>
+            <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode">
+            <div class="invalid-feedback">
+              Le code postal est requis
+            </div>
+        </div>
+        <div>
+            <label for="city" form-label>ville</label>
+            <input type="text" class="form-control" id="city" name="city">
+            <div class="invalid-feedback">
+              La ville est requise
+            </div>
+        </div>
+        <button type="submit" id="btnDeliveryCharges" class="btn btn-primary m-4">Calculer les frais de livraison</button>
+    </form>
+
+
+
+      <p>Calcul des frais de livraison pour votre évènement du 20 juin 2026</p>
+      <table>
+          <thead class="bgc-primary">
+              <tr>
+                  <th>menu choisi</th>
+                  <th>nombre de personnes</th>
+                  <th>prix unitaire du menu</th>
+                  <th>total ligne</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>menu classique</td>
+                  <td>10 personnes</td>
+                  <td>32€</td>
+                  <td>320€</td>
+              </tr>
+              <tr>
+                  <td class="align_right" colspan="3">total menu: </td>
+                  <td>320€</td>
+              </tr>
+                  <td class="align_right" colspan="3">frais de livraisons : </td>
+                  <td>30€</td>
+              </tr>
+              <tr>
+          </tbody>
+          <tfoot>
+              <tr>
+                  <td class="align_right" colspan="3">total : </td>
+                  <td>350€</td>
+              </tr>
+          </tfoot>
+      </table>
+      <button class="btn btn-primary mt-4">confirmer la commande</button>
+</div>

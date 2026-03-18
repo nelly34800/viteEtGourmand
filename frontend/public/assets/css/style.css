@@ -143,6 +143,10 @@ font-size: 28px;
   object-fit: cover;
 }
 
+input {
+  background-color: var(--secondary);
+}
+
 .input-qty {
   width: 60px;
 }
@@ -164,7 +168,7 @@ fieldset {
 
 .map {
   position: relative;
-  width: 620px;
+  width: 320px;
   margin: 0 auto;
 }
 
@@ -175,10 +179,10 @@ fieldset {
 
 .map-address {  /*fausse addresse sur contact */
   position: absolute;
-  top: 10px;
-  left: 20px;
+  top: 0px;
+  left: 5px;
   background: var(--secondary);
-  padding: 10px 14px;
+  padding: 5px;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
@@ -200,6 +204,14 @@ fieldset {
 
 dl dt {
   font-weight: 900;
+}
+
+.align_left {
+  text-align: left;
+}
+
+.align_right {
+  text-align: right;
 }
 
 /* Utilitaires
@@ -225,6 +237,11 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
+
+td {
+  border: solid 1px var(--primary)
+}
+
 
 /* Footer
  ========================= */
