@@ -14,7 +14,7 @@ function checkCredentials(){
         setToken(token);
 
         eraseCookie(roleCookieName);
-        setCookie(roleCookieName, "client", 7);
+        setCookie(roleCookieName, "admin", 7);
 
         // placer ce token en cookie
         window.location.replace("/");

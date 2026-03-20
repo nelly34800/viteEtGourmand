@@ -7,7 +7,7 @@ export const allRoutes = [
     new Route("/mentions", "Mentions légales", "/pages/mentions.html", []),
     new Route("/signin", "Connexion", "/pages/auth/signin.html", ["disconnected"], "/js/auth/signin.js"),
     new Route("/signup", "Inscription", "/pages/auth/signup.html", ["disconnected"], "/js/auth/signup.js"),
-    new Route("/account", "Mon compte","/pages/auth/account.html",  ["client"]),
+    new Route("/account", "Mon compte","/pages/auth/account.html", ["client", "admin", "employe"]),
     new Route("/editUserInfo", "Modifier mes informations", "/pages/auth/editUserInfo.html", ["client"], "/js/auth/editUserInfo.js"),
     new Route("/editPassword", "Modifier mon mot de passe", "/pages/auth/editPassword.html", ["client"], "/js/auth/editPassword.js"),
     new Route("/menus", "Les menus", "/pages/menus.html", []),
@@ -16,8 +16,10 @@ export const allRoutes = [
     new Route("/cart", "Panier", "/pages/order/cart.html", ["client"], "/js/order/cart.js"),
     new Route("/order", "Livraison commande", "/pages/order/order.html", ["client"], "/js/order/order.js"), 
     new Route("/orderConfirmation", "Confirmation de commande", "/pages/order/orderConfirmation.html", ["client"]),
-    new Route("/modifyOrder", "Modifier ma commande", "/pages/order/modifyOrder.html", ["client"])
-
+    new Route("/modifyOrder", "Modifier ma commande", "/pages/order/modifyOrder.html", ["client"]),
+    new Route("/admin", "Admin","/pages/admin/admin.html", ["admin"]),
+    new Route("/creatEmployee", "Créer un compte employé", "/pages/admin/creatEmployee.html", ["admin"], "/js/admin/creatEmployee.js"),
+    new Route("/employeesList", "liste des employés", "/pages/admin/employeesList.html", ["admin"]),
 ];
 //Le titre s'affiche comme ceci : Route.titre - websitename
 export const websiteName = "Vite & Gourmand";

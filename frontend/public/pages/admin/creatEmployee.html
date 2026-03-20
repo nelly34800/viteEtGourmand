@@ -1,0 +1,83 @@
+<div class="container p-4">
+    <h1>Créer un employé</h1>
+
+    <form action="" method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="email">Email: </label>
+            <input type="email" name="email" class="form-control" id="email">
+            <div class="invalid-feedback">
+                Le mail n'est pas au bon format
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="password">Mot de passe : </label>
+            <input type="password" name="password" class="form-control" id="password">
+            <div class="invalid-feedback">
+                Le mot de passe n'est pas assez robuste : au moins 10 caractères 
+                comprenant au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial
+            </div>
+            <div class="valid-feedback">
+                Le mot de passe est robuste
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmation mot de passe : </label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" />
+            <div class="invalid-feedback">
+                La confirmation n'est pas identique au mot de passe
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="lastName">Nom: </label>
+            <input class="form-control" type="text" name="lastName" id="lastName">
+            <div class="invalid-feedback">
+                Le nom est requis
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="firstName">Prénom: </label>
+            <input class="form-control" type="text" name="firstName" id="firstName">
+            <div class="invalid-feedback">
+                Le prénom est requis
+          </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="address">Adresse: </label>
+            <input class="form-control" type="text" name="address" id="address">
+            <div class="invalid-feedback">
+                L'adresse est requise
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="postalCode">Code postal: </label>
+            <input class="form-control" type="text" name="postalCode" id="postalCode">
+            <div class="invalid-feedback">
+                Le code postal est requis
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="city">Ville: </label>
+            <input class="form-control" type="text" name="city" id="city">
+            <div class="invalid-feedback">
+                La ville est requise
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Téléphone : </label>
+            <input type="tel" pattern="[0-9\s+]+" inputmode="tel" class="form-control" id="phone" placeholder="06 12 34 56 78" name="phone" />
+            <div class="invalid-feedback">
+                Le numéro de téléphone est requis
+            </div>
+          </div>
+
+        <input type="submit" class="btn btn-primary " value="Créer l'employé" id="validation-inscription">
+    </form>
+</div>

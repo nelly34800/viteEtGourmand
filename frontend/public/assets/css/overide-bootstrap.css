@@ -62,3 +62,10 @@
   --bs-nav-link-color: var(--secondary);
   --bs-nav-link-hover-color: var(--primary);
 }
+
+.table {
+  --bs-table-bg: var(--primary);
+  --bs-table-color: var(--secondary);
+  --bs-table-striped-color: var(--primary);
+  --bs-table-striped-bg: var(--secondary);
+}
