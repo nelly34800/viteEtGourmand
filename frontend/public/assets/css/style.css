@@ -201,7 +201,7 @@ fieldset {
 .bi-star, .bi-star-fill {
   padding-left: 5px;
 }
-
+/*dl= liste des menu; dt=terme; dd=definition */
 dl dt {
   font-weight: 900;
 }

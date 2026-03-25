@@ -1,4 +1,4 @@
-// Données "en dur" simulant la base de données
+// données "en dur" simulant la base de données
 const menuImages = [
   { src: "../assets/img/asperge.jpg", alt: "Plat 1" },
   { src: "../assets/img/brochette_fruits.jpg", alt: "Plat 2" },
@@ -10,7 +10,7 @@ const menuImages = [
 
 const carouselInner = document.getElementById("carouselInner");
 
-// 3Détermine combien d'images selon la largeur de l'écran
+// détermine combien d'images selon la largeur de l'écran
 let imagesPerSlide;
 
 if (window.innerWidth >= 680) {   // breakpoint

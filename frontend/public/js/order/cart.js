@@ -4,6 +4,7 @@ const numberPeople = document.getElementById("numberPeople");
 const btnValidation = document.getElementById("btnValidation");
 
 //écoute des événements
+dateEvent.addEventListener("keyup", validateForm);
 numberPeople.addEventListener("keyup", validateForm);
 
 //fonction permettant de valider le formulaire
@@ -11,7 +12,7 @@ function validateForm(){
   const dateOk = validateRequired(dateEvent);
   const nombrePersOk = validateRequired(numberPeople);
 
-    if(dateEvent && nombrePersOk){
+    if(dateOk && nombrePersOk){
       btnValidation.disabled = false;
       }
       else{

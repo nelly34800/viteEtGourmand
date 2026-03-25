@@ -109,9 +109,9 @@ function showAndHideElementForRole(){
                     element.classList.add("d-none");
                 }
                 break; 
-                case "employe":
+                case "employee":
                   // Visible uniquement si connecté ET rôle employe
-                     if(!userConnected || (role!="employe")){ 
+                     if(!userConnected || (role!="employee")){ 
                         element.classList.add("d-none"); 
                     }
                 break;
