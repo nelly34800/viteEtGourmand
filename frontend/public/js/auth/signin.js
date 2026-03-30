@@ -5,22 +5,53 @@ const btnSignin = document.getElementById('signin');
 btnSignin.addEventListener('click', checkCredentials);
 
 // vérifie le mail et le mot de passe 
-function checkCredentials(){
-    // ici il faudra appeler l'API pour vérifier les crendentials en BDD
-    if(emailInput.value == "test@mail.com" && passwordInput.value == "123") {
+async function checkCredentials(e) {
+  e.preventDefault();
 
-        // il faudra récupérer le vrai token
-        const token = "khbdkfhdfkmhdfkjldfghaetryetuyiryuivksjhvkl";
-        setToken(token);
+  try {
+    const response = await fetch('http://localhost:8082/login', {
+      method: 'POST',
+      credentials: 'include', // récupère la session
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: emailInput.value,
+        password: passwordInput.value
+      })
+    });
+    const data = await response.json();
 
-        eraseCookie(roleCookieName);
-        setCookie(roleCookieName, "admin", 7);
+    const messageDiv = document.getElementById('signin-message');
 
-        // placer ce token en cookie
-        window.location.replace("/");
+    if (response.ok) {
+      // afficher le message
+      messageDiv.textContent = "Connexion réussie ! Vous allez être redirigé sur la page d'accueil";
+      messageDiv.classList.remove("d-none");
+      messageDiv.classList.add("alert-success");
+
+      // stocker le CSRF
+      localStorage.setItem('csrf_token', data.csrf_token);
+
+        // stocker l'utilisateur
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // redirection après 3 secondes
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 3000);
+
+    } else {
+      // message d'erreur
+      messageDiv.textContent = data.error || "Une erreur est survenue";
+      messageDiv.classList.remove("d-none");
+      messageDiv.classList.add("alert-danger");
+
+      emailInput.classList.add('is-invalid');
+      passwordInput.classList.add('is-invalid');
     }
-    else{
-        emailInput.classList.add('is-invalid');
-        passwordInput.classList.add('is-invalid');
-    }
+
+  } catch (error) {
+    console.error("Erreur fetch :", error);
+  }
 }

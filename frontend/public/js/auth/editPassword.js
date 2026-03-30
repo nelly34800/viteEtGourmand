@@ -1,6 +1,6 @@
 const password = document.getElementById("password");
 const confirmPassword = document.getElementById("confirmPassword");
-const btnModification = document.getElementById("validation-modification");
+const btnModification = document.getElementById("validationModification");
 
 //écoute des événements
 password.addEventListener("keyup", validateForm);
@@ -12,10 +12,10 @@ const passwordOk = validatePassword(password);
 const confirmPasswordOk = validateConfirmationPassword(password, confirmPassword);
 
     if(passwordOk && confirmPasswordOk) {
-        btnValidation.disabled = false;
+        btnModification.disabled = false;
     }
     else{
-        btnValidation.disabled = true;
+        btnModification.disabled = true;
     }
 }
 

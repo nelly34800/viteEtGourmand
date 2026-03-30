@@ -105,3 +105,64 @@ function validateRequired(input){
         return false;
     }
 }
+
+// créer en bdd l'utilisateur
+document.querySelector('form').addEventListener('submit', async (e) => {
+  //empêche le rechargement
+  e.preventDefault();
+  //récupère l'utilisateur (valeurs des inputs) par son id
+  const lastName = document.getElementById('lastName').value;
+  const firstName = document.getElementById('firstName').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const address = document.getElementById('address').value;
+  const postalCode = document.getElementById('postalCode').value;
+  const city = document.getElementById('city').value;
+  const phone = document.getElementById('phone').value;
+
+  // envoie au backend pour l'entrer dans la bdd
+  try {
+    const response = await fetch('http://localhost:8082/user', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': localStorage.getItem('csrf_token')
+      },
+      body: JSON.stringify({
+        last_name: lastName,
+        first_name: firstName,
+        email: email,
+        password: password,
+        postal_address: address,
+        city: city,
+        postal_code: postalCode,
+        phone: phone
+      })
+    });
+
+    const data = await response.json();
+
+    const messageDiv = document.getElementById('signup-message');
+
+    if (response.ok) {
+      // afficher le message
+      messageDiv.textContent = "Inscription réussie ! Vous allez être redirigé sur la page de connexion";
+      messageDiv.classList.remove("d-none");
+      messageDiv.classList.add("alert-success");
+
+      // redirection après 3 secondes
+      setTimeout(() => {
+        window.location.href = '/signin';
+      }, 3000);
+    } else {
+      // message d'erreur
+      messageDiv.textContent = data.error || "Une erreur est survenue";
+      messageDiv.classList.remove("d-none");
+      messageDiv.classList.add("alert-danger");
+    }
+
+  } catch (error) {
+    console.error("Erreur fetch :", error);
+  }
+});

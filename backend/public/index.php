@@ -1,13 +1,41 @@
 <?php
+// Liste des domaines autorisés à faire des requêtes vers l'API
+$allowedOrigins = [
+    "http://localhost:8086",
+    //à remplacer par l'url du site
+    "https://monsite.com"
+];
+// Vérifie si la requête vient d’un domaine autorisé
+if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
+  // Autorise ce domaine à accéder à l'API
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+}
+// Autorise les méthodes HTTP utilisées par l'API
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+// Autorise certains headers côté frontend (important pour CSRF)
+header("Access-Control-Allow-Headers: Content-Type, X-CSRF-Token");
+// Autorise l'envoi des cookies (sessions PHP)
+header("Access-Control-Allow-Credentials: true");
+// Gère les requêtes préflight (OPTIONS) pour CORS
+// Si c'est une requête OPTIONS, on répond avec 200 et on arrête le script
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+// Définit le type de réponse en JSON pour toute l’API
 header('Content-Type: application/json');
-
+// Autoload des classes (Composer)
 require_once __DIR__ . '/../vendor/autoload.php';
+// Connexion à la base de données
 require_once '../config/database.php';
 
+// gestion dynamique HTTPS
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+// Configuration du cookie de session PHP avec des options de sécurité
 session_set_cookie_params([
     'httponly' => true,
-    'secure' => true,
-    'samesite' => 'Strict'
+    'secure' =>  $isHttps, //mettre true en production
+    'samesite' => 'Lax'    // none en production si domaine séparé frontend/backend, sinon Lax
 ]);
 
 session_start();

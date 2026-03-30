@@ -3,6 +3,7 @@
 <h1>Inscription</h1>
 
 <div class="container p-4">
+  <!-- Message de feedback -->
   <form>
     <div class="mb-3">
       <label for="lastName" class="form-label">Nom</label>
@@ -51,17 +52,17 @@
       </div>
     </div>
     <div class="mb-3">
-      <label for="postalCode" class="form-label">Code postal</label>
-      <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode" placeholder="votre code postal" />
-      <div class="invalid-feedback">
-        Le code postal est requis
-      </div>
-    </div>
-    <div class="mb-3">
       <label for="city" class="form-label">Ville</label>
       <input type="text" class="form-control" id="city" name="city" placeholder="votre ville" />
       <div class="invalid-feedback">
         La ville est requise
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="postalCode" class="form-label">Code postal</label>
+      <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode" placeholder="votre code postal" />
+      <div class="invalid-feedback">
+        Le code postal est requis
       </div>
     </div>
     <div class="mb-3">
@@ -71,6 +72,7 @@
         Le numéro de téléphone est requis
       </div>
     </div>
+    <div id="signup-message" class="alert d-none"></div>
     <div class="text-center">
       <button type="submit" class="btn btn-primary" id="validation-inscription">S'inscrire</button>
     </div>

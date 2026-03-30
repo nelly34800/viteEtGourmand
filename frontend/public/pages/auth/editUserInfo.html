@@ -18,6 +18,11 @@
           Le prénom est requis
         </div>
     </div>
+        <div class="mb-3">
+      <label for="email" class="form-label">Adresse email</label>
+      <input type="email" class="form-control" id="email" name="email" readonly />
+      <small class="text-muted">L’adresse email n’est pas modifiable</small>
+    </div>
     <div class="mb-3">
       <label for="address" class="form-label">Adresse postale</label>
       <input type="text" class="form-control" id="address" name="address" placeholder="votre adresse" value="" />
@@ -46,9 +51,11 @@
         Le numéro de téléphone est requis
       </div>
     </div>
+    <div id="edit-user-message" class="alert d-none"></div>
+    <div id="delete-user-message" class="alert d-none"></div>
     <div class="text-center">
-      <button type="submit" class="btn btn-primary" id="validation-modification">Modifier mes informations</button>
-      <button type="button" class="btn btn-danger">Supprimer mon compte</button>
+      <button type="submit" class="btn btn-primary" id="validationModification">Modifier mes informations</button>
+      <button type="button" id="deleteAccount" class="btn btn-danger">Supprimer mon compte</button>
     </div>
     <div class="text-center pt-3">
       <a href="/editPassword">modifier mon mot de passe</a>

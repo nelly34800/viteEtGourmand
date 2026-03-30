@@ -25,7 +25,7 @@ class UserRepository
     {
         // transforme une ligne SQL de la table `user` en objet User
         return new User(
-            $row['id'],
+            $row['user_id'],
             $row['last_name'],
             $row['first_name'],
             $row['email'],
@@ -34,7 +34,7 @@ class UserRepository
             $row['city'],
             $row['postal_code'],
             $row['phone'],
-            $row['id_role'],
+            $row['role_id'],
             $row['role_name'] ?? null
         );
     }
@@ -51,7 +51,22 @@ class UserRepository
      */
     public function findAllEmploye(): array
     {
-        $stmt = $this->pdo->query("SELECT `user`.*, role.role_name FROM user JOIN `role` ON user.id_role = role.id WHERE role.role_name = 'employé'");
+        $stmt = $this->pdo->query
+        ("SELECT
+            `user`.id AS user_id,
+            `user`.last_name,
+            `user`.first_name,
+            `user`.email,
+            `user`.password,
+            `user`.postal_address,
+            `user`.city,
+            `user`.postal_code,
+            `user`.phone,
+            role.id AS role_id,
+            role.role_name 
+         FROM user 
+         JOIN `role` ON user.id_role = role.id 
+         WHERE role.role_name = 'employé'");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $users = [];
@@ -65,7 +80,22 @@ class UserRepository
      */
     public function findById(string $id): User
     {
-        $stmt = $this->pdo->prepare("SELECT `user`.*, role.role_name FROM user JOIN role ON user.id_role = role.id WHERE user.id = ?");
+        $stmt = $this->pdo->prepare
+        ("SELECT
+            `user`.id AS user_id,
+            `user`.last_name,
+            `user`.first_name,
+            `user`.email,
+            `user`.password,
+            `user`.postal_address,
+            `user`.city,
+            `user`.postal_code,
+            `user`.phone,
+            role.id AS role_id,
+            role.role_name 
+        FROM user 
+        JOIN role ON user.id_role = role.id 
+        WHERE user.id = ?");
         $stmt->execute([$id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -153,7 +183,22 @@ class UserRepository
      */
     public function findByEmail(string $email): User
     {
-        $stmt = $this->pdo->prepare("SELECT *, role.role_name FROM `user` JOIN role ON user.id_role = role.id WHERE email = ?");
+        $stmt = $this->pdo->prepare
+        ("SELECT 
+            `user`.id AS user_id,
+            `user`.last_name,
+            `user`.first_name,
+            `user`.email,
+            `user`.password,
+            `user`.postal_address,
+            `user`.city,
+            `user`.postal_code,
+            `user`.phone,
+            role.id AS role_id,
+            role.role_name 
+        FROM `user` 
+        JOIN role ON user.id_role = role.id 
+        WHERE email = ?");
         $stmt->execute([$email]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);

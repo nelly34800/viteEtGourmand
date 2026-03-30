@@ -1,7 +1,3 @@
-// Nom du cookie contenant le token d'authentification (JWT ou autre)
-const tokenCookieName  = "accesstoken";
-// nom du rôle(admin, employe, client)
-const roleCookieName = "role";
 // Récupération du bouton de déconnexion
 const signoutBtn = document.getElementById("signout-btn");
 
@@ -15,69 +11,43 @@ if (signoutBtn) {
     signout();
   });
 }
-// Retourne le rôle stocké dans le cookie
-function getRole(){
-    return getCookie(roleCookieName);
+// Retourne le rôle 
+function getRole() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user ? user.role : null;
+}
+
+//vérifie si l'utilisateur est connecté
+function isConnected() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user !== null;
 }
 
 // Déconnecte l'utilisateur
-function signout(){
-    // Supprime le cookie du token
-    eraseCookie(tokenCookieName);
-    // Supprime le cookie du rôle
-    eraseCookie(roleCookieName);
-    // Recharge la page pour réinitialiser l'affichage
-    globalThis.location.reload();
-}
-// Stocke le token dans un cookie pour 7 jours
-function setToken (token){
-    setCookie(tokenCookieName, token, 7);
-}
-// Récupère le token depuis le cookie
-function getToken (){
-    return getCookie(tokenCookieName);
-}
-// Crée ou modifie un cookie
-function setCookie(name,value,days) {
-    let expires = "";
-      // Si une durée est définie
-    if (days) {
-        let date = new Date();
-        // Convertit les jours en millisecondes
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        // Formatage de la date d'expiration
-        expires = "; expires=" + date.toUTCString();
-    }
-    // Création du cookie sur tout le site
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-// Récupère la valeur d'un cookie à partir de son nom
-function getCookie(name) {
-    let nameEQ = name + "=";
-    // Sépare les cookies dans un tableau
-    let ca = document.cookie.split(';');
-    for(const element of ca) {
-        let c = element;
-             // Supprime les espaces au début
-        while (c.startsWith(' ')) c = c.substring(1,c.length);
-        // Si le cookie correspond au nom recherché
-        if (c.startsWith(nameEQ)) 
-            // Retourne uniquement la valeur
-            return c.substring(nameEQ.length,c.length);
-    }
-    // Retourne null si le cookie n'existe pas
-    return null;
-}
-// Supprime un cookie en définissant une date d'expiration passée
-function eraseCookie(name) {
-    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
-//vérifie si l'utilisateur est connecté
-function isConnected(){
-  // Retourne true si un token est présent, sinon false
-  return getToken() !== null;
-}
+async function signout() {
+  const csrfToken = localStorage.getItem('csrf_token');
 
+  try {
+    const response = await fetch('http://localhost:8082/logout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'X-CSRF-Token': csrfToken
+      }
+    });
+    if (!response.ok) {
+        console.error("Erreur logout");
+      }
+
+  } catch (error) {
+    console.error("Erreur fetch :", error);
+  }
+
+  localStorage.removeItem('user');
+  localStorage.removeItem('csrf_token');
+
+  window.location.reload();
+}
 
 //afficher et masquer les élément en fonction du role
 function showAndHideElementForRole(){
@@ -124,3 +94,5 @@ function showAndHideElementForRole(){
         }
     })
 }
+
+document.addEventListener('DOMContentLoaded', showAndHideElementForRole);

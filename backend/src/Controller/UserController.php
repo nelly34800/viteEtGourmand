@@ -10,12 +10,16 @@ use App\Helper\ValidatorHelper;
 use Database;
 use InvalidArgumentException;
 use RuntimeException;
+
 /**
  * Contrôleur responsable de la gestion des utilisateurs.
  */
 class UserController
 {
     private UserRepository $repository;
+
+    const ROLE_CUSTOMER = 'f6ba60ab-18c5-11f1-b696-160b8e3eadca';
+    const ROLE_EMPLOYEE = 'f6ba62ec-18c5-11f1-b696-160b8e3eadca';
 
     public function __construct()
     {
@@ -84,9 +88,10 @@ class UserController
         // Lecture du JSON envoyé
         $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if(!isset($data['last_name'], $data['first_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'], $data['id_role'])) {
+        if(!isset($data['last_name'], $data['first_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+        $id_role = self::ROLE_CUSTOMER;
         // Création de l'entité User à partir des données reçues
         $user = new User(
             '',
@@ -98,7 +103,7 @@ class UserController
             $data['city'],
             $data['postal_code'],
             $data['phone'],
-            $data['id_role']
+            $id_role
         );
         //  appel du repository pour l'enregistrer en base
         try {
@@ -111,28 +116,37 @@ class UserController
     /**
      * Met à jour un utilisateur.
      */
-    public function update(string $id): void
+    public function updateInfo(string $id): void
     {
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
+        // autorisation : un utilisateur ne peut modifier que son propre compte
+        if ($_SESSION['user']['id'] !== $id) {
+            ResponseHelper::json(['error' => 'Forbidden'], 403);
+            return;
+        }
         // Lecture du JSON
         $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if (!isset($data['first_name'], $data['last_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'], $data['id_role'])) {
+        if (!isset($data['first_name'], $data['last_name'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+        if (isset($data['id_role'])) {
+            throw new InvalidArgumentException('Role modification not allowed');
+        }
+        $existingUser = $this->repository->findById($id);
         // Création de l'entité utilisateur à partir des données reçues 
         $user = new User(
             $id,
             $data['last_name'],
             $data['first_name'],
-            $data['email'],
-            password_hash($data['password'], PASSWORD_DEFAULT),
+            $existingUser->getEmail(),
+            $existingUser->getPassword(),
             $data['postal_address'],
             $data['city'],
             $data['postal_code'],
             $data['phone'],
-            $data['id_role'],
+            $existingUser->getIdRole(),
             null, // roleName
         );
         // appel du repository pour mettre à jour en base
@@ -147,9 +161,58 @@ class UserController
     {
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
+        // récupérer le user à supprimer
+        $userToDelete = $this->repository->findById($id);
+
+        $currentUser = $_SESSION['user'];
+
+        // règle d'autorisation
+        $isOwner = $currentUser['id'] === $id;
+        $isAdminDeletingEmployee = (
+            $currentUser['role'] === 'admin' &&
+            $userToDelete->getRoleName() === 'employé'
+        );
+
+    if (!$isOwner && !$isAdminDeletingEmployee) {
+        ResponseHelper::json(['error' => 'Forbidden'], 403);
+        return;
+    }
         // Appel du repository pour supprimer l'utilisateur en base
         $this->repository->delete($id);
 
         ResponseHelper::json(['message' => 'Deleted']);
+    }
+    /**
+    * Crée un nouvel utilisateur.
+    */
+    public function createEmployee(): void
+    {
+        // Lecture du JSON envoyé
+        $data = RequestHelper::getJson();
+        // Validation des champs obligatoires
+        if(!isset($data['last_name'], $data['first_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'])) {
+            throw new InvalidArgumentException('Invalid input');
+        }
+        $id_role = self::ROLE_EMPLOYEE;
+        // Création de l'entité User à partir des données reçues
+        $user = new User(
+            '',
+            $data['last_name'],
+            $data['first_name'],
+            $data['email'],
+            password_hash($data['password'], PASSWORD_DEFAULT),
+            $data['postal_address'],
+            $data['city'],
+            $data['postal_code'],
+            $data['phone'],
+            $id_role
+        );
+        //  appel du repository pour l'enregistrer en base
+        try {
+            $this->repository->create($user);
+            ResponseHelper::json(['message' => 'Employee created'], 201);
+        } catch (\Exception $e) {
+            ResponseHelper::json(['error' => 'Error creating employee', 'details' => $e->getMessage()], 500);
+        }
     }
 }

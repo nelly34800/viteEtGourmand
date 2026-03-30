@@ -17,7 +17,7 @@ $router->post('/user', function() {
 $router->put('/user/{id}', function($id) {
     CsrfHelper::validate();
     AuthMiddleware::requireAuth();
-    (new UserController())->update($id);
+    (new UserController())->updateInfo($id);
 });
 
 $router->delete('/user/{id}', function($id) {
@@ -30,6 +30,12 @@ $allowedRoles = ['admin'];
 
 $router->get('/user', function() use ($allowedRoles) {
     CsrfHelper::validate();
-    AuthMiddleware::requireAuth();
+    AuthMiddleware::requireRole($allowedRoles);
     (new UserController())->index();
+});
+
+$router->post('/employee', function() use ($allowedRoles) {
+    CsrfHelper::validate();
+    AuthMiddleware::requireRole($allowedRoles);
+    (new UserController())->createEmployee();
 });

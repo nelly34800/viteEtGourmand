@@ -52,7 +52,12 @@ class AuthController
                 'role' => $user->getRoleName()
             ];
 
-            ResponseHelper::json(['message' => 'Login successful','csrf_token' => CsrfHelper::generate()]);
+            ResponseHelper::json(['message' => 'Login successful','csrf_token' => CsrfHelper::generate(),
+            'user' => [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRoleName()
+            ]]);
 
         } catch (RuntimeException $e) {
             ResponseHelper::json(['error' => 'Incorrect username or password'], 401);
