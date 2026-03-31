@@ -23,7 +23,13 @@ export const allRoutes = [
     new Route("/createEmployee", "Créer un compte employé", "/pages/admin/createEmployee.html", ["admin"], "/js/admin/createEmployee.js"),
     new Route("/employeesList", "liste des employés", "/pages/admin/employeesList.html", ["admin"], "/js/admin/employeesList.js"),
     // employé
-    new Route("/employee", "Espace employé", "/pages/employees/employee.html", ["admin", "employee"], "/js/employee/employee.js"),
+    new Route("/employee", "Espace employé", "/pages/employees/employee.html", ["admin", "employee"], "/js/employees/employee.js"),
+              // allergènes
+    new Route("/allergens", "Les allergènes", "/pages/employees/allergens/allergens.html", ["admin", "employee"], "/js/employees/allergens/allergens.js"),
+    new Route("/createAllergen", "Créer/modifier un allergène", "/pages/employees/allergens/createAllergen.html", ["admin", "employee"], "/js/employees/allergens/createAllergen.js"),
+              // régimes alimentaires
+    new Route("/diets", "Les régimes alimentaires", "/pages/employees/diets/diets.html", ["admin", "employee"], "/js/employees/diets/diets.js"),
+    new Route("/createDiet", "Créer/modifier un régime alimentaire", "/pages/employees/diets/createDiet.html", ["admin", "employee"], "/js/employees/diets/createDiet.js"),
 ];
 //Le titre s'affiche comme ceci : Route.titre - websitename
 export const websiteName = "Vite & Gourmand";

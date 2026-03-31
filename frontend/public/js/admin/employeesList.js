@@ -23,6 +23,7 @@ async function loadUsers() {
   //mobile
   const mobileContainer = document.getElementById('mobile-container');
   mobileContainer.innerHTML = '';
+  
   data.forEach(user => {
     //desktop: boucle pour afficher le tableau de tous les employées
     const tr = document.createElement('tr');
