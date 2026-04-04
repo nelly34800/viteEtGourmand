@@ -1,101 +1,111 @@
 async function loadUsers() {
-  const csrfToken = localStorage.getItem('csrf_token');
+  try {
   //appel la route get/user
-  const response = await fetch('http://localhost:8082/user', {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'X-CSRF-Token': csrfToken
-    }
-  });
+    const data = await secureFetch(
+      'http://localhost:8082/user', {
+      method: 'GET'},
+      ['admin']
+    );
+    //desktop: vide le tableau
+    const tbody = document.querySelector('tbody');
+    tbody.innerHTML = '';
 
-  //transforme JSON en objet JS
-  const data = await response.json();
+    //mobile
+    const mobileContainer = document.getElementById('mobile-container');
+    mobileContainer.innerHTML = '';
 
-    if (!response.ok) {
-    console.error(data);
-    return;
+    // boucle sur chaque employé
+    data.forEach(user => {
+      //desktop: création d'une ligne
+      const tr = document.createElement('tr');
+      //inject dans le DOM
+      // Nom
+      const tdtName = document.createElement("td");
+      tdtName.textContent = `${user.first_name} ${user.last_name}`;
+      tr.appendChild(tdtName);
+      // Email
+      const tdemail = document.createElement("td");
+      tdemail.textContent = user.email;
+      tr.appendChild(tdemail);
+      // Adresse
+      const tdaddress = document.createElement("td");
+      tdaddress.textContent = `${user.address} ${user.postal_address} ${user.postal_code} ${user.city}`;
+      tr.appendChild(tdaddress);
+      // Téléphone
+      const tdphone = document.createElement("td");
+      tdphone.textContent = user.phone;
+      tr.appendChild(tdphone);
+      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      const tdAction = document.createElement("td");
+      tdAction.appendChild(createActionButtons(schedule.id));
+      tr.appendChild(tdAction);
+
+      // ajout dans le DOM
+      tbody.appendChild(tr);
+
+      //mobile: boucle pour afficher les cartes de tous les employées
+      const card = document.createElement('div');
+      card.className = 'card mb-3';
+
+      const cardBody = document.createElement('div');
+      cardBody.className = 'card-body bgc-secondary text-center';
+      // nom
+      const cardTitle = document.createElement('h5');
+      cardTitle.textContent = `${user.first_name} ${user.last_name}`;
+      cardBody.appendChild(cardTitle);
+      // email
+      const cardEmail = document.createElement('p');
+      cardEmail.textContent = user.email;
+      cardBody.appendChild(cardEmail);
+      // adresse
+      const cardAddress = document.createElement('p');
+      cardAddress.textContent = `${user.address} ${user.postal_address} ${user.postal_code} ${user.city}`;
+      cardBody.appendChild(cardAddress);
+      // téléphone
+      const cardPhone = document.createElement('p');
+      cardPhone.textContent = user.phone;
+      cardBody.appendChild(cardPhone);
+      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      const cardAction = document.createElement("td");
+      cardBody.appendChild(createActionButtons(schedule.id));
+      card.appendChild(cardAction);
+
+      card.appendChild(cardBody);
+      mobileContainer.appendChild(card);
+    });
+   } catch (error) {
+      // affiche l'erreur si problème API
+      alert(error.message);
   }
-  //desktop
-  const tbody = document.querySelector('tbody');
-  tbody.innerHTML = '';
-
-  //mobile
-  const mobileContainer = document.getElementById('mobile-container');
-  mobileContainer.innerHTML = '';
-  
-  data.forEach(user => {
-    //desktop: boucle pour afficher le tableau de tous les employées
-    const tr = document.createElement('tr');
-    //inject dans le DOM
-    tr.innerHTML = `
-      <td>${user.first_name} ${user.last_name}</td>
-      <td>${user.email}</td>
-      <td>${user.postal_address} ${user.postal_code} ${user.city}</td>
-      <td>${user.phone}</td>
-      <td>
-        <button class="btn btn-danger deleteBtn" data-id="${user.id}" aria-label="Supprimer"><i class="bi bi-trash"></i></button>
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-
-    //mobile: boucle pour afficher les cartes de tous les employées
-    const card = document.createElement('div');
-    card.className = 'card mb-3';
-
-    card.innerHTML = `
-      <div class="card-body bgc-secondary text-center">
-        <h5>${user.first_name} ${user.last_name}</h5>
-        <p>${user.email}</p>
-        <p>${user.postal_address} ${user.postal_code} ${user.city}</p>
-        <p>${user.phone}</p>
-        <button class="btn btn-danger deleteBtn" data-id="${user.id}" aria-label="Supprimer"><i class="bi bi-trash"></i></button>
-      </div>
-    `;
-
-    mobileContainer.appendChild(card);
-  });
 }
 // se lance au chargement
 loadUsers();
 
 //supprimer l'employé
 document.addEventListener("click", async (e) => {
+  // vérifie si bouton supprimer
   if (!e.target.closest(".deleteBtn")) return;
 
   const button = e.target.closest(".deleteBtn");
+  // récupère l'id
   const userId = button.dataset.id;
-
-  if (!confirm("Êtes-vous sûr de vouloir supprimer cet employé ?")) {
-    return;
-  }
-  const csrfToken = localStorage.getItem('csrf_token');
+  // confirmation utilisateur
+  if (!confirm("Êtes-vous sûr de vouloir supprimer cet employé ?")) return;
 
   try {
-    const response = await fetch(`http://localhost:8082/user/${userId}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        'X-CSRF-Token': csrfToken
-      }
-    });
+    // appel API DELETE
+    await secureFetch(
+      `http://localhost:8082/user/${userId}`,
+       { method: 'DELETE', }
+    );
 
-    const data = await response.json();
+    // message succès
+    alert("Employé supprimé");
 
-    if (response.ok) {
-      alert("Employé supprimé");
-
-      // rafraîchit la liste
-      loadUsers();
-
-    } else {
-      //
-      button.closest('tr')?.remove();
-      button.closest('.card')?.remove();
-    }
+    // rafraîchit la liste
+    loadUsers();
 
   } catch (error) {
-    console.error(error);
+    alert(error.message);
   }
 });

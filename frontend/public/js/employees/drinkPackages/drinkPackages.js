@@ -1,28 +1,33 @@
-// fonction pour charger les allergènes
-async function loadAllergens() {
+// fonction pour charger les forfaits de boissons
+async function loadDrinksPackage() {
   try {
     // Appel sécurisé vers l'API (GET)
     const data = await secureFetch(
-      'http://localhost:8082/allergen',
+      'http://localhost:8082/drinkPackage',
       { method: 'GET' },
       ['employee', 'admin'] // seuls ces rôles peuvent accéder
     );
     // vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
-    // Boucle sur chaque allergène reçu
-    data.forEach(allergen => {
+    // Boucle sur chaque forfait de boissons reçu
+    data.forEach(drinkPackage => {
       // Création d'une ligne
       const tr = document.createElement('tr');
       //inject dans le DOM
       // Nom
       const tdName = document.createElement("td");
-      tdName.textContent = allergen.allergen_name;
+      tdName.textContent = drinkPackage.drink_package_name;
       tr.appendChild(tdName);
-      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      // Prix
+      const tdPrice = document.createElement("td");
+      tdPrice.textContent = `${drinkPackage.price_per_person}€`;
+      tr.appendChild(tdPrice);
+      // Actions
       const tdAction = document.createElement("td");
-      tdAction.appendChild(createActionButtons(allergen.id));
+      tdAction.appendChild(createActionButtons(drinkPackage.id));
       tr.appendChild(tdAction);
+
       // Ajout dans le DOM
       tbody.appendChild(tr);
     });
@@ -31,21 +36,21 @@ async function loadAllergens() {
       alert(error.message);
   }
 }
-loadAllergens();
+loadDrinksPackage();
 
-// modifier: aller sur la page createAllergen pour modifier l'allergène
+// modifier: aller sur la page createDrinkPackage pour modifier le forfait de boissons
 document.addEventListener("click", (e) => {
   // Vérifie si on a cliqué sur un bouton "modifier"
   if (e.target.closest(".editBtn")) {
     const button = e.target.closest(".editBtn");
-    // Récupère l'id de l'allergène
-    const allergenId = button.dataset.id;
+    // Récupère l'id du régime alimentaire
+    const drinkPackageId = button.dataset.id;
     // redirection avec id dans l'URL
-    window.location.href = `/createAllergen?id=${allergenId}`;
+    window.location.href = `/createDrinkPackage?id=${drinkPackageId}`;
   }
 });
 
-//supprimer l'allergène
+//supprimer le forfait de boisson
 document.addEventListener("click", async (e) => {
 
   // Vérifie si bouton supprimer
@@ -54,24 +59,24 @@ document.addEventListener("click", async (e) => {
   const button = e.target.closest(".deleteBtn");
 
   // Récupère l'id
-  const allergenId = button.dataset.id;
+  const drinkPackageId = button.dataset.id;
 
-  // Confirmation utilisateur
-  if (!confirm("Supprimer cet allergène ?")) return;
+  // Confirmation
+  if (!confirm("Supprimer ce forfait de boisson ?")) return;
 
   try {
     // Appel API DELETE
     await secureFetch(
-      `http://localhost:8082/allergen/${allergenId}`,
+      `http://localhost:8082/drinkPackage/${drinkPackageId}`,
       { method: 'DELETE' },
       ['employee', 'admin']
     );
 
     // Message succès
-    alert("Allergène supprimé");
+    alert("forfait de boisson supprimé avec succès");
 
     // Recharge la liste
-    loadAllergens();
+    loadDrinksPackage();
 
   } catch (error) {
     alert(error.message);

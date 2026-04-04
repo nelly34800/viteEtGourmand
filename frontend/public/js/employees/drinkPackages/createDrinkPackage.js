@@ -1,24 +1,29 @@
 //validation des données
 // Implémenter js de ma page
-const nameAllergen = document.getElementById("nameAllergen");
-const allergenValidation = document.getElementById("allergenValidation");
+const nameDrinkPackage = document.getElementById("nameDrinkPackage");
+const priceDrinkPackage = document.getElementById("priceDrinkPackage");
+const drinkPackageValidation = document.getElementById("drinkPackageValidation");
 const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
-const allergenId = params.get('id');
+const drinkPackageId = params.get('id');
+
 
 //écoute des événements
-nameAllergen.addEventListener("input", validateForm);
+[nameDrinkPackage, priceDrinkPackage].forEach(input => {
+  input.addEventListener("input", validateForm);
+});
 
 //fonction permettant de valider le formulaire
 function validateForm(){
-  const nameAllergenOk = validateRequired(nameAllergen);
+  const nameDrinkPackageOk = validateRequired(nameDrinkPackage);
+  const priceDrinkPackageOk = validateRequired(priceDrinkPackage);
 
-    if(nameAllergenOk){
-      allergenValidation.disabled = false;
+    if(nameDrinkPackageOk && priceDrinkPackageOk){
+      drinkPackageValidation.disabled = false;
       }
       else{
-      allergenValidation.disabled = true;
+      drinkPackageValidation.disabled = true;
       }
   }
 
@@ -43,41 +48,45 @@ function showMessage(message, type) {
   messageDiv.className = `alert alert-${type}`;
 }
 
-// Charger un allergène (modification)
-async function loadAllergen(id) {
+// Charger un forfait de boissons (modification)
+async function loadDrinkPackage(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/allergen/${id}`,
+      `http://localhost:8082/drinkPackage/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
 
-    nameAllergen.value = data.allergen_name;
+    nameDrinkPackage.value = data.drink_package_name;
+    priceDrinkPackage.value = data.price_per_person;
 
   } catch (error) {
     showMessage(error.message, "danger");
   }
 }
 // pré-rempli si edit
-if (allergenId) {
-  loadAllergen(allergenId);
+if (drinkPackageId) {
+  loadDrinkPackage(drinkPackageId);
 }
 
-// créer ou modifier en bdd l'allergène (submit)
+// créer ou modifier en bdd le forfait de boissons (submit)
 document.querySelector('form').addEventListener('submit', async (e) => {
   //empêche le rechargement
   e.preventDefault();
 
-  const name = nameAllergen.value;
+  const name = nameDrinkPackage.value;
+  const price = priceDrinkPackage.value;
   // envoie au backend 
   try {
     // vérifie si on a un id dans l'URL (si id = modification)
-    if (allergenId) {
+    if (drinkPackageId) {
       await secureFetch(
-        `http://localhost:8082/allergen/${allergenId}`,
+        `http://localhost:8082/drinkPackage/${drinkPackageId}`,
         {
           method: 'PUT',
-          body: JSON.stringify({ allergen_name: name })
+          body: JSON.stringify({ 
+            drink_package_name: name ,
+            price_per_person: price })
         },
         ['employee', 'admin']
       );
@@ -86,16 +95,18 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     showMessage("Modification réussie ! Vous allez être redirigé", "success");
     // redirection après 2 secondes
     setTimeout(() => {
-      window.location.href = '/allergens';
+      window.location.href = '/drinkPackages';
     }, 2000);
   
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/allergen`,
+        `http://localhost:8082/drinkPackage`,
         {
           method: 'POST',
-          body: JSON.stringify({ allergen_name: name })
+          body: JSON.stringify({ 
+            drink_package_name: name ,
+            price_per_person: price })
         },
         ['employee', 'admin']
       );
@@ -104,7 +115,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
       showMessage("Création réussie ! Vous allez être redirigé", "success");
       // redirection après 2 secondes
       setTimeout(() => {
-        window.location.href = '/allergens';
+        window.location.href = '/drinkPackages';
       }, 2000);
     }
   } catch (error) {

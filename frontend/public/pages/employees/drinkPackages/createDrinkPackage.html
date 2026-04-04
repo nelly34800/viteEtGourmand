@@ -1,0 +1,21 @@
+<div class="container p-4">
+  <h1>Créer/modifier un forfait de boissons</h1>
+  <form action="">
+    <div class="mb-3">
+      <label class="form-label" for="nameDrinkPackage">Nom du forfait de boisson : </label>
+      <input class="form-control" type="text" name="nameDrinkPackage" id="nameDrinkPackage">
+      <div class="invalid-feedback">
+          Le nom du forfait de boisson est requis
+      </div>
+    </div>
+        <div class="mb-3">
+      <label class="form-label" for="priceDrinkPackage">Prix du forfait de boisson : </label>
+      <input class="form-control" type="int" name="priceDrinkPackage" id="priceDrinkPackage">
+      <div class="invalid-feedback">
+          Le prix du forfait de boisson est requis
+      </div>
+    </div>
+    <div id="creat-message" class="alert d-none"></div>
+    <input type="submit" class="btn btn-primary" value="Créer le forfait de boisson" id="drinkPackageValidation">
+  </form>
+</div>

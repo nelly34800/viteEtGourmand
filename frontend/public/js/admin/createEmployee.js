@@ -1,3 +1,4 @@
+//validation des données
 // Implémenter js de ma page
 const lastName = document.getElementById("lastName");
 const firstName = document.getElementById("firstName");
@@ -9,17 +10,15 @@ const postalCode = document.getElementById("postalCode");
 const city = document.getElementById("city");
 const phone = document.getElementById("phone");
 const btnValidation = document.getElementById("validation-inscription");
+const messageDiv = document.getElementById('creat-message');
+
+const params = new URLSearchParams(window.location.search);
+const userId = params.get('id');
 
 //écoute des événements
-lastName.addEventListener("keyup", validateForm);
-firstName.addEventListener("keyup", validateForm);
-email.addEventListener("keyup", validateForm);
-password.addEventListener("keyup", validateForm);
-confirmPassword.addEventListener("keyup", validateForm);
-address.addEventListener("keyup", validateForm);
-postalCode.addEventListener("keyup", validateForm);
-city.addEventListener("keyup", validateForm);
-phone.addEventListener("keyup", validateForm);
+[lastName, firstName, email, password, confirmPassword, address, postalCode, city, phone].forEach(input => {
+  input.addEventListener("input", validateForm);
+});
 
 //fonction permettant de valider le formulaire
 function validateForm(){
@@ -106,63 +105,52 @@ function validateRequired(input){
     }
 }
 
+// Affichage message
+function showMessage(message, type) {
+  messageDiv.textContent = message;
+  messageDiv.className = `alert alert-${type}`;
+}
+
 // créer en bdd l'employé
 document.querySelector('form').addEventListener('submit', async (e) => {
   //empêche le rechargement
   e.preventDefault();
   //récupère l'utilisateur (valeurs des inputs) par son id
-  const lastName = document.getElementById('lastName').value;
-  const firstName = document.getElementById('firstName').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const address = document.getElementById('address').value;
-  const postalCode = document.getElementById('postalCode').value;
-  const city = document.getElementById('city').value;
-  const phone = document.getElementById('phone').value;
+  const lastNameValue = lastName.value;
+  const firstNameValue = firstName.value;
+  const emailValue = email.value;
+  const passwordValue = password.value;
+  const addressValue = address.value;
+  const postalCodeValue = postalCode.value;
+  const cityValue = city.value;
+  const phoneValue = phone.value;
 
   // envoie au backend pour l'entrer dans la bdd
   try {
-    const response = await fetch('http://localhost:8082/employee', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': localStorage.getItem('csrf_token')
-      },
-      body: JSON.stringify({
-        last_name: lastName,
-        first_name: firstName,
-        email: email,
-        password: password,
-        postal_address: address,
-        city: city,
-        postal_code: postalCode,
-        phone: phone
-      })
-    });
+    await secureFetch(
+      'http://localhost:8082/employee', 
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          last_name: lastNameValue,
+          first_name: firstNameValue,
+          email: emailValue,
+          password: passwordValue,
+          postal_address: addressValue,
+          city: cityValue,
+          postal_code: postalCodeValue,
+          phone: phoneValue})
+        },
+        ['admin']
+      );
 
-    const data = await response.json();
-
-    const messageDiv = document.getElementById('creat-message');
-
-    if (response.ok) {
       // afficher le message
-      messageDiv.textContent = "Création réussie ! Vous allez être redirigé sur la page administrateur";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-success");
-
-      // redirection après 3 secondes
+      showMessage("Création réussie ! Vous allez être redirigé", "success");
+      // redirection après 2 secondes
       setTimeout(() => {
-        window.location.href = '/admin';
-      }, 3000);
-    } else {
-      // message d'erreur
-      messageDiv.textContent = data.error || "Une erreur est survenue";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-danger");
-    }
-
+        window.location.href = '/employeesList';
+      }, 2000);
   } catch (error) {
     console.error("Erreur fetch :", error);
   }
-});
+  });

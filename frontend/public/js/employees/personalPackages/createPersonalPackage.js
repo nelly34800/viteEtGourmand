@@ -1,24 +1,30 @@
 //validation des données
 // Implémenter js de ma page
-const nameAllergen = document.getElementById("nameAllergen");
-const allergenValidation = document.getElementById("allergenValidation");
+const eventType = document.getElementById("eventType");
+const staffRatio = document.getElementById("staffRatio");
+const packagePrice = document.getElementById("packagePrice");
+const personalPackageValidation = document.getElementById("personalPackageValidation");
 const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
-const allergenId = params.get('id');
+const personalPackageId = params.get('id');
 
 //écoute des événements
-nameAllergen.addEventListener("input", validateForm);
+[eventType, staffRatio, packagePrice].forEach(input => {
+  input.addEventListener("input", validateForm);
+});
 
 //fonction permettant de valider le formulaire
 function validateForm(){
-  const nameAllergenOk = validateRequired(nameAllergen);
+  const eventTypeOk = validateRequired(eventType);
+  const staffRatioOk = validateRequired(staffRatio);
+  const packagePriceOk = validateRequired(packagePrice);
 
-    if(nameAllergenOk){
-      allergenValidation.disabled = false;
+    if(eventTypeOk && staffRatioOk && packagePriceOk){
+      personalPackageValidation.disabled = false;
       }
       else{
-      allergenValidation.disabled = true;
+      personalPackageValidation.disabled = true;
       }
   }
 
@@ -43,41 +49,48 @@ function showMessage(message, type) {
   messageDiv.className = `alert alert-${type}`;
 }
 
-// Charger un allergène (modification)
-async function loadAllergen(id) {
+// Charger un forfait de personnel (modification)
+async function loadPersonalPackage(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/allergen/${id}`,
+      `http://localhost:8082/personalPackage/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
 
-    nameAllergen.value = data.allergen_name;
+    eventType.value = data.event_type;
+    staffRatio.value = data.staff_ratio;
+    packagePrice.value = data.package_price;
 
   } catch (error) {
     showMessage(error.message, "danger");
   }
 }
 // pré-rempli si edit
-if (allergenId) {
-  loadAllergen(allergenId);
+if (personalPackageId) {
+  loadPersonalPackage(personalPackageId);
 }
 
-// créer ou modifier en bdd l'allergène (submit)
+// créer ou modifier en bdd le forfait de personnel (submit)
 document.querySelector('form').addEventListener('submit', async (e) => {
   //empêche le rechargement
   e.preventDefault();
 
-  const name = nameAllergen.value;
+  const event = eventType.value;
+  const ratio = staffRatio.value;
+  const package = packagePrice.value;
   // envoie au backend 
   try {
     // vérifie si on a un id dans l'URL (si id = modification)
-    if (allergenId) {
+    if (personalPackageId) {
       await secureFetch(
-        `http://localhost:8082/allergen/${allergenId}`,
+        `http://localhost:8082/personalPackage/${personalPackageId}`,
         {
           method: 'PUT',
-          body: JSON.stringify({ allergen_name: name })
+          body: JSON.stringify({
+            event_type: event ,
+            staff_ratio: ratio ,
+            package_price: package })
         },
         ['employee', 'admin']
       );
@@ -86,16 +99,19 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     showMessage("Modification réussie ! Vous allez être redirigé", "success");
     // redirection après 2 secondes
     setTimeout(() => {
-      window.location.href = '/allergens';
+      window.location.href = '/personalPackages';
     }, 2000);
   
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/allergen`,
+        `http://localhost:8082/personalPackage`,
         {
           method: 'POST',
-          body: JSON.stringify({ allergen_name: name })
+          body: JSON.stringify({
+            event_type: event ,
+            staff_ratio: ratio ,
+            package_price: package })
         },
         ['employee', 'admin']
       );
@@ -104,7 +120,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
       showMessage("Création réussie ! Vous allez être redirigé", "success");
       // redirection après 2 secondes
       setTimeout(() => {
-        window.location.href = '/allergens';
+        window.location.href = '/personalPackages';
       }, 2000);
     }
   } catch (error) {

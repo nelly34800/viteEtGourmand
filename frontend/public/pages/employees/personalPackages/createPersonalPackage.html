@@ -1,0 +1,28 @@
+<div class="container p-4">
+  <h1>Créer/modifier un forfait de personnel</h1>
+  <form action="">
+    <div class="mb-3">
+      <label class="form-label" for="eventType">type d'évènment : </label>
+      <input class="form-control" type="text" name="eventType" id="eventType">
+      <div class="invalid-feedback">
+          Le type d'évènment est requis
+      </div>
+    </div>
+        <div class="mb-3">
+      <label class="form-label" for="staffRatio">ratio personnel/nombre d'invités : </label>
+      <input class="form-control" type="int" name="staffRatio" id="staffRatio">
+      <div class="invalid-feedback">
+          Le type d'évènment est requis
+      </div>
+    </div>
+        <div class="mb-3">
+      <label class="form-label" for="packagePrice">prix unitaire du forfait:  </label>
+      <input class="form-control" type="int" name="packagePrice" id="packagePrice">
+      <div class="invalid-feedback">
+          Le prix est requis
+      </div>
+    </div>
+    <div id="creat-message" class="alert d-none"></div>
+    <input type="submit" class="btn btn-primary " value="Créer le forfait de personnel" id="personalPackageValidation">
+  </form>
+</div>

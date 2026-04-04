@@ -52,3 +52,31 @@ async function secureFetch(url, options = {}, allowedRoles = []) {//prend en par
     throw error;
   }
 }
+// fonction pour les boutons d'action (modifier/supprimer: évite répétition)
+function createActionButtons(id) {
+  const container = document.createElement("div");
+
+  const editBtn = document.createElement("button");
+  editBtn.className = "btn btn-secondary editBtn m-1";
+  editBtn.dataset.id = id;
+  editBtn.textContent = "modifier";
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "btn btn-danger deleteBtn m-1";
+  deleteBtn.dataset.id = id;
+
+  const icon = document.createElement("i");
+  icon.className = "bi bi-trash";
+  deleteBtn.appendChild(icon);
+
+  container.appendChild(editBtn);
+  container.appendChild(deleteBtn);
+
+  return container;
+}
+
+//formatage des horaires
+const formatTime = (time) => {
+  const [hours, minutes] = time.split(":");
+  return `${hours}h${minutes}`;
+};

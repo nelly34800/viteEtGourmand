@@ -9,7 +9,7 @@ const dietId = params.get('id');
 
 
 //écoute des événements
-nameDiet.addEventListener("keyup", validateForm);
+nameDiet.addEventListener("input", validateForm);
 
 //fonction permettant de valider le formulaire
 function validateForm(){
@@ -85,10 +85,10 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     // afficher le message
     showMessage("Modification réussie ! Vous allez être redirigé", "success");
-    // redirection après 3 secondes
+    // redirection après 2 secondes
     setTimeout(() => {
       window.location.href = '/diets';
-    }, 3000);
+    }, 2000);
   
     } else {
       // sinon pas d'id = création
@@ -103,10 +103,10 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
       // afficher le message
       showMessage("Création réussie ! Vous allez être redirigé", "success");
-      // redirection après 3 secondes
+      // redirection après 2 secondes
       setTimeout(() => {
         window.location.href = '/diets';
-      }, 3000);
+      }, 2000);
     }
   } catch (error) {
       // message d'erreur

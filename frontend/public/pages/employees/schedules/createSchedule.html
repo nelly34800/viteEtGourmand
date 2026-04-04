@@ -1,0 +1,42 @@
+<div class="container p-4">
+  <h1>Créer/modifier un horaire</h1>
+  <form action="">
+    <div class="mb-3">
+      <label class="form-label" for="nameSchedule">Nom de l'horaire: </label>
+      <input class="form-control" type="text" name="nameSchedule" id="nameSchedule">
+      <div class="invalid-feedback">
+          Le nom de l'horaire est requis
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="firstDay">Jour d'ouverture : </label>
+      <input class="form-control" type="text" name="firstDay" id="firstDay">
+      <div class="invalid-feedback">
+        Le jour d'ouverture est requis
+      </div>
+    </div>
+   <div class="mb-3">
+      <label class="form-label" for="lastDay">Jour de fermeture : </label>
+      <input class="form-control" type="text" name="lastDay" id="lastDay">
+      <div class="invalid-feedback">
+        Le jour de fermeture est requis
+      </div>
+    </div>
+       <div class="mb-3">
+      <label class="form-label" for="openingTime">Heure d'ouverture </label>
+      <input class="form-control" type="text" name="openingTime" id="openingTime">
+      <div class="invalid-feedback">
+        L'heure d'ouverture est requis
+      </div>
+    </div>
+       <div class="mb-3">
+      <label class="form-label" for="closingTime">heure de fermeture : </label>
+      <input class="form-control" type="text" name="closingTime" id="closingTime">
+      <div class="invalid-feedback">
+        L'heure de fermeture est requis
+      </div>
+    </div>
+      <div id="creat-message" class="alert d-none"></div>
+      <input type="submit" class="btn btn-primary " value="Créer l'horaire" id="scheduleValidation">
+  </form>
+</div>

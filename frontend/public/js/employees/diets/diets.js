@@ -15,13 +15,14 @@ async function loadDiets() {
       // Création d'une ligne
       const tr = document.createElement('tr');
       //inject dans le DOM
-      tr.innerHTML = `
-        <td>${diet.diet_name}</td>
-        <td>
-          <button class="btn btn-secondary editBtn m-1" data-id="${diet.id}">modifier</button>
-          <button class="btn btn-danger deleteBtn m-1" data-id="${diet.id}" aria-label="Supprimer"><i class="bi bi-trash"></i></button>
-        </td>
-      `;
+      // Nom
+      const tdName = document.createElement("td");
+      tdName.textContent = diet.diet_name;
+      tr.appendChild(tdName);
+      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      const tdAction = document.createElement("td");
+      tdAction.appendChild(createActionButtons(diet.id));
+      tr.appendChild(tdAction);
       // Ajout dans le DOM
       tbody.appendChild(tr);
     });
