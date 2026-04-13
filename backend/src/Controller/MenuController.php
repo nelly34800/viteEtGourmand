@@ -68,8 +68,8 @@ class MenuController
             'minimum_people' => $menu->getMinimumPeople(),
             'price_per_person' => $menu->getPricePerPerson(),
             'remaining_quantity' => $menu->getRemainingQuantity(),
-            'dish_id' => $menu->getDishes(),
-            'condition_id' => $menu->getConditions(),
+            'dishes' => $menu->getDishes(),
+            'conditions' => $menu->getConditions(),
         ]);
         ResponseHelper::json($response);
 
@@ -84,6 +84,8 @@ class MenuController
     {
         // Lecture du JSON envoyé
         $data = RequestHelper::getJson();
+        ValidatorHelper::validateUuidArray($data['dish_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['condition_id'] ?? []);
         // Validation des champs obligatoires
         if(!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');
@@ -119,6 +121,8 @@ class MenuController
         ValidatorHelper::validateUuid($id);
         // Lecture du JSON
         $data = RequestHelper::getJson();
+        ValidatorHelper::validateUuidArray($data['dish_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['condition_id'] ?? []);
         // Validation des champs obligatoires
         if (!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');

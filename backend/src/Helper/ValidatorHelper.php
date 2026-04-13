@@ -4,6 +4,7 @@ namespace App\Helper;
 
 class ValidatorHelper
 {
+    // Valide si bien UUID
     public static function validateUuid(string $id): void
     {
         if (!preg_match(
@@ -11,6 +12,20 @@ class ValidatorHelper
             $id
         )) {
             throw new \InvalidArgumentException("Invalid UUID format");
+        }
+    }
+    // Valide un tableau d'UUID
+    public static function validateUuidArray(array $ids): void
+{
+    foreach ($ids as $id) {
+        self::validateUuid($id);
+    }
+}
+    // Valide le format de l'image
+    public static function validatePicture(string $filename): void
+    {
+        if (!preg_match('/\.(jpg|jpeg|png|webp)$/i', $filename)) {
+            throw new \InvalidArgumentException("Invalid image format");
         }
     }
 }

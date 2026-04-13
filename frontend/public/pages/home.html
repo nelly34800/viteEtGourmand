@@ -48,8 +48,26 @@
     </article>
     <article class="bgc-primary secondary">
         <div class="container p-4">
-            <h2 class="text-center">Ce sont nos clients qui en parlent le mieux</h2>
-            <div class="row row-cols-1 row-cols-lg-3" id="allNotices"></div>
+          <h2 class="text-center">Ce sont nos clients qui en parlent le mieux</h2>
+          <div class="carousel-wrapper d-flex flex-column align-items-center">
+            <button class="custom-control-prev bgc-primary mb-3" data-bs-target="#carouselNotices" data-bs-slide="prev">
+              <i class="bi bi-caret-up-fill note"></i>
+            </button>
+            <div id="carouselNotices" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner" id="carouselContent">
+                <!-- Injecté en JS -->
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselNotices" data-bs-slide="prev">
+                <i class="bi bi-caret-left-fill note"></i>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselNotices" data-bs-slide="next">
+                <i class="bi bi-caret-right-fill note"></i>
+              </button>
+            </div>
+            <button class="custom-control-next bgc-primary" data-bs-target="#carouselNotices" data-bs-slide="next">
+              <i class="bi bi-caret-down-fill note"></i>
+            </button>
+          </div>
         </div>
     </article>
 </section>

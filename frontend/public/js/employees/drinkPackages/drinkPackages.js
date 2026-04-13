@@ -1,12 +1,8 @@
 // fonction pour charger les forfaits de boissons
 async function loadDrinksPackage() {
   try {
-    // Appel sécurisé vers l'API (GET)
-    const data = await secureFetch(
-      'http://localhost:8082/drinkPackage',
-      { method: 'GET' },
-      ['employee', 'admin'] // seuls ces rôles peuvent accéder
-    );
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    const data = await getDrinkPackages();
     // vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';

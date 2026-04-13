@@ -1,12 +1,8 @@
 // fonction pour charger les allergènes
 async function loadAllergens() {
   try {
-    // Appel sécurisé vers l'API (GET)
-    const data = await secureFetch(
-      'http://localhost:8082/allergen',
-      { method: 'GET' },
-      ['employee', 'admin'] // seuls ces rôles peuvent accéder
-    );
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    const data = await getAllergens();
     // vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
@@ -68,11 +64,11 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("Allergène supprimé");
+    alert("Allergène supprimé avec succès");
 
     // Recharge la liste
     loadAllergens();
-
+ 
   } catch (error) {
     alert(error.message);
   }

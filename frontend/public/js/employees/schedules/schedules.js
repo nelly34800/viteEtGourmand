@@ -1,12 +1,8 @@
 // fonction pour charger les horaires
 async function loadSchedules() {
   try {
-    // appel sécurisé vers l'API (GET)
-    const data = await secureFetch(
-      'http://localhost:8082/schedule',
-      { method: 'GET' },
-      ['employee', 'admin'] // seuls ces rôles peuvent accéder
-    );
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    const data = await getSchedules();
     // dekstop: vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
@@ -55,7 +51,7 @@ async function loadSchedules() {
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body bgc-secondary text-center';
       // Titre
-      const title = document.createElement('h5');
+      const title = document.createElement('h2');
       title.textContent = schedule.schedule_name;
       cardBody.appendChild(title);
       // Jours
@@ -118,7 +114,7 @@ document.addEventListener("click", async (e) => {
     );
 
     // message succès
-    alert("Horaire supprimé");
+    alert("Horaire supprimé avec succès");
 
     // recharge la liste
     loadSchedules();

@@ -1,12 +1,8 @@
 // fonction pour charger les régimes alimentaires
 async function loadDiets() {
   try {
-    // Appel sécurisé vers l'API (GET)
-    const data = await secureFetch(
-      'http://localhost:8082/diet',
-      { method: 'GET' },
-      ['employee', 'admin'] // seuls ces rôles peuvent accéder
-    );
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    const data = await getDiets();
     // vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
@@ -68,7 +64,7 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("Régime alimentaire supprimé");
+    alert("Régime alimentaire supprimé avec succès");
 
     // Recharge la liste
     loadDiets();

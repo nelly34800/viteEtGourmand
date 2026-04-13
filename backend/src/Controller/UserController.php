@@ -18,8 +18,8 @@ class UserController
 {
     private UserRepository $repository;
 
-    const ROLE_CUSTOMER = 'f6ba60ab-18c5-11f1-b696-160b8e3eadca';
-    const ROLE_EMPLOYEE = 'f6ba62ec-18c5-11f1-b696-160b8e3eadca';
+    const ROLE_CUSTOMER = 'ca128af3-3772-11f1-a865-8e079ea62154';
+    const ROLE_EMPLOYEE = 'ca128e57-3772-11f1-a865-8e079ea62154';
 
     public function __construct()
     {
@@ -193,6 +193,7 @@ class UserController
         if(!isset($data['last_name'], $data['first_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+        // autorisation : seul un admin peut créer un employé
         $id_role = self::ROLE_EMPLOYEE;
         // Création de l'entité User à partir des données reçues
         $user = new User(

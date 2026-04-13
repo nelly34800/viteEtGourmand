@@ -39,7 +39,8 @@ class MaterialController
                 'material_name' => $material->getMaterialName(),
                 'quantity_available' => $material->getQuantityAvailable(),
                 'price' => $material->getPrice(),
-                'id_material_category' => $material->getIdMaterialCategory()
+                'id_material_category' => $material->getIdMaterialCategory(),
+                'material_category_name' => $material->getMaterialCategoryName()
             ];
         }, $materials);
 
@@ -65,7 +66,8 @@ class MaterialController
                 'material_name' => $material->getMaterialName(),
                 'quantity_available' => $material->getQuantityAvailable(),
                 'price' => $material->getPrice(),
-                'id_material_category' => $material->getIdMaterialCategory()
+                'id_material_category' => $material->getIdMaterialCategory(),
+                'material_category_name' => $material->getMaterialCategoryName()
             ]);
             ResponseHelper::json($response);
     }
@@ -74,8 +76,8 @@ class MaterialController
      */
 public function store(): void
 {
-
     $data = RequestHelper::getJson();
+    ValidatorHelper::validateUuid($data['id_material_category']);
     // Validation des champs obligatoires
     if(!isset($data['material_name'], $data['quantity_available'], $data['price'], $data['id_material_category'])) {
         throw new InvalidArgumentException('Invalid input');
@@ -87,6 +89,7 @@ public function store(): void
         $data['quantity_available'],
         $data['price'],
         $data['id_material_category'],
+        null, //material_category_name
     );
         //  appel du repository pour l'enregistrer en base
         try {
@@ -107,6 +110,7 @@ public function store(): void
         ValidatorHelper::validateUuid($id);
         // Lecture du JSON
         $data = RequestHelper::getJson();
+        ValidatorHelper::validateUuid($data['id_material_category']);
         // Validation des champs obligatoires
         if(!isset($data['material_name'], $data['quantity_available'], $data['price'], $data['id_material_category'])) {
             throw new InvalidArgumentException('Invalid input');

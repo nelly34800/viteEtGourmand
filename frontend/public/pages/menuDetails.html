@@ -2,17 +2,23 @@
   <h1>Menu classique Gourmand</h1>
   <p>Description : Un menu équilibré et généreux, mettant à l’honneur des recettes traditionnelles revisitées, 
       adaptées à tous vos événements tout au long de l’année.</p>
-
-  <div id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner" id="carouselInner"></div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#menuCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#menuCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-      </button>
+  <div class="carousel-wrapper d-flex flex-column align-items-center">
+    <button class="custom-control-prev bgc-primary mb-3" data-bs-target="#menuCarousel" data-bs-slide="prev">
+      <i class="bi bi-caret-up-fill note"></i>
+    </button>
+    <button class="carousel-control-prev" data-bs-target="#menuCarousel" data-bs-slide="prev">
+      <i class="bi bi-caret-left-fill bgc-primary"></i>
+    </button>
+    <div id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner" id="carouselInner"></div>
+    </div>
+    <button class="carousel-control-next" data-bs-target="#menuCarousel" data-bs-slide="next">
+      <i class="bi bi-caret-right-fill bgc-primary"></i>
+    </button>
+    <button class="custom-control-next bgc-primary mt-3" data-bs-target="#menuCarousel" data-bs-slide="next">
+      <i class="bi bi-caret-down-fill note"></i>
+    </button>
   </div>
-
   <section class="text-start">
     <h2>Entrées</h2>
     <dl>

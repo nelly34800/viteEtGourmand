@@ -17,6 +17,8 @@ class NoticeController
 {
     private NoticeRepository $repository;
 
+    const CREATION_STATUS ='en attente';
+
     public function __construct()
     {
       // Récupération de la connexion PDO et initialisation du repository
@@ -80,16 +82,17 @@ class NoticeController
         // Lecture du JSON envoyé
         $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if(!isset($data['note'], $data['description'], $data['signature'], $data['status'], $data['date'], $data['id_order'])) {
+        if(!isset($data['note'], $data['description'], $data['signature'], $data['date'], $data['id_order'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+        $status = self::CREATION_STATUS;
         // Création de l'entité notice à partir des données reçues
         $notice = new Notice(
             '',
             $data['note'],
             $data['description'],
             $data['signature'],
-            $data['status'],
+            $status,
             new \DateTimeImmutable($data['date']),
             $data['id_order']
         );
@@ -141,4 +144,28 @@ class NoticeController
 
         ResponseHelper::json(['message' => 'Deleted']);
     }
+     /**
+     * Liste tous les avis validés.
+     */
+    public function indexValidate(): void
+    {
+        // Appel du repository pour récupérer tous les avis validés et affichage au format JSON
+        $notices = $this->repository->findAllNoticeValidate();
+
+        $response = array_map(function(Notice $notice) {
+          // Transformation en array pour JSON (hydratation inverse)
+            return [
+                'id' => $notice->getId(),
+                'note' => $notice->getNote(),
+                'description' => $notice->getDescription(),
+                'signature' => $notice->getSignature(),
+                'status' => $notice->getStatus(),
+                'date' => $notice->getDate()->format('Y-m-d'),
+                'id_order' => $notice->getIdOrder(),
+            ];
+        }, $notices);
+
+        ResponseHelper::json($response);
+    }
 }
+

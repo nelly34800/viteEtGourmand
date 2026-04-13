@@ -69,16 +69,16 @@ CREATE TABLE dish(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_category_dish`) VALUES
-('Velouté de potimarron', 'Velouté onctueux de potimarron rôti, relevé d’une pointe de crème et parsemé de noisettes torréfiées.', 'velouté_potimarron_noisette.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
+('Velouté de potimarron', 'Velouté onctueux de potimarron rôti, relevé d’une pointe de crème et parsemé de noisettes torréfiées.', 'veloute_potimarron_noisette.jpeg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
 ('Salade de chèvre chaud sur toast', 'Jeunes pousses, toasts croustillants au chèvre fondant, vinaigrette maison au miel.', 'salade_chevre.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
 ('Houmous de pois chiches et légumes croquants', 'Purée de pois chiches au sésame, citron et huile d’olive, accompagnée de légumes frais.', 'Houmous_legume.jpg', (SELECT id FROM category_dish WHERE category_name = 'Entrées')),
-('Suprême de volaille fermière, sauce forestière', 'Suprême de volaille rôtie, sauce crémeuse aux champignons, gratin dauphinois maison.', 'Supreme_volaille.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
+('Suprême de volaille fermière, sauce forestière', 'Suprême de volaille rôtie, sauce crémeuse aux champignons, gratin dauphinois maison.', 'Supreme_volaille.jpeg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
 ('Gambas flambées au pastis, riz basmati parfumé', 'Gambas sautées et flambées au pastis, servies avec un riz basmati délicatement parfumé.', 'gambas.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
 ('Curry de légumes de saison au lait de coco', 'Mélange de légumes frais mijotés dans un curry doux au lait de coco.', 'curry.jpg', (SELECT id FROM category_dish WHERE category_name = 'Plats principaux')),
-('Plateau de fromages affinés', 'Sélection de fromages régionaux affinés.', 'assiette_fromage.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
-('Alternative végétale aux noix de cajou', 'Préparation végétale crémeuse à base de noix de cajou.', 'preparation_vegetale.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
+('Plateau de fromages affinés', 'Sélection de fromages régionaux affinés.', 'assiette_fromage.jpeg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
+('Alternative végétale aux noix de cajou', 'Préparation végétale crémeuse à base de noix de cajou.', 'preparation_fromagere.jpg', (SELECT id FROM category_dish WHERE category_name = 'Fromages')),
 ('Tarte fine aux pommes caramélisées', 'Pommes fondantes caramélisées sur pâte croustillante.', 'tarte.jpg', (SELECT id FROM category_dish WHERE category_name = 'Desserts')),
-('Brownie végan au chocolat', 'Brownie fondant au chocolat noir, sans ingrédient d’origine animale.', 'brownie_vegan.jpg', (SELECT id FROM category_dish WHERE category_name = 'Desserts'));
+('Brownie végan au chocolat', 'Brownie fondant au chocolat noir, sans ingrédient d’origine animale.', 'brownie_vegan.png', (SELECT id FROM category_dish WHERE category_name = 'Desserts'));
 
 CREATE TABLE menu(
    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
@@ -194,9 +194,9 @@ CREATE TABLE user(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_address`, `city`, `postal_code`, `phone`, `id_role`) VALUES
-('Test', 'Mathieu', 'mathieu@test.com', 'Test12345!', '123 Rue de la Paix', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'client')),
-('Test', 'Marie', 'marie@test.com', 'Test12345!', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
-('Test', 'Elise', 'elise@test.com', 'Test12345!', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
+('Test', 'Mathieu', 'mathieu@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '123 Rue de la Paix', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'client')),
+('Test', 'Marie', 'marie@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
+('Test', 'Elise', 'elise@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
 ('Admin', 'José', 'jose.admin@test.com', '$2y$10$GxFGCM7acUe9BrMooaIxXeiAhLy10UuuS9KuGGdBQe/ATMaQTHtWu', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
 
 CREATE TABLE orders(
@@ -226,7 +226,7 @@ CREATE TABLE notice(
    note INT NOT NULL,
    description TEXT NOT NULL,
    signature VARCHAR(50) NOT NULL,
-   status VARCHAR(50) NOT NULL,
+   status  enum('en attente', 'validé') NOT NULL DEFAULT 'en attente',
    date DATE NOT NULL,
    id_order CHAR(36) NOT NULL,
    FOREIGN KEY(id_order) REFERENCES orders(id)
@@ -234,9 +234,9 @@ CREATE TABLE notice(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 insert into notice (note, description, signature, status, date, id_order) values
-  (5, 'Mon mariage s’est très bien passé grâce au sérieux de l’équipe.', 'Mathieu33', 'Validé', '2026-01-15', (SELECT id FROM orders WHERE order_date = '2026-01-15')),
-  (4, 'Traiteur très sérieux.', 'RobinDesBois', 'Validé', '2026-01-16', (SELECT id FROM orders WHERE order_date = '2026-01-16')),
-  (5, 'Merci encore pour la qualité et la présentation. Merci à Julie, José et toute la team.', 'EliseB', 'Validé', '2026-01-17', (SELECT id FROM orders WHERE order_date = '2026-01-17'));
+  (5, 'Mon mariage s’est très bien passé grâce au sérieux de l’équipe.', 'Mathieu33', 'validé', '2026-01-15', (SELECT id FROM orders WHERE order_date = '2026-01-15')),
+  (4, 'Traiteur très sérieux.', 'RobinDesBois', 'en attente', '2026-01-16', (SELECT id FROM orders WHERE order_date = '2026-01-16')),
+  (5, 'Merci encore pour la qualité et la présentation. Merci à Julie, José et toute la team.', 'EliseB', 'validé', '2026-01-17', (SELECT id FROM orders WHERE order_date = '2026-01-17'));
 
 CREATE TABLE order_material(
    id_order CHAR(36) NOT NULL,

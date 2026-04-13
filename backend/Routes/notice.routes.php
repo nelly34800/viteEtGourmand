@@ -10,15 +10,22 @@ $router->get('/notice', function() {
     (new NoticeController())->index();
 });
 
+$router->get('/noticeValidate', function() {
+    (new NoticeController())->indexValidate();
+});
+
 $router->get('/notice/{id}', function($id) {
     CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new NoticeController())->show($id);
 });
 
+$allowedRoles = ['client'];
+$allowedRoles2 = ['admin', 'employé'];
+
 $router->post('/notice', function() use ($allowedRoles) {
     CsrfHelper::validate();
-    AuthMiddleware::requireAuth();
+    AuthMiddleware::requireRole($allowedRoles);
     (new NoticeController())->store();
 });
 
@@ -28,8 +35,8 @@ $router->put('/notice/{id}', function($id) use ($allowedRoles) {
     (new NoticeController())->update($id);
 });
 
-$router->delete('/notice/{id}', function($id) use ($allowedRoles) {
+$router->delete('/notice/{id}', function($id) use ($allowedRoles2) {
     CsrfHelper::validate();
-    AuthMiddleware::requireAuth();
+    AuthMiddleware::requireRole($allowedRoles2);
     (new NoticeController())->delete($id);
 });

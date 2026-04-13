@@ -1,12 +1,8 @@
 // fonction pour charger les forfaits de personnel
 async function loadPersonalsPackage() {
   try {
-    // Appel sécurisé vers l'API (GET)
-    const data = await secureFetch(
-      'http://localhost:8082/personalPackage',
-      { method: 'GET' },
-      ['employee', 'admin'] // seuls ces rôles peuvent accéder
-    );
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    const data = await getPersonalPackages();
     // dekstop: vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';

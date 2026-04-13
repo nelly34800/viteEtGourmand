@@ -5,7 +5,7 @@ const staffRatio = document.getElementById("staffRatio");
 const packagePrice = document.getElementById("packagePrice");
 const personalPackageValidation = document.getElementById("personalPackageValidation");
 const messageDiv = document.getElementById('creat-message');
-
+// Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const personalPackageId = params.get('id');
 

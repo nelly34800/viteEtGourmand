@@ -1,20 +1,71 @@
-const displayReviews = document.getElementById("allNotices");
+// fonction pour charger les avis validés
+async function loadNoticeValidate() {
+  try {
+    // Appel sécurisé vers l'API
+    const response = await fetch('http://localhost:8082/noticeValidate');
 
-//récupérer les informations des avis 
-let note = '4';
-let description = 'Super expérience, je recommande !';
-let firstName = 'Julie'
-let myNote = getNotice(note,description, firstName);
-displayReviews.innerHTML = myNote;
+    if (!response.ok) {
+      throw new Error('Erreur API');
+    }
 
-function getNotice(note,description, firstName){
-  note = sanitizeHTML(note);
-  description = sanitizeHTML(description);
-    return `  <div class="col p-3">
-      <div class="image-card">
-        ${renderStars(Number(note))}
-        <p class="description">${description}</p>
-        <p class="signature">${firstName}</p>
-      </div>
-    </div>`
+    const data = await response.json();
+    const carouselContent = document.querySelector("#carouselContent");
+
+    carouselContent.innerHTML = '';
+
+    // détermine combien d'avis selon la largeur de l'écran
+    let noticesPerSlide;
+
+    if (window.innerWidth >= 680) {   // breakpoint
+      noticesPerSlide = 3;             // grand écran 3 avis
+    } else {
+      noticesPerSlide = 3;             // petit écran 3 avis
+    }
+
+// Générer les slides
+for (let i = 0; i < data.length; i += noticesPerSlide) {
+  // Sélection des avis pour cette slide
+
+  const slideDiv = document.createElement("div");
+  slideDiv.classList.add("carousel-item");
+  // La première slide prend la classe active
+  if (i === 0) slideDiv.classList.add("active");
+
+  // Construit la slide
+  const row = document.createElement("div");
+  row.classList.add("row", "justify-content-center");
+
+  const slideNotices = data.slice(i, i + noticesPerSlide);
+
+    slideNotices.forEach((notice) => {
+      // création d'une ligne d'un avis
+      const col = document.createElement("div");
+
+      // desktop = 3 colonnes / Mobile = 1 colonne
+      col.classList.add("col-12", "col-lg-4", "mb-3");
+
+      col.innerHTML = `
+        <div class="d-flex justify-content-center">
+          <div class="card bgc-primary p-4 text-center" style="max-width: 500px;">
+            <div class="note mb-2">
+              ${renderStars(Number(sanitizeHTML(notice.note)))}
+            </div>
+            <p>${sanitizeHTML(notice.description)}</p>
+            <p class="signature mt-2">${sanitizeHTML(notice.signature)}</p>
+          </div>
+        </div>
+      `;
+      row.appendChild(col);
+    });
+
+    slideDiv.appendChild(row);
+      carouselContent.appendChild(slideDiv);
+    }
+
+  } catch (error) {
+      // Affiche l'erreur si problème API
+      alert(error.message);
+  }
 }
+// se lance au chargement
+loadNoticeValidate();

@@ -12,8 +12,9 @@ body {
   font-weight: 700;
   font-size: var(--bs-font-size);
 }
+
 main {
-    flex: 1;
+  flex: 1;
 }
 
 /* Typographie Couleurs
@@ -69,20 +70,20 @@ a.nav-link:hover {
 }
 
 .navbar-brand:hover {
-    color: var(--primary);
-    background-color: var(--secondary);
-    font-size: (--bs-font-size);
-    border-radius: 20px;
-    padding: 5px 10px;
-  }
+  color: var(--primary);
+  background-color: var(--secondary);
+  font-size: (--bs-font-size);
+  border-radius: 20px;
+  padding: 5px 10px;
+}
 
 .navbar-toggler-icon {
-    color: var(--secondary);
-    filter: invert(1);
+  color: var(--secondary);
+  filter: invert(1);
 }
 
 .navbar-brand {
-font-size: 28px;
+  font-size: 28px;
 }
 
 /* Logo
@@ -152,11 +153,16 @@ input {
 }
 
 #menuTheme {
-width: 170px;
+  width: 170px;
 }
 
 fieldset {
   padding-bottom: 10px;
+}
+
+#allergens-container label, 
+#diets-container label {
+  margin: 0 10px;
 }
 
 /* Contenu/pages
@@ -185,17 +191,6 @@ fieldset {
   padding: 5px;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.allNotices {
-  color: var(--secondary);
-  font-family:  var(--bs-body-font-family);
-  font-size: var(--bs-font-size);
-}
-
-.signature {
-  font-style: italic;
-  font-size: var(--bs-font-size);
 }
 
 .bi-star, .bi-star-fill {
@@ -243,7 +238,6 @@ td {
 }
 
 
-
 /* Footer
  ========================= */
 
@@ -259,9 +253,43 @@ footer  {
   margin-top: 50px;
 }
 
+/* Carrousel
+ ========================= */
+#carouselNotices,  
+#menuCarousel {
+  position: relative;
+}
+/* boutons carousel visibles */
+.carousel-control-prev,
+.carousel-control-next {
+  display: flex;
+}
+/* boutons custom invisibles */
+.custom-control-prev,
+.custom-control-next {
+  display: none;
+}
+
+.note {
+  background: var(--gradient-gold);
+   /* standard */
+  background-clip: text;
+  /* compatibilité Chrome / Safari */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* fallback */
+  color: transparent;
+}
+
+.signature {
+  font-style: italic;
+  font-size: var(--bs-font-size);
+  font-weight: 300;
+}
+
 @media screen and (max-width: 680px) {
   footer::before {
-    height: 3px;
+    height: 5px;
   }
 
   .map {
@@ -269,6 +297,25 @@ footer  {
   }
 
   .navbar-brand {
-font-size: 20px;
+    font-size: 20px;
+  }
+
+  /* bouton du carroussel sur mobile */
+  .carousel-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: auto;
+  }
+
+  /* boutons carousel invisibles */
+  .carousel-control-prev,
+  .carousel-control-next {
+    display: none;
+  }
+
+  /* boutons custom visibles */
+  .custom-control-prev,
+  .custom-control-next  {
+    display: block;
   }
 }

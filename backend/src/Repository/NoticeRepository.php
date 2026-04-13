@@ -127,4 +127,21 @@ class NoticeRepository
             throw new RuntimeException('notice not found');
         }
     }
+    /**
+     * Retourne un tableau de tous les avis validés.
+     */
+    public function findAllNoticeValidate(): array
+    {
+        $stmt = $this->pdo->query("
+        SELECT id, note, description, signature, status, date, id_order 
+        FROM notice 
+        WHERE status = 'validé'");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $notices = [];
+        foreach ($rows as $row) {
+            $notices[] = $this->mapRowToNotice($row);
+        }
+        return $notices;
+    }
 }

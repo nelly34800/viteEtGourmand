@@ -40,6 +40,7 @@ class DishController
                 'description' => $dish->getDescription(),
                 'picture' => $dish->getPicture(),
                 'id_category_dish' => $dish->getIdCategoryDish(),
+                'category_name' => $dish->getCategoryName(),
                 'diets' => $dish->getDiets(),
                 'allergens' => $dish->getAllergens(),
             ];
@@ -52,7 +53,6 @@ class DishController
      */
     public function show(string $id): void
     {
-
         //si l'id n'a pas le format UUID retourne une erreur
         ValidatorHelper::validateUuid($id);
         // Appel du repository pour récupérer le plat par son id et affichage au format JSON
@@ -66,8 +66,9 @@ class DishController
                 'description' => $dish->getDescription(),
                 'picture' => $dish->getPicture(),
                 'id_category_dish' => $dish->getIdCategoryDish(),
-                'diet_id' => $dish->getDiets(),
-                'allergen_id' => $dish->getAllergens()
+                'category_name' => $dish->getCategoryName(),
+                'diets' => $dish->getDiets(),
+                'allergens' => $dish->getAllergens()
             ]);
             ResponseHelper::json($response);
 
@@ -81,8 +82,11 @@ class DishController
      */
 public function store(): void
 {
-
     $data = RequestHelper::getJson();
+    ValidatorHelper::validateUuid($data['id_category_dish']);
+    ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
+    ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
+    ValidatorHelper::validatePicture($data['picture']);
     // Validation des champs obligatoires
     if(!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
         throw new InvalidArgumentException('Invalid input');
@@ -119,6 +123,10 @@ public function store(): void
         ValidatorHelper::validateUuid($id);
         // Lecture du JSON
         $data = RequestHelper::getJson();
+            ValidatorHelper::validateUuid($data['id_category_dish']);
+            ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
+            ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
+            ValidatorHelper::validatePicture($data['picture']);
         // Validation des champs obligatoires
         if (!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
             throw new InvalidArgumentException('Invalid input');
