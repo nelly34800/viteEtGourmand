@@ -1,0 +1,37 @@
+<div class="container p-4">
+  <h1>Créer/modifier du materiel</h1>
+  <form action="">
+    <div class="mb-3">
+      <label class="form-label" for="nameMaterial">Nom du matériel: </label>
+      <input class="form-control" type="text" name="nameMaterial" id="nameMaterial">
+      <div class="invalid-feedback">
+          Le nom du matériel est requis
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="quantityAvailable">quantité disponible : </label>
+      <input class="form-control" type="number" step="1" name="quantityAvailable" id="quantityAvailable">
+      <div class="invalid-feedback">
+        La quantité disponible est requise
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="price">prix unitaire : </label>
+      <input class="form-control" type="number" step="1" name="price" id="price">
+      <div class="invalid-feedback">
+        Le prix est requis
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="category">Catégorie du matérieL : </label>
+        <select id="category" class="form-control">
+          <option value=""class="bgc-secondary">Sélectionnez une catégorie</option>
+        </select>
+      <div class="invalid-feedback">
+          La catégorie est requise
+      </div>
+    </div>
+    <div id="creat-message" class="alert d-none"></div>
+    <input type="submit" class="btn btn-primary " value="Créer le matériel" id="materialValidation">
+  </form>
+</div>

@@ -5,7 +5,7 @@ export const allRoutes = [
     new Route("/contact", "Contact", "/pages/contact.html", []),
     new Route("/cgv", "CGV", "/pages/cgv.html", []),
     new Route("/mentions", "Mentions légales", "/pages/mentions.html", []),
-    new Route("/menus", "Les menus", "/pages/menus.html", []),
+    new Route("/menus", "Les menus", "/pages/menus.html", [], "/js/menus.js"),
     new Route("/menuDetails", "Détails du menu", "/pages/menuDetails.html", [], "/js/menuDetails.js"),
     new Route("/createNotice", "Laisser un avis", "/pages/createNotice.html", ["client"], "/js/notices/createNotice.js"),
     // auth
@@ -34,7 +34,7 @@ export const allRoutes = [
     new Route("/dishes", "Les plats", "/pages/employees/dishes/dishes.html", ["admin", "employee"], "/js/employees/dishes/dishes.js"),
     new Route("/createDish", "Créer/modifier un plat", "/pages/employees/dishes/createDish.html", ["admin", "employee"], "/js/employees/dishes/createDish.js"),
               // menus
-    new Route("/menu", "Les menus", "/pages/employees/menus/menus.html", ["admin", "employee"], "/js/employees/menus/menus.js"),
+    new Route("/menu", "Les menus", "/pages/employees/menus/menu.html", ["admin", "employee"], "/js/employees/menus/menu.js"),
     new Route("/createMenu", "Créer/modifier un menu", "/pages/employees/menus/createMenu.html", ["admin", "employee"], "/js/employees/menus/createMenu.js"),
               // horaires
     new Route("/schedules", "Les horaires", "/pages/employees/schedules/schedules.html", ["admin", "employee"], "/js/employees/schedules/schedules.js"),

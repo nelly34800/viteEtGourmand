@@ -43,6 +43,7 @@ class MenuController
                 'remaining_quantity' => $menu->getRemainingQuantity(),
                 'dishes' => $menu->getDishes(),
                 'conditions' => $menu->getConditions(),
+                'illustration' => $menu->getIllustrationDish(),
             ];
         }, $menus);
 
@@ -70,6 +71,7 @@ class MenuController
             'remaining_quantity' => $menu->getRemainingQuantity(),
             'dishes' => $menu->getDishes(),
             'conditions' => $menu->getConditions(),
+            'illustration' => $menu->getIllustrationDish(),
         ]);
         ResponseHelper::json($response);
 
@@ -86,9 +88,14 @@ class MenuController
         $data = RequestHelper::getJson();
         ValidatorHelper::validateUuidArray($data['dish_id'] ?? []);
         ValidatorHelper::validateUuidArray($data['condition_id'] ?? []);
+
         // Validation des champs obligatoires
         if(!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');
+        }
+        // Validation de l'illustration (obligatoire)
+        if (empty($data['illustration_dish_id'])) {
+            throw new InvalidArgumentException("Image obligatoire");
         }
         $dishIds = $data['dish_id'] ?? [];
         $conditionIds = $data['condition_id'] ?? [];
@@ -97,12 +104,14 @@ class MenuController
             id: '', // l'UUID sera généré côté repository
             menuName: $data['menu_name'],
             description: $data['description'],
+            illustrationDishId: $data['illustration_dish_id'],
             minimumPeople: $data['minimum_people'],
             pricePerPerson: $data['price_per_person'],
             remainingQuantity: $data['remaining_quantity'],
             dishes: $dishIds,
             conditions:$conditionIds
         );
+ 
         //  appel du repository pour l'enregistrer en base
         try {
             $this->repository->create($menu);
@@ -127,6 +136,10 @@ class MenuController
         if (!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');
         }
+        // Validation de l'illustration (obligatoire)
+        if (empty($data['illustration_dish_id'])) {
+            throw new InvalidArgumentException("Image obligatoire");
+        }
          $dishIds = $data['dish_id'] ?? [];
          $conditionIds = $data['condition_id'] ?? [];
         // Création de l'entité menu à partir des données reçues 
@@ -134,6 +147,7 @@ class MenuController
             $id,
             $data['menu_name'],
             $data['description'],
+            $data['illustration_dish_id'],
             $data['minimum_people'],
             $data['price_per_person'],
             $data['remaining_quantity'],

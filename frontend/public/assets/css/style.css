@@ -122,22 +122,6 @@ a.nav-link:hover {
    font-weight: 700;
 }
 
-.card-gold {
-  position: relative;
-  padding: 8px; /* épaisseur du liseret */
-  background: var(--gradient-gold);
-}
-
-.card-content {
-  background: var(--secondary);
-  padding: 1.5rem;
-}
-
-.card-content-primary{
-  background-color: var(--primary);
-  color: var(--secondary);
-}
-
 .d-block {
   height: 300px;
   width: 100%;
@@ -212,14 +196,6 @@ dl dt {
 /* Utilitaires
  ========================= */
 
-.card-body .bi-star-fill {
-  color: var(--primary);
-}
-
-.card-body {
-  text-align: left;
-}
-
 input.form-control::placeholder,
 textarea.form-control::placeholder {
   color: lightgrey;
@@ -237,6 +213,49 @@ td {
   border: solid 1px var(--primary)
 }
 
+/* Cartes
+ ========================= */
+.card-gold {
+  position: relative;
+  padding: 8px; /* épaisseur du liseret */
+  background: var(--gradient-gold);
+}
+
+.card-body .bi-star-fill {
+  color: var(--primary);
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-align: left;
+}
+
+.card-content {
+  background: var(--secondary);
+  padding: 1.5rem;
+  height: 100%;
+  min-height: 575px;
+}
+
+.card-content-primary{
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.card-content p {
+  overflow: hidden; /* masque texte qui dépasse */
+  display: -webkit-box; /* modèle de boîte flexible de WebKit */
+  -webkit-line-clamp: 5; /*  5 lignes max */
+  line-clamp: 5;  
+  -webkit-box-orient: vertical; /* orientation verticale */
+}
+
+.card-footer {
+  margin-top: auto;
+  text-align: center;
+}
 
 /* Footer
  ========================= */
@@ -298,6 +317,12 @@ footer  {
 
   .navbar-brand {
     font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  footer::before {
+    height: 5px;
   }
 
   /* bouton du carroussel sur mobile */

@@ -14,17 +14,11 @@ async function loadNoticeValidate() {
     carouselContent.innerHTML = '';
 
     // détermine combien d'avis selon la largeur de l'écran
-    let noticesPerSlide;
+    let noticesPerSlide = 3;
 
-    if (window.innerWidth >= 680) {   // breakpoint
-      noticesPerSlide = 3;             // grand écran 3 avis
-    } else {
-      noticesPerSlide = 3;             // petit écran 3 avis
-    }
-
-// Générer les slides
-for (let i = 0; i < data.length; i += noticesPerSlide) {
-  // Sélection des avis pour cette slide
+    // Générer les slides
+    for (let i = 0; i < data.length; i += noticesPerSlide) {
+      // Sélection des avis pour cette slide
 
   const slideDiv = document.createElement("div");
   slideDiv.classList.add("carousel-item");
@@ -42,7 +36,7 @@ for (let i = 0; i < data.length; i += noticesPerSlide) {
       const col = document.createElement("div");
 
       // desktop = 3 colonnes / Mobile = 1 colonne
-      col.classList.add("col-12", "col-lg-4", "mb-3");
+      col.classList.add("col-12", "col-md-4", "mb-3");
 
       col.innerHTML = `
         <div class="d-flex justify-content-center">

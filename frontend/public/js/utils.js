@@ -75,6 +75,20 @@ function createActionButtons(id) {
   return container;
 }
 
+// fonction pour le bouton d'action (ajouter: évite répétition)
+function addOrderButton(id) {
+  const container = document.createElement("div");
+
+  const addBtn = document.createElement("button");
+  addBtn.className = "btn btn-secondary addBtn m-1";
+  addBtn.dataset.id = id;
+  addBtn.textContent = "ajouter";
+
+  container.appendChild(addBtn);
+
+  return container;
+}
+
 //formatage des horaires
 const formatTime = (time) => {
   const [hours, minutes] = time.split(":");

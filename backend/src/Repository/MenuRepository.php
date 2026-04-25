@@ -32,21 +32,51 @@ class MenuRepository
 
             // Si on n'a pas encore créé l'objet Menu
             if(!isset($menus[$menuId])){
-              $menus[$menuId] = new Menu(
+                $menus[$menuId] = new Menu(
                     $menuId,
                     $row['menu_name'],
                     $row['description'],
+                    $row['illustration_dish_id'],
                     $row['minimum_people'],
                     $row['price_per_person'],
                     $row['remaining_quantity'],
                 );
+                // initialise les plats
+            $menus[$menuId]->setDishes([]);
             }
-            // Ajouter le plat si pas déjà présent
-             if ($row['dish_id'] !== null) {
-                $menus[$menuId]->addDish([
-                  'id' => $row['dish_id'],
-                  'name' => $row['dish_title']
-                  ]);
+            // Ajouter le plat
+            if ($row['dish_id'] !== null) {
+                $dishId = $row['dish_id'];
+                // récupérer les dishes déjà présents dans CE menu
+                $currentDishes = $menus[$menuId]->getDishes();
+                // Si le plat n'existe pas encore → on le crée
+                if (!isset($currentDishes[$dishId])) {
+                    $currentDishes[$dishId] = [
+                        'id' => $dishId,
+                        'name' => $row['dish_title'],
+                        'description' => $row['dish_description'],
+                        'picture' => $row['dish_picture'],
+                        'categoryName' => $row['category_name'],
+                        'diets' => [],
+                        'allergens' => []
+                    ];
+                }
+                // Ajouter diet s'il y en a
+                if ($row['diet_id'] !== null) {
+                    $currentDishes[$dishId]['diets'][$row['diet_id']] = [
+                        'id' => $row['diet_id'],
+                        'name' => $row['d_diet_name']
+                    ];
+                }
+                // Ajouter allergen s'il y en a
+                if ($row['allergen_id'] !== null) {
+                    $currentDishes[$dishId]['allergens'][$row['allergen_id']] = [
+                        'id' => $row['allergen_id'],
+                        'name' => $row['d_allergen_name']
+                    ];
+                }
+                // réinjecter dans le bon menu
+                $menus[$menuId]->setDishes($currentDishes);
             }
             // Ajouter la condition si pas déjà présente
              if ($row['condition_id'] !== null) {
@@ -56,9 +86,25 @@ class MenuRepository
                   'description' => $row['condition_description']
                   ]);
             }
+            // Ajouter les données de l'illustration
+            $menus[$menuId]->setIllustrationDish([
+                'id' => $row['illustration_dish_id'],
+                'picture' => $row['illustration_picture']
+            ]);
         }
-        // À la fin, $menus contient tous les objets Menu avec leurs tableaux dish et condition
-    return array_values($menus);
+        // Nettoyage final (important pour le front)
+        foreach ($menus as $menu) {
+            $dishes = $menu->getDishes();
+
+            foreach ($dishes as &$dish) {
+                $dish['diets'] = array_values($dish['diets']);
+                $dish['allergens'] = array_values($dish['allergens']);
+            }
+
+            $menu->setDishes(array_values($dishes));
+        }
+
+        return array_values($menus);
     }
     /**
      * Retourne un  tableau tous les menus.
@@ -70,19 +116,34 @@ class MenuRepository
             menu.id AS menu_id,
             menu.menu_name,
             menu.description,
+            menu.illustration_dish_id,
             menu.minimum_people,
             menu.price_per_person,
             menu.remaining_quantity,
             dish.id AS dish_id,
             dish.dish_title,
+            dish.description AS dish_description,
+            dish.picture AS dish_picture,
+            category_dish.category_name,
+            diet.id AS diet_id,
+            diet.diet_name AS d_diet_name,
+            allergen.id AS allergen_id,
+            allergen.allergen_name AS d_allergen_name,
             condition_menu.id AS condition_id,
             condition_menu.condition_type,
-            condition_menu.description AS condition_description
+            condition_menu.description AS condition_description,
+            illustration_dish.picture AS illustration_picture
         FROM menu 
         LEFT JOIN menu_dish ON menu.id = menu_dish.id_menu
         LEFT JOIN dish ON menu_dish.id_dish = dish.id
+        LEFT JOIN category_dish ON dish.id_category_dish = category_dish.id
         LEFT JOIN menu_condition_menu ON menu_condition_menu.id_menu = menu.id
-        LEFT JOIN condition_menu ON menu_condition_menu.id_condition_menu = condition_menu.id");
+        LEFT JOIN condition_menu ON menu_condition_menu.id_condition_menu = condition_menu.id
+        LEFT JOIN dish AS illustration_dish ON menu.illustration_dish_id = illustration_dish.id
+        LEFT JOIN diet_dish ON dish.id = diet_dish.id_dish
+        LEFT JOIN diet ON diet_dish.id_diet = diet.id
+        LEFT JOIN allergen_dish ON dish.id = allergen_dish.id_dish
+        LEFT JOIN allergen ON allergen_dish.id_allergen = allergen.id");
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -98,19 +159,34 @@ class MenuRepository
             menu.id AS menu_id,
             menu.menu_name,
             menu.description,
+            menu.illustration_dish_id,
             menu.minimum_people,
             menu.price_per_person,
             menu.remaining_quantity,
             dish.id AS dish_id,
             dish.dish_title,
+            dish.description AS dish_description,
+            dish.picture AS dish_picture,
+            category_dish.category_name,
+            diet.id AS diet_id,
+            diet.diet_name AS d_diet_name,
+            allergen.id AS allergen_id,
+            allergen.allergen_name AS d_allergen_name,
             condition_menu.id AS condition_id,
             condition_menu.condition_type,
-            condition_menu.description AS condition_description
+            condition_menu.description AS condition_description,
+            illustration_dish.picture AS illustration_picture
         FROM menu 
         LEFT JOIN menu_dish ON menu.id = menu_dish.id_menu
         LEFT JOIN dish ON menu_dish.id_dish = dish.id
+        LEFT JOIN category_dish ON dish.id_category_dish = category_dish.id
         LEFT JOIN menu_condition_menu ON menu_condition_menu.id_menu = menu.id
-        LEFT JOIN condition_menu ON menu_condition_menu.id_condition_menu = condition_menu.id WHERE menu.id = ?");
+        LEFT JOIN dish AS illustration_dish ON menu.illustration_dish_id = illustration_dish.id
+        LEFT JOIN condition_menu ON menu_condition_menu.id_condition_menu = condition_menu.id
+        LEFT JOIN diet_dish ON dish.id = diet_dish.id_dish
+        LEFT JOIN diet ON diet_dish.id_diet = diet.id
+        LEFT JOIN allergen_dish ON dish.id = allergen_dish.id_dish
+        LEFT JOIN allergen ON allergen_dish.id_allergen = allergen.id WHERE menu.id = ?");
 
         $stmt->execute([$id]);
 
@@ -138,14 +214,15 @@ class MenuRepository
 
             // insertion du menu
             $stmt = $this->pdo->prepare("
-                INSERT INTO menu (id, menu_name, description, minimum_people, price_per_person, remaining_quantity)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO menu (id, menu_name, description, illustration_dish_id, minimum_people, price_per_person, remaining_quantity)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
             // exécute la requête avec les données du menu
             $stmt->execute([
                 $menu->getId(),
                 $menu->getMenuName(),
                 $menu->getDescription(),
+                $menu->getIllustrationDishId(),
                 $menu->getMinimumPeople(),
                 $menu->getPricePerPerson(),
                 $menu->getRemainingQuantity()
@@ -185,13 +262,14 @@ class MenuRepository
             // modifie le menu
             $stmt = $this->pdo->prepare("
                 UPDATE menu
-                SET menu_name = ?, description = ?, minimum_people = ?, price_per_person = ?, remaining_quantity = ?
+                SET menu_name = ?, description = ?, illustration_dish_id = ?, minimum_people = ?, price_per_person = ?, remaining_quantity = ?
                 WHERE id = ?
             ");
 
             $stmt->execute([
                 $menu->getMenuName(),
                 $menu->getDescription(),
+                $menu->getIllustrationDishId(),
                 $menu->getMinimumPeople(),
                 $menu->getPricePerPerson(),
                 $menu->getRemainingQuantity(),

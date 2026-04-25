@@ -29,7 +29,7 @@ async function loadUsers() {
       tr.appendChild(tdemail);
       // Adresse
       const tdaddress = document.createElement("td");
-      tdaddress.textContent = `${user.address} ${user.postal_address} ${user.postal_code} ${user.city}`;
+      tdaddress.textContent = `${user.postal_address} ${user.postal_code} ${user.city}`;
       tr.appendChild(tdaddress);
       // Téléphone
       const tdphone = document.createElement("td");
@@ -37,7 +37,7 @@ async function loadUsers() {
       tr.appendChild(tdphone);
       // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
       const tdAction = document.createElement("td");
-      tdAction.appendChild(createActionButtons(schedule.id));
+      tdAction.appendChild(createActionButtons(user.id));
       tr.appendChild(tdAction);
 
       // ajout dans le DOM
@@ -59,7 +59,7 @@ async function loadUsers() {
       cardBody.appendChild(cardEmail);
       // adresse
       const cardAddress = document.createElement('p');
-      cardAddress.textContent = `${user.address} ${user.postal_address} ${user.postal_code} ${user.city}`;
+      cardAddress.textContent = ` ${user.postal_address} ${user.postal_code} ${user.city}`;
       cardBody.appendChild(cardAddress);
       // téléphone
       const cardPhone = document.createElement('p');
@@ -67,7 +67,7 @@ async function loadUsers() {
       cardBody.appendChild(cardPhone);
       // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
       const cardAction = document.createElement("td");
-      cardBody.appendChild(createActionButtons(schedule.id));
+      cardBody.appendChild(createActionButtons(user.id));
       card.appendChild(cardAction);
 
       card.appendChild(cardBody);

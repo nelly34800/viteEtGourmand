@@ -18,8 +18,8 @@ class UserController
 {
     private UserRepository $repository;
 
-    const ROLE_CUSTOMER = 'ca128af3-3772-11f1-a865-8e079ea62154';
-    const ROLE_EMPLOYEE = 'ca128e57-3772-11f1-a865-8e079ea62154';
+    const ROLE_CUSTOMER = 'client';
+    const ROLE_EMPLOYEE = 'employé';
 
     public function __construct()
     {
@@ -91,7 +91,8 @@ class UserController
         if(!isset($data['last_name'], $data['first_name'], $data['email'], $data['password'], $data['postal_address'], $data['city'], $data['postal_code'], $data['phone'])) {
             throw new InvalidArgumentException('Invalid input');
         }
-        $id_role = self::ROLE_CUSTOMER;
+        // autorisation : par défaut, un nouvel utilisateur est un client
+        $id_role = $this->getRoleIdByName(self::ROLE_CUSTOMER);
         // Création de l'entité User à partir des données reçues
         $user = new User(
             '',
@@ -194,7 +195,7 @@ class UserController
             throw new InvalidArgumentException('Invalid input');
         }
         // autorisation : seul un admin peut créer un employé
-        $id_role = self::ROLE_EMPLOYEE;
+        $id_role = $this->getRoleIdByName(self::ROLE_EMPLOYEE);
         // Création de l'entité User à partir des données reçues
         $user = new User(
             '',
@@ -216,4 +217,20 @@ class UserController
             ResponseHelper::json(['error' => 'Error creating employee', 'details' => $e->getMessage()], 500);
         }
     }
+
+    private function getRoleIdByName(string $roleName): string
+{
+    $pdo = Database::getConnection();
+
+    $stmt = $pdo->prepare("SELECT id FROM role WHERE role_name = :name");
+    $stmt->execute(['name' => $roleName]);
+
+    $id = $stmt->fetchColumn();
+
+    if (!$id) {
+        throw new RuntimeException("Role not found");
+    }
+
+    return $id;
+}
 }

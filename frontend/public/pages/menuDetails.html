@@ -1,102 +1,44 @@
-<div class="container p-4">
-  <h1>Menu classique Gourmand</h1>
-  <p>Description : Un menu équilibré et généreux, mettant à l’honneur des recettes traditionnelles revisitées, 
-      adaptées à tous vos événements tout au long de l’année.</p>
+<div id="container" class="container p-4">
+
+  <h1 id="menu-title"></h1>
+  <p id="menu-description"></p>
+
+  <!-- CAROUSEL -->
   <div class="carousel-wrapper d-flex flex-column align-items-center">
-    <button class="custom-control-prev bgc-primary mb-3" data-bs-target="#menuCarousel" data-bs-slide="prev">
+    <button class="custom-control-prev bgc-primary mb-3" data-bs-target="#menu-carousel" data-bs-slide="prev">
       <i class="bi bi-caret-up-fill note"></i>
     </button>
-    <button class="carousel-control-prev" data-bs-target="#menuCarousel" data-bs-slide="prev">
-      <i class="bi bi-caret-left-fill bgc-primary"></i>
-    </button>
-    <div id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="menu-carousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner" id="carouselInner"></div>
     </div>
-    <button class="carousel-control-next" data-bs-target="#menuCarousel" data-bs-slide="next">
+    <button class="carousel-control-prev" data-bs-target="#menu-carousel" data-bs-slide="prev">
+      <i class="bi bi-caret-left-fill bgc-primary"></i>
+    </button>
+    
+    <button class="carousel-control-next" data-bs-target="#menu-carousel" data-bs-slide="next">
       <i class="bi bi-caret-right-fill bgc-primary"></i>
     </button>
-    <button class="custom-control-next bgc-primary mt-3" data-bs-target="#menuCarousel" data-bs-slide="next">
+    <button class="custom-control-next bgc-primary mt-3" data-bs-target="#menu-carousel" data-bs-slide="next">
       <i class="bi bi-caret-down-fill note"></i>
     </button>
   </div>
-  <section class="text-start">
-    <h2>Entrées</h2>
-    <dl>
-      <dt>Velouté de potimarron</dt>
-      <dd>
-        Velouté onctueux de potimarron rôti, relevé d’une pointe de crème et parsemé de noisettes  torréfiées.<br>
-        <strong>Régime : </strong> végétarien | <strong>Allergènes : </strong> lactose, fruits à coque
-      </dd>
-      <dt>Salade de chèvre chaud sur toast</dt>
-      <dd>Jeunes pousses, toasts croustillants au chèvre fondant, vinaigrette maison au miel.<br>
-          <strong>Régime : </strong> végétarien | <strong>Allergènes : </strong> gluten, lactose, fruits à coque
-      </dd>
-      <dt>Houmous de pois chiches et légumes croquants</dt>
-      <dd>Purée de pois chiches au sésame, citron et huile d’olive, accompagnée de légumes frais.<br>
-          <strong>Régime : </strong> végan | <strong>Allergènes : </strong> sésame
-      </dd>
-    </dl>
 
-    <h2>Plats principaux</h2>
-    <dl>
-      <dt>Suprême de volaille fermière, sauce forestière</dt>
-      <dd>Suprême de volaille rôtie, sauce crémeuse aux champignons, gratin dauphinois maison.<br>
-          <strong>Régime : </strong> sans porc | <strong>Allergènes : </strong> lactose
-      </dd>
-      <dt>Gambas flambées au pastis, riz basmati parfumé</dt>
-      <dd>Gambas sautées et flambées au pastis, servies avec un riz basmati délicatement parfumé.<br>
-          <strong>Régime : </strong> sans lactose, sans gluten | <strong>Allergènes : </strong> crustacés
-      </dd>
-      <dt>Curry de légumes de saison au lait de coco</dt>
-      <dd>Mélange de légumes frais mijotés dans un curry doux au lait de coco.<br>
-          <strong>Régime : </strong> végan | <strong>Allergènes : </strong> aucun
-      </dd>
-    </dl>
+  <!-- PLATS -->
+  <div id="dishes-container" class="mt-4"></div>
 
-    <h2>Fromages</h2>
-    <dl>
-      <dt>Plateau de fromages affinés</dt>
-      <dd>Sélection de fromages régionaux affinés.<br>
-          <strong>Régime : </strong> végétarien | <strong>Allergènes : </strong> lactose
-      </dd>
-      <dt>Alternative végétale aux noix de cajou</dt>
-      <dd>Préparation végétale crémeuse à base de noix de cajou.<br>
-          <strong>Régime : </strong>  végan | <strong>Allergènes : </strong> fruits à coque
-      </dd>
-    </dl>
+    <!-- CONDITIONS -->
+  <div id="menu-conditions"></div>
 
-    <h2>Desserts</h2>
-    <dl>
-      <dt>Tarte fine aux pommes caramélisées</dt>
-      <dd>Pommes fondantes caramélisées sur pâte croustillante.<br>
-        <strong>Régime : </strong>végétarien | <strong>Allergènes : </strong> gluten, lactose
-      </dd>
-      <dt>Brownie végan au chocolat</dt>
-      <dd>Brownie fondant au chocolat noir, sans ingrédient d’origine animale.<br>
-          <strong>Régime : </strong>végan | <strong>Allergènes : </strong> gluten, fruits à coque
-      </dd>
-    </dl>
-  </section>
-  <section class="text-start">
-    
-    <h3>Condition du menu : </h3> 
-    <dl>
-      <dt>Nombre de personnes minimum </dt>
-      <dd>6 personnes</dd>
-      <dt>Régime alimentaire</dt>
-      <dd>Tous nos menus comprennent des options végan, donc sans lactose et sans porc.</dd>
-    </dl>
-    <dl>
-      <dt>Délai de commande</dt>
-      <dd>5 jours avant l’événement, modification possible jusqu’à 72h avant.</dd>
-      <dt>Conservation</dt>
-      <dd>plats froids : +4°C, plats chauds : à consommer sous 2h après livraison</dd>
-      <dt>Disponibilité</dt>
-      <dd>Il reste 20 commandes possibles de ce menu.</dd>
-    </dl>
-    <h3 class="text-center">Prix: 32 €</h3>
-  </section>
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal">Ajouter au panier</button>
+      <!-- INFOS -->
+  <div id="menu-infos"></div>
+
+  <!-- ACTION -->
+  <div class="mt-4 text-center">
+    <button id="reserve_btn" class="btn btn-primary playfair">
+      Réserver
+    </button>
+  </div>
+
 </div>
 
 <!-- Modal panier-->
