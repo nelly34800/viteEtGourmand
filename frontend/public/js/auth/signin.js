@@ -22,13 +22,7 @@ async function checkCredentials(e) {
     });
     const data = await response.json();
 
-    const messageDiv = document.getElementById('signin-message');
-
     if (response.ok) {
-      // afficher le message
-      messageDiv.textContent = "Connexion réussie ! Vous allez être redirigé sur la page d'accueil";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-success");
 
       // stocker le CSRF
       localStorage.setItem('csrf_token', data.csrf_token);
@@ -36,16 +30,24 @@ async function checkCredentials(e) {
         // stocker l'utilisateur
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      // redirection après 3 secondes
+      // afficher le message
+      showMessage("Connexion réussie ! Vous allez être redirigé", "success");
+      
+      // redirection
+      const redirect = localStorage.getItem("redirectAfterLogin");
+
       setTimeout(() => {
-        window.location.href = '/';
+        if (redirect) {
+          localStorage.removeItem("redirectAfterLogin");
+          window.location.href = redirect;
+        } else {
+          window.location.href = "/";
+        }
       }, 3000);
 
     } else {
       // message d'erreur
-      messageDiv.textContent = data.error || "Une erreur est survenue";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-danger");
+      showMessage("Une erreur est survenue", "danger");
 
       emailInput.classList.add('is-invalid');
       passwordInput.classList.add('is-invalid');

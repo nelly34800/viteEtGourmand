@@ -116,4 +116,24 @@ class PersonalPackageRepository
             throw new RuntimeException('PersonalPackage not found');
         }
     }
+    /**
+     * Retourne un tableau de forfaits de personnel par leurs IDS.
+     */
+    public function findByIds(array $ids): array {
+        // Vérifie si l'array est vide
+        if (empty($ids)) return [];
+        // crée autant de ? qu’il y a d’IDs pour sécuriser la requête SQL
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $stmt = $this->pdo->prepare(
+            "SELECT id,
+                event_type,
+                staff_ratio,
+                package_price
+            FROM personal_package WHERE id IN ($placeholders)"
+          );
+
+        $stmt->execute($ids);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

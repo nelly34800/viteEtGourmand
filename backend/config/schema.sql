@@ -2,8 +2,8 @@ SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
 
 CREATE TABLE role(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   role_name enum('client', 'employé', 'admin') NOT NULL DEFAULT 'client'
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  role_name enum('client', 'employé', 'admin') NOT NULL DEFAULT 'client'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `role` ( `role_name`) VALUES 
@@ -12,20 +12,20 @@ INSERT INTO `role` ( `role_name`) VALUES
 ('admin');
 
 CREATE TABLE schedule(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   schedule_name VARCHAR(255) NOT NULL,
-   first_day VARCHAR(50) NOT NULL,
-   last_day VARCHAR(50) NOT NULL,
-   opening_time TIME NOT NULL,
-   closing_time TIME NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  schedule_name VARCHAR(255) NOT NULL,
+  first_day VARCHAR(50) NOT NULL,
+  last_day VARCHAR(50) NOT NULL,
+  opening_time TIME NOT NULL,
+  closing_time TIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `schedule` (`schedule_name`,`first_day`, `last_day`, `opening_time`, `closing_time`) VALUES
 ('horaires classiques','Mardi', 'Dimanche', '11:00:00', '22:00:00');
 
 CREATE TABLE diet(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   diet_name VARCHAR(50) NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  diet_name VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `diet` (`diet_name`) VALUES
@@ -36,8 +36,8 @@ INSERT INTO `diet` (`diet_name`) VALUES
 ('Sans porc');
 
 CREATE TABLE allergen(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   allergen_name VARCHAR(50) NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  allergen_name VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `allergen` (`allergen_name`) VALUES
@@ -52,8 +52,8 @@ INSERT INTO `allergen` (`allergen_name`) VALUES
 ('Mollusques');
 
 CREATE TABLE category_dish(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   category_name enum('Entrées', 'Plats principaux', 'Desserts', 'Fromages') NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  category_name enum('Entrées', 'Plats principaux', 'Desserts', 'Fromages') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `category_dish` (`category_name`) VALUES
@@ -63,12 +63,12 @@ INSERT INTO `category_dish` (`category_name`) VALUES
 ('Fromages');
 
 CREATE TABLE dish(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   dish_title VARCHAR(250) NOT NULL,
-   description TEXT NOT NULL,
-   picture VARCHAR(250) NOT NULL,
-   id_category_dish CHAR(36) NOT NULL,
-   FOREIGN KEY(id_category_dish) REFERENCES category_dish(id)
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  dish_title VARCHAR(250) NOT NULL,
+  description TEXT NOT NULL,
+  picture VARCHAR(250) NOT NULL,
+  id_category_dish CHAR(36) NOT NULL,
+  FOREIGN KEY(id_category_dish) REFERENCES category_dish(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_category_dish`) VALUES
@@ -112,14 +112,14 @@ INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_category_dish`) 
 ('Desserts format mini', 'Brownie chocolat & caramel beurre salé et/ou Mini tartelettes aux fruits de saison et/ou Brochettes de fruits frais et/ou Brownie vegan au chocolat', 'brownie_caramel.jpg', (SELECT id FROM category_dish WHERE category_name = 'Desserts'));
 
 CREATE TABLE menu(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   menu_name VARCHAR(250) NOT NULL,
-   description TEXT NOT NULL,
-   illustration_dish_id CHAR(36) NOT NULL,
-   minimum_people INT NOT NULL,
-   price_per_person DECIMAL(10,2) NOT NULL, 
-   remaining_quantity INT NOT NULL,
-   FOREIGN KEY(illustration_dish_id) REFERENCES dish(id)
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  menu_name VARCHAR(250) NOT NULL,
+  description TEXT NOT NULL,
+  illustration_dish_id CHAR(36) NOT NULL,
+  minimum_people INT NOT NULL,
+  price_per_person DECIMAL(10,2) NOT NULL, 
+  remaining_quantity INT NOT NULL,
+  FOREIGN KEY(illustration_dish_id) REFERENCES dish(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `menu` (`menu_name`, `description`, `illustration_dish_id`, `minimum_people`, `price_per_person`, `remaining_quantity`) VALUES
@@ -133,8 +133,8 @@ INSERT INTO `menu` (`menu_name`, `description`, `illustration_dish_id`, `minimum
 ('Menu Enfant – « Petit Gourmet »', 'Un menu ludique et élaboré avec des plats simples et savoureux pour satisfaire les plus jeunes gourmands.', (SELECT id FROM dish WHERE dish_title = 'Steak de bœuf Charolais, frites maison'), 1, 12.00, 50);
 
 CREATE TABLE material_category(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   material_category_name enum('vaisselle', 'linge de table', 'verrerie', 'décoration de table', 'équipement') NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  material_category_name enum('vaisselle', 'linge de table', 'verrerie', 'décoration de table', 'équipement') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `material_category` (`material_category_name`) VALUES
@@ -145,12 +145,12 @@ INSERT INTO `material_category` (`material_category_name`) VALUES
 ('équipement');
 
 CREATE TABLE material(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   material_name VARCHAR(250) NOT NULL,
-   quantity_available INT NOT NULL,
-   price DECIMAL(10,2) NOT NULL,
-   id_material_category CHAR(36) NOT NULL,
-   FOREIGN KEY(id_material_category) REFERENCES material_category(id)
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  material_name VARCHAR(250) NOT NULL,
+  quantity_available INT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  id_material_category CHAR(36) NOT NULL,
+  FOREIGN KEY(id_material_category) REFERENCES material_category(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `material` (`material_name`, `quantity_available`, `price`, `id_material_category`) VALUES
@@ -175,9 +175,9 @@ INSERT INTO `material` (`material_name`, `quantity_available`, `price`, `id_mate
 ('armoire froide pour buffet', 2, 35.00, (SELECT id FROM material_category WHERE material_category_name = 'équipement'));
 
 CREATE TABLE drink_package(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   drink_package_name VARCHAR(255) NOT NULL,
-   price_per_person INT NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  drink_package_name VARCHAR(255) NOT NULL,
+  price_per_person INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `drink_package` (`drink_package_name`, `price_per_person`) VALUES
@@ -187,10 +187,10 @@ INSERT INTO `drink_package` (`drink_package_name`, `price_per_person`) VALUES
 ('Forfait champagne', 20);
 
 CREATE TABLE personal_package(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   event_type VARCHAR(250) NOT NULL,
-   staff_ratio INT NOT NULL,
-   package_price INT NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  event_type VARCHAR(250) NOT NULL,
+  staff_ratio INT NOT NULL,
+  package_price INT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `personal_package` (`event_type`, `staff_ratio`, `package_price`) VALUES
@@ -199,9 +199,9 @@ INSERT INTO `personal_package` (`event_type`, `staff_ratio`, `package_price`) VA
 ('Classique à table', 20, 30);
 
 CREATE TABLE condition_menu(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   condition_type VARCHAR(255) NOT NULL,
-   description TEXT NOT NULL
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  condition_type VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `condition_menu` (`condition_type`, `description`) VALUES
@@ -218,57 +218,62 @@ INSERT INTO `condition_menu` (`condition_type`, `description`) VALUES
 ('Délai de commande', 'réservation minimum 1 mois à l’avance.');
 
 CREATE TABLE user(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   last_name VARCHAR(50) NOT NULL,
-   first_name VARCHAR(50) NOT NULL,
-   email VARCHAR(255) NOT NULL UNIQUE,
-   password VARCHAR(255) NOT NULL,
-   postal_address VARCHAR(255) NOT NULL,
-   city VARCHAR(50) NOT NULL,
-   postal_code VARCHAR(50) NOT NULL,
-   phone VARCHAR(50) NOT NULL,
-   id_role CHAR(36) NOT NULL,
-   FOREIGN KEY(id_role) REFERENCES role(id)
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  last_name VARCHAR(50) NOT NULL,
+  first_name VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  postal_address VARCHAR(255) NOT NULL,
+  city VARCHAR(50) NOT NULL,
+  postal_code VARCHAR(50) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  id_role CHAR(36) NOT NULL,
+  FOREIGN KEY(id_role) REFERENCES role(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_address`, `city`, `postal_code`, `phone`, `id_role`) VALUES
 ('Test', 'Mathieu', 'mathieu@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '123 Rue de la Paix', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Marie', 'marie@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '456 Avenue des Champs', 'Bordeaux', '33000', '06 12 34 56 79', (SELECT id FROM role WHERE role_name = 'client')),
 ('Test', 'Elise', 'elise@test.com', '$2y$10$mzgmNoiO8EsFNmKcKKp.jeJze4qd64bpRHsVKcGTFmv7Qu0ETkVHK', '789 Boulevard Saint-Michel', 'Bordeaux', '33000', '06 12 34 56 80', (SELECT id FROM role WHERE role_name = 'client')),
+('Test', 'Sophie', 'sophie.empl1@test.com', '$2y$10$SoGpgkGNrlvfJiKU9CpLgOPPL9HaCV4e3tSbjhOI391tZI7nlsNGy', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'employé')),
 ('Admin', 'José', 'jose.admin@test.com', '$2y$10$GxFGCM7acUe9BrMooaIxXeiAhLy10UuuS9KuGGdBQe/ATMaQTHtWu', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
 
 CREATE TABLE orders(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   order_date DATE NOT NULL,
-   service_date DATETIME NOT NULL,
-   delivery_address VARCHAR(255) NOT NULL,
-   city VARCHAR(50) NOT NULL,
-   postal_code VARCHAR(50) NOT NULL,
-   number_of_people INT NOT NULL,
-   total_order_price DECIMAL(10,2) NOT NULL,
-   status VARCHAR(50) NOT NULL,
-   equipment_loan TINYINT(1) NOT NULL,
-   equipment_return TINYINT(1) NOT NULL,
-   id_user CHAR(36) NOT NULL,
-   FOREIGN KEY(id_user) REFERENCES user(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  order_date DATE NOT NULL,
+  service_date DATETIME NOT NULL,
+  delivery_address VARCHAR(255) NOT NULL,
+  city VARCHAR(50) NOT NULL,
+  postal_code VARCHAR(10) NOT NULL,
+  latitude DECIMAL(10,8) NOT NULL,
+  longitude DECIMAL(11,8) NOT NULL,
+  number_of_people INT NOT NULL,
+  delivery_charges DECIMAL(10,2) NOT NULL,
+  total_excluding_tax DECIMAL(10,2) NOT NULL,
+  total_including_tax DECIMAL(10,2) NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  equipment_loan TINYINT(1) NOT NULL,
+  equipment_return TINYINT(1) NOT NULL,
+  id_user CHAR(36) NOT NULL,
+  FOREIGN KEY(id_user) REFERENCES user(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `number_of_people`, `total_order_price`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
-('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 50, 1750.00, 'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
-('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000', 30, 900.00, 'Confirmé', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
-('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 25, 655.55, 'Confirmé', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
+INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `latitude`, `longitude`, `number_of_people`, `delivery_charges`, `total_excluding_tax`, `total_including_tax`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
+('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 44.837789, -0.579180, 50, 120.00, 1630.00, 1750.00,  'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
+('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000',  44.837789, -0.579180, 30, 80.00, 820.00, 900.00, 'Confirmé', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
+('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 44.837789, -0.579180, 25, 55.55, 600.00, 655.55, 'Confirmé', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
 
 CREATE TABLE notice(
-   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
-   note INT NOT NULL,
-   description TEXT NOT NULL,
-   signature VARCHAR(50) NOT NULL,
-   status  enum('en attente', 'validé') NOT NULL DEFAULT 'en attente',
-   date DATE NOT NULL,
-   id_order CHAR(36) NOT NULL,
-   FOREIGN KEY(id_order) REFERENCES orders(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  note INT NOT NULL,
+  description TEXT NOT NULL,
+  signature VARCHAR(50) NOT NULL,
+  status  enum('en attente', 'validé') NOT NULL DEFAULT 'en attente',
+  date DATE NOT NULL,
+  id_order CHAR(36) NOT NULL,
+  FOREIGN KEY(id_order) REFERENCES orders(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 insert into notice (note, description, signature, status, date, id_order) values
@@ -277,39 +282,40 @@ insert into notice (note, description, signature, status, date, id_order) values
   (5, 'Merci encore pour la qualité et la présentation. Merci à Julie, José et toute la team.', 'EliseB', 'validé', '2026-01-17', (SELECT id FROM orders WHERE order_date = '2026-01-17'));
 
 CREATE TABLE order_material(
-   id_order CHAR(36) NOT NULL,
-   id_material CHAR(36) NOT NULL,
-   PRIMARY KEY (id_order, id_material),
-   quantity INT NOT NULL,
-   unit_price DECIMAL(10,2) NOT NULL,
-   subtotal DECIMAL(10,2) NOT NULL,
-   FOREIGN KEY(id_order) REFERENCES orders(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_material) REFERENCES material(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_order CHAR(36) NOT NULL,
+  id_material CHAR(36) NOT NULL,
+  PRIMARY KEY (id_order, id_material),
+  quantity INT NOT NULL,
+  unit_price DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY(id_order) REFERENCES orders(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_material) REFERENCES material(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE order_menu(
-   id_order CHAR(36)  NOT NULL,
-   id_menu CHAR(36) NOT NULL,
-   PRIMARY KEY (id_order, id_menu),
-   number_people INT NOT NULL,
-   price_person DECIMAL(10,2) NOT NULL,
-   subtotal DECIMAL(10,2) NOT NULL,
-   FOREIGN KEY(id_order) REFERENCES orders(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_menu) REFERENCES menu(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_order CHAR(36)  NOT NULL,
+  id_menu CHAR(36) NOT NULL,
+  PRIMARY KEY (id_order, id_menu),
+  number_people INT NOT NULL,
+  price_person DECIMAL(10,2) NOT NULL,
+  discount_amount DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY(id_order) REFERENCES orders(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_menu) REFERENCES menu(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE menu_dish(
-   id_menu CHAR(36) NOT NULL,
-   id_dish CHAR(36) NOT NULL,
-   PRIMARY KEY (id_menu, id_dish),
-   FOREIGN KEY(id_dish) REFERENCES dish(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_menu) REFERENCES menu(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_menu CHAR(36) NOT NULL,
+  id_dish CHAR(36) NOT NULL,
+  PRIMARY KEY (id_menu, id_dish),
+  FOREIGN KEY(id_dish) REFERENCES dish(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_menu) REFERENCES menu(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO menu_dish (id_menu, id_dish) VALUES
@@ -449,13 +455,13 @@ INSERT INTO menu_dish (id_menu, id_dish) VALUES
   (SELECT id FROM dish WHERE dish_title='Desserts format mini'));
 
 CREATE TABLE allergen_dish(
-   id_allergen CHAR(36) NOT NULL,
-   id_dish CHAR(36) NOT NULL,
-   PRIMARY KEY (id_allergen, id_dish),
-   FOREIGN KEY(id_allergen) REFERENCES allergen(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_dish) REFERENCES dish(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_allergen CHAR(36) NOT NULL,
+  id_dish CHAR(36) NOT NULL,
+  PRIMARY KEY (id_allergen, id_dish),
+  FOREIGN KEY(id_allergen) REFERENCES allergen(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_dish) REFERENCES dish(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO allergen_dish (id_allergen, id_dish) VALUES
@@ -577,13 +583,13 @@ INSERT INTO allergen_dish (id_allergen, id_dish) VALUES
  (SELECT id FROM dish WHERE dish_title='Desserts format mini'));
 
 CREATE TABLE diet_dish(
-   id_diet CHAR(36) NOT NULL,
-   id_dish CHAR(36) NOT NULL,
-   PRIMARY KEY (id_diet, id_dish),
-   FOREIGN KEY(id_diet) REFERENCES diet(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_dish) REFERENCES dish(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_diet CHAR(36) NOT NULL,
+  id_dish CHAR(36) NOT NULL,
+  PRIMARY KEY (id_diet, id_dish),
+  FOREIGN KEY(id_diet) REFERENCES diet(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_dish) REFERENCES dish(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -680,39 +686,39 @@ INSERT INTO diet_dish (id_diet, id_dish) VALUES
  (SELECT id FROM dish WHERE dish_title='Desserts format mini'));
 
 CREATE TABLE order_drink_package(
-   id_order CHAR(36) NOT NULL,
-   id_drink_package CHAR(36) NOT NULL,
-   PRIMARY KEY (id_order, id_drink_package),
-   number_people INT NOT NULL,
-   price_person DECIMAL(10,2) NOT NULL,
-   subtotal DECIMAL(10,2) NOT NULL,
-   FOREIGN KEY(id_order) REFERENCES orders(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_drink_package) REFERENCES drink_package(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_order CHAR(36) NOT NULL,
+  id_drink_package CHAR(36) NOT NULL,
+  PRIMARY KEY (id_order, id_drink_package),
+  number_people INT NOT NULL,
+  price_person DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY(id_order) REFERENCES orders(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_drink_package) REFERENCES drink_package(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE order_personal_package(
-   id_order CHAR(36) NOT NULL,
-   id_personal_package CHAR(36) NOT NULL,
-   PRIMARY KEY (id_order, id_personal_package),
-   number_people INT NOT NULL,
-   price_package DECIMAL(10,2) NOT NULL,
-   subtotal DECIMAL(10,2) NOT NULL,
-   FOREIGN KEY(id_order) REFERENCES orders(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_personal_package) REFERENCES personal_package(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_order CHAR(36) NOT NULL,
+  id_personal_package CHAR(36) NOT NULL,
+  PRIMARY KEY (id_order, id_personal_package),
+  number_people INT NOT NULL,
+  price_package DECIMAL(10,2) NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY(id_order) REFERENCES orders(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_personal_package) REFERENCES personal_package(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE menu_condition_menu(
   id_menu CHAR(36) NOT NULL,
-   id_condition_menu CHAR(36) NOT NULL,
-   PRIMARY KEY (id_menu, id_condition_menu),
-   FOREIGN KEY(id_menu) REFERENCES menu(id)
-   ON DELETE CASCADE ON UPDATE CASCADE,
-   FOREIGN KEY(id_condition_menu) REFERENCES condition_menu(id)
-   ON DELETE CASCADE ON UPDATE CASCADE
+  id_condition_menu CHAR(36) NOT NULL,
+  PRIMARY KEY (id_menu, id_condition_menu),
+  FOREIGN KEY(id_menu) REFERENCES menu(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY(id_condition_menu) REFERENCES condition_menu(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO menu_condition_menu (id_menu, id_condition_menu) VALUES

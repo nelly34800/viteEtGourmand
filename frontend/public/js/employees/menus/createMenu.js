@@ -8,7 +8,6 @@ const remainingQuantity = document.getElementById("remainingQuantity");
 const dishes = document.getElementById("dishes-container");
 const conditions= document.getElementById("conditions-container");
 const menuValidation = document.getElementById("menuValidation");
-const messageDiv = document.getElementById('creat-message');
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const menuId = params.get('id');
@@ -52,11 +51,6 @@ function validateRequired(input){
   }
 }
 
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
-}
 // ordre d'affichage des plats
 const order = ["Entrées", "Plats principaux", "Fromages", "Desserts"];
 

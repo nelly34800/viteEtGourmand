@@ -6,7 +6,6 @@ const lastDay = document.getElementById("lastDay");
 const openingTime = document.getElementById("openingTime");
 const closingTime = document.getElementById("closingTime");
 const scheduleValidation = document.getElementById("scheduleValidation");
-const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
 const scheduleId = params.get('id');
@@ -45,12 +44,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // Charger un horaire (modification)

@@ -46,7 +46,7 @@ async function signout() {
   localStorage.removeItem('user');
   localStorage.removeItem('csrf_token');
 
-  window.location.reload();
+  window.location.href = "/";
 }
 
 //afficher et masquer les élément en fonction du role
@@ -79,9 +79,9 @@ function showAndHideElementForRole(){
                     element.classList.add("d-none");
                 }
                 break; 
-                case "employee":
+                case "employé":
                   // Visible uniquement si connecté ET rôle employe
-                     if(!userConnected || (role!="employee")){ 
+                     if(!userConnected || (role!="employé")){ 
                         element.classList.add("d-none"); 
                     }
                 break;
@@ -96,3 +96,34 @@ function showAndHideElementForRole(){
 }
 
 document.addEventListener('DOMContentLoaded', showAndHideElementForRole);
+
+function loadProfileByRole(role) {
+  switch (role) {
+    case "client": 
+    window.location.href = "/account";
+    break;
+
+    case "employé": 
+    window.location.href = "/employee";
+    break;
+
+    case "admin": 
+    window.location.href = "/admin";
+    break;
+
+    default: 
+    showMessage("Cette page est seulement accessible après connexion, merci de vous connecter s'il vous plait", "warning");
+    // redirection après 2 secondes
+    setTimeout(() => {
+      window.location.href = "/signin";
+    }, 2000);
+  }
+}
+// 
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#account")) {
+    e.preventDefault();
+    const role = getRole();
+    loadProfileByRole(role);
+  }
+});

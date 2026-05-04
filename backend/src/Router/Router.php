@@ -46,6 +46,11 @@ class Router
         }
 
         http_response_code(404);
-        echo json_encode(['error' => 'Route not found']);
+        echo json_encode([
+            'error' => 'Route not found',
+            'method' => $method,
+            'uri' => $uri,
+            'available_routes' => array_keys($this->routes[$method] ?? [])
+          ]);
     }
 }

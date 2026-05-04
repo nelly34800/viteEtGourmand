@@ -3,11 +3,9 @@
 const nameDrinkPackage = document.getElementById("nameDrinkPackage");
 const priceDrinkPackage = document.getElementById("priceDrinkPackage");
 const drinkPackageValidation = document.getElementById("drinkPackageValidation");
-const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
 const drinkPackageId = params.get('id');
-
 
 //écoute des événements
 [nameDrinkPackage, priceDrinkPackage].forEach(input => {
@@ -40,12 +38,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // Charger un forfait de boissons (modification)

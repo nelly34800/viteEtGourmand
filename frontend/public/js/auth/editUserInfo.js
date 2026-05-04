@@ -120,13 +120,10 @@ async function editUserInfo(e){
     });
 
     const data = await response.json();
-    const messageDiv = document.getElementById('edit-user-message');
 
     if (response.ok) {
       // afficher le message
-      messageDiv.textContent = "Modification réussie ! Vous allez être redirigé sur la page d'accueil";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-success");
+      showMessage("Modification réussie ! Vous allez être redirigé sur la page d'accueil", "success");
 
       // redirection après 3 secondes
       setTimeout(() => {
@@ -134,9 +131,7 @@ async function editUserInfo(e){
       }, 3000);
     } else {
       // message d'erreur
-      messageDiv.textContent = data.error || "Une erreur est survenue";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-danger");
+       showMessage("Une erreur est survenue, danger");
     }
 
   } catch (error) {
@@ -167,13 +162,10 @@ deleteAccount.addEventListener("click", async function() {
     });
 
     const data = await response.json();
-    const messageDiv = document.getElementById('delete-user-message');
 
     if (response.ok) {
       // afficher le message
-      messageDiv.textContent = "Suppression réussie ! Vous allez être redirigé sur la page d'accueil'";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-success");
+      showMessage("Suppression réussie ! Vous allez être redirigé sur la page d'accueil, danger");
 
       // nettoyage côté front
       localStorage.removeItem('user');
@@ -186,9 +178,7 @@ deleteAccount.addEventListener("click", async function() {
 
     } else {
       // message d'erreur
-      messageDiv.textContent = data.error || "Une erreur est survenue";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-danger");
+      showMessage(data.error || "Une erreur est survenue, danger");
     }
 
   } catch (error) {

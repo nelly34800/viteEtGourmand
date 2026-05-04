@@ -10,7 +10,6 @@ const postalCode = document.getElementById("postalCode");
 const city = document.getElementById("city");
 const phone = document.getElementById("phone");
 const btnValidation = document.getElementById("validation-inscription");
-const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
 const userId = params.get('id');
@@ -103,12 +102,6 @@ function validateRequired(input){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // créer en bdd l'employé

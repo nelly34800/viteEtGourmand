@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use PDO;
 use App\Entity\DrinkPackage;
+
 use RuntimeException;
 use Ramsey\Uuid\Uuid;
 
@@ -112,5 +113,25 @@ class DrinkPackageRepository
         if ($stmt->rowCount() === 0) {
             throw new RuntimeException('DrinkPackage not found');
         }
+    }
+    /**
+     * Retourne un tableau de forfaits boissons par leurs IDS.
+     */
+    public function findByIds(array $ids): array {
+        // Vérifie si l'array est vide
+        if (empty($ids)) return [];
+        // crée autant de ? qu’il y a d’IDs pour sécuriser la requête SQL
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $stmt = $this->pdo->prepare(
+            "SELECT id,
+                drink_package_name,
+                minimum_people,
+                price_per_person
+            FROM drink_package WHERE id IN ($placeholders)"
+          );
+
+        $stmt->execute($ids);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

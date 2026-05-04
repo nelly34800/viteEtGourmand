@@ -4,7 +4,7 @@ const eventType = document.getElementById("eventType");
 const staffRatio = document.getElementById("staffRatio");
 const packagePrice = document.getElementById("packagePrice");
 const personalPackageValidation = document.getElementById("personalPackageValidation");
-const messageDiv = document.getElementById('creat-message');
+
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const personalPackageId = params.get('id');
@@ -41,12 +41,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // Charger un forfait de personnel (modification)

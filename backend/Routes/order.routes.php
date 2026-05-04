@@ -5,13 +5,11 @@ use App\Middleware\AuthMiddleware;
 use App\Helper\CsrfHelper;
 
 $router->get('/order', function() {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new OrderController())->index();
 });
 
 $router->get('/order/{id}', function($id) {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new OrderController())->show($id);
 });

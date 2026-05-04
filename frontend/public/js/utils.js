@@ -22,31 +22,43 @@ function renderStars(rating, maxStars = 5) {
 async function secureFetch(url, options = {}, allowedRoles = []) {//prend en paramètre l'url, les options du fetch(get, post...) et les rôles autorisés
   // vérifie le rôle 
   const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) throw new Error("Utilisateur non connecté");
-  if (allowedRoles.length && !allowedRoles.includes(user.role)) {
-    // si le rôle de l'utilisateur n'est pas dans les rôles autorisés, on bloque l'accès
-    throw new Error("Accès interdit : rôle non autorisé");
+  if (!user) {
+    throw new Error("Utilisateur non connecté");
+  } 
+  const method = (options.method || "GET").toUpperCase();
+  // envoie dans l'entête de requête le type d'envoie
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+  // si le type d'envoie n'est pas get, ajoute le token CSRF
+  if (["POST", "PUT", "DELETE"].includes(method)) {
+    const csrfToken = localStorage.getItem("csrf_token");
+
+    if (!csrfToken) {
+      throw new Error("Token CSRF manquant");
+    }
+
+    headers["X-CSRF-Token"] = csrfToken;
   }
-  const csrfToken = localStorage.getItem('csrf_token');
 
   const fetchOptions = {
-    credentials: 'include',
-    headers: {
-      'X-CSRF-Token': csrfToken,
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    },
-    ...options
+    ...options,
+    method,
+    credentials: "include",
+    headers
   };
+
   try {
     const response = await fetch(url, fetchOptions);
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Une erreur est survenue');
+      throw new Error(data.error || "Une erreur est survenue");
     }
 
     return data;
+
   } catch (error) {
     console.error("Erreur fetch sécurisé :", error);
     throw error;
@@ -76,11 +88,11 @@ function createActionButtons(id) {
 }
 
 // fonction pour le bouton d'action (ajouter: évite répétition)
-function addOrderButton(id) {
+function CreateAddButton(id) {
   const container = document.createElement("div");
 
   const addBtn = document.createElement("button");
-  addBtn.className = "btn btn-secondary addBtn m-1";
+  addBtn.className = "btn btn-primary addBtn m-1";
   addBtn.dataset.id = id;
   addBtn.textContent = "ajouter";
 
@@ -94,3 +106,19 @@ const formatTime = (time) => {
   const [hours, minutes] = time.split(":");
   return `${hours}h${minutes}`;
 };
+
+// affichage des messages
+function showMessage(message, type = "info") {
+  const messageDiv = document.getElementById("messageDiv");
+
+  if (!messageDiv) return;
+
+  messageDiv.textContent = message;
+  messageDiv.className = `alert alert-${type}`;
+  messageDiv.classList.remove("d-none");
+
+  // disparition automatique (optionnel mais propre)
+  setTimeout(() => {
+    messageDiv.classList.add("d-none");
+  }, 3000);
+}

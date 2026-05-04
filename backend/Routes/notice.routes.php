@@ -5,7 +5,6 @@ use App\Middleware\AuthMiddleware;
 use App\Helper\CsrfHelper;
 
 $router->get('/notice', function() {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new NoticeController())->index();
 });
@@ -15,7 +14,6 @@ $router->get('/noticeValidate', function() {
 });
 
 $router->get('/notice/{id}', function($id) {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new NoticeController())->show($id);
 });

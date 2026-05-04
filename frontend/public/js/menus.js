@@ -1,8 +1,14 @@
 // fonction pour charger les menus
 async function loadMenus() {
   try {
-    // Appel sécurisé vers l'API (GET: fonction dans api.js)
-    const data = await getMenus();
+    // Appel sécurisé vers l'API
+    const response = await fetch(`http://localhost:8082/menu`);
+
+    if (!response.ok) {
+      throw new Error("Erreur API");
+    }
+
+    const data = await response.json();
 
     const container = document.getElementById('container');
     container.innerHTML = '';

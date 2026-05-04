@@ -2,7 +2,6 @@
 // Implémenter js de ma page
 const nameDiet = document.getElementById("nameDiet");
 const dietValidation = document.getElementById("dietValidation");
-const messageDiv = document.getElementById('creat-message');
 
 const params = new URLSearchParams(window.location.search);
 const dietId = params.get('id');
@@ -36,12 +35,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // Charger un régime alimentaire (modification)

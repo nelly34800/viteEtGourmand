@@ -39,55 +39,66 @@ class OrderRepository
                     $row['delivery_address'],
                     $row['city'],
                     $row['postal_code'],
+                    $row['latitude'],
+                    $row['longitude'],
                     $row['number_of_people'],
-                    $row['total_order_price'],
+                    $row['delivery_charges'],
+                    $row['total_excluding_tax'],
+                    $row['total_including_tax'],
                     $row['status'],
                     $row['equipment_loan'],
                     $row['equipment_return'],
                     $row['id_user'],
+                    $row['user_last_name'],
+                    $row['user_first_name'],
+                    $row['user_email'],
+                    $row['user_phone']
                 );
             }
             // Ajouter le menu si pas déjà présent
-             if ($row['menu_id'] !== null) {
+            if ($row['menu_id'] !== null) {
+            // Récupération des menus existants pour la commande
                 $orders[$orderId]->addMenu([
-                  'id' => $row['menu_id'],
-                  'name' => $row['menu_name'],
-                  'number' => $row['number_people'],
-                  'price' => $row['price_person'],
-                  'subtotal' => $row['subtotal']
-                  ]);
+                    'id' => $row['menu_id'],
+                    'name' => $row['menu_name'],
+                    'number' => $row['menu_number_people'],
+                    'price' => $row['price_person'],
+                    'discount' => $row['discount_amount'],
+                    'subtotal' => $row['menu_subtotal']
+                    ]);
             }
             // Ajouter le matériel si pas déjà présent
             if ($row['material_id'] !== null) {
-            $orders[$orderId]->addMaterial([
-                  'id' => $row['material_id'],
-                  'name' => $row['material_name'],
-                  'number' => $row['quantity'],
-                  'price' => $row['unit_price'],
-                  'subtotal' => $row['subtotal']
-                  ]);
+                $orders[$orderId]->addMaterial([
+                    'id' => $row['material_id'],
+                    'name' => $row['material_name'],
+                    'number' => $row['quantity'],
+                    'price' => $row['unit_price'],
+                    'subtotal' => $row['material_subtotal']
+                    ]);
             }
              // Ajouter le forfait boisson si pas déjà présent
             if ($row['drink_package_id'] !== null) {
-            $orders[$orderId]->addDrinkPackage([
-                  'id' => $row['drink_package_id'],
-                  'name' => $row['drink_package_name'],
-                  'number' => $row['number_people'],
-                  'price' => $row['price_person'],
-                  'subtotal' => $row['subtotal']
-                  ]);
+                $orders[$orderId]->addDrinkPackage([
+                    'id' => $row['drink_package_id'],
+                    'name' => $row['drink_package_name'],
+                    'number' => $row['drink_number_people'],
+                    'price' => $row['drink_price_person'],
+                    'subtotal' => $row['drink_subtotal']
+                    ]);
             }
              // Ajouter le forfait personnel si pas déjà présent
             if ($row['personal_package_id'] !== null) {
-            $orders[$orderId]->addPersonalPackage([
-                  'id' => $row['personal_package_id'],
-                  'name' => $row['personal_package_event_type'],
-                  'number' => $row['number_people'],
-                  'price' => $row['price_package'],
-                  'subtotal' => $row['subtotal']
-                  ]);
+                $orders[$orderId]->addPersonalPackage([
+                    'id' => $row['personal_package_id'],
+                    'name' => $row['personal_package_event_type'],
+                    'number' => $row['personal_number_people'],
+                    'price' => $row['price_package'],
+                    'subtotal' => $row['personal_subtotal']
+                    ]);
             }
         }
+
     // À la fin, $orders contient tous les objets Order avec leurs tableaux menu, material,drinkPackage et personalPackage
     return array_values($orders);
     }
@@ -104,14 +115,23 @@ class OrderRepository
                 orders.delivery_address,
                 orders.city,
                 orders.postal_code,
+                orders.latitude,
+                orders.longitude,
                 orders.number_of_people,
-                orders.total_order_price,
+                orders.delivery_charges,
+                orders.total_excluding_tax,
+                orders.total_including_tax,
                 orders.status,
                 orders.equipment_loan,
                 orders.equipment_return,
                 orders.id_user,
+                user.last_name AS user_last_name,
+                user.first_name AS user_first_name,
+                user.email AS user_email,
+                user.phone AS user_phone,
                 order_menu.number_people AS menu_number_people,
                 order_menu.price_person,
+                order_menu.discount_amount,
                 order_menu.subtotal AS menu_subtotal,
                 menu.id AS menu_id,
                 menu.menu_name,
@@ -121,7 +141,7 @@ class OrderRepository
                 material.id AS material_id,
                 material.material_name,
                 order_drink_package.number_people AS drink_number_people,
-                order_drink_package.price_person,
+                order_drink_package.price_person AS drink_price_person,
                 order_drink_package.subtotal AS drink_subtotal,
                 drink_package.id AS drink_package_id,
                 drink_package.drink_package_name,
@@ -158,30 +178,39 @@ class OrderRepository
                 orders.delivery_address,
                 orders.city,
                 orders.postal_code,
+                orders.latitude,
+                orders.longitude,
                 orders.number_of_people,
-                orders.total_order_price,
+                orders.delivery_charges,
+                orders.total_excluding_tax,
+                orders.total_including_tax,
                 orders.status,
                 orders.equipment_loan,
                 orders.equipment_return,
                 orders.id_user,
-                order_menu.number_people,
+                user.last_name AS user_last_name,
+                user.first_name AS user_first_name,
+                user.email AS user_email,
+                user.phone AS user_phone,
+                order_menu.number_people AS menu_number_people,
                 order_menu.price_person,
-                order_menu.subtotal,
+                order_menu.discount_amount,
+                order_menu.subtotal AS menu_subtotal,
                 menu.id AS menu_id,
                 menu.menu_name,
                 order_material.quantity,
                 order_material.unit_price,
-                order_material.subtotal,
+                order_material.subtotal AS material_subtotal,
                 material.id AS material_id,
                 material.material_name,
-                order_drink_package.number_people,
-                order_drink_package.price_person,
-                order_drink_package.subtotal,
+                order_drink_package.number_people AS drink_number_people,
+                order_drink_package.price_person AS drink_price_person,
+                order_drink_package.subtotal AS drink_subtotal,
                 drink_package.id AS drink_package_id,
                 drink_package.drink_package_name,
-                order_personal_package.number_people,
+                order_personal_package.number_people AS personal_number_people,
                 order_personal_package.price_package,
-                order_personal_package.subtotal,
+                order_personal_package.subtotal AS personal_subtotal,
                 personal_package.id AS personal_package_id,
                 personal_package.event_type AS personal_package_event_type
             FROM orders
@@ -221,27 +250,32 @@ class OrderRepository
 
             // insertion du commande
             $stmt = $this->pdo->prepare("
-                INSERT INTO orders (id, order_date, service_date, delivery_address, city, postal_code, number_of_people, total_order_price, status, equipment_loan, equipment_return, id_user)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO orders (id, order_date, service_date, delivery_address, city, postal_code, latitude, longitude,
+                number_of_people, delivery_charges, total_excluding_tax, total_including_tax, status, equipment_loan, equipment_return, id_user)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $order->getId(),
-                $order->getOrderDate()->format('Y-m-d H:i:s'),
+                $order->getOrderDate()->format('Y-m-d'),
                 $order->getServiceDate()->format('Y-m-d H:i:s'),
                 $order->getDeliveryAddress(),
                 $order->getCity(),
                 $order->getPostalCode(),
+                $order->getLatitude(),
+                $order->getLongitude(),
                 $order->getNumberOfPeople(),
-                $order->getTotalOrderPrice(),
+                $order->getDeliveryCharges(),
+                $order->getTotalExcludingTax(),
+                $order->getTotalIncludingTax(),
                 $order->getStatus(),
-                $order->getEquipmentLoan(),
-                $order->getEquipmentReturn(),
+                (int) $order->getEquipmentLoan(),
+                (int) $order->getEquipmentReturn(),
                 $order->getIdUser(),
             ]);
 
             // insertion dans table pivot order_menu
             $stmtMenu = $this->pdo->prepare("
-                INSERT INTO order_menu (id_order, id_menu, number_people, price_person, subtotal) VALUES (?, ?, ?, ?, ?)
+                INSERT INTO order_menu (id_order, id_menu, number_people, price_person, discount_amount, subtotal) VALUES (?, ?, ?, ?, ?, ?)
             ");
             foreach ($order->getMenus() as $menu) {
                 $stmtMenu->execute([
@@ -249,6 +283,7 @@ class OrderRepository
                     $menu['id'],
                     $menu['number'],
                     $menu['price'],
+                    $menu['discount'],
                     $menu['subtotal']
                 ]);
             }
@@ -312,7 +347,9 @@ class OrderRepository
             // modifie le commande
             $stmt = $this->pdo->prepare("
                 UPDATE orders 
-                SET order_date = ?, service_date = ?, delivery_address = ?, city = ?, postal_code = ?, number_of_people = ?, total_order_price = ?, status = ?, equipment_loan = ?, equipment_return = ?, id_user = ?
+                SET order_date = ?, service_date = ?, delivery_address = ?, city = ?, postal_code = ?, latitude = ?, longitude = ?,
+                number_of_people = ?, delivery_charges = ?, total_excluding_tax = ?, total_including_tax = ?,
+                status = ?, equipment_loan = ?, equipment_return = ?, id_user = ?
                 WHERE id = ?
             ");
 
@@ -322,11 +359,15 @@ class OrderRepository
                 $order->getDeliveryAddress(),
                 $order->getCity(),
                 $order->getPostalCode(),
+                $order->getLatitude(),
+                $order->getLongitude(),
                 $order->getNumberOfPeople(),
-                $order->getTotalOrderPrice(),
+                $order->getDeliveryCharges(),
+                $order->getTotalExcludingTax(),
+                $order->getTotalIncludingTax(),
                 $order->getStatus(),
-                $order->getEquipmentLoan(),
-                $order->getEquipmentReturn(),
+                (int) $order->getEquipmentLoan(),
+                (int) $order->getEquipmentReturn(),
                 $order->getIdUser(),
                 $order->getId()
             ]);
@@ -346,7 +387,7 @@ class OrderRepository
 
             // réinsertion
             $stmtMenu = $this->pdo->prepare("
-                INSERT INTO order_menu (id_order, id_menu, number_people, price_person, subtotal) VALUES (?, ?, ?, ?, ?)
+                INSERT INTO order_menu (id_order, id_menu, number_people, price_person, discount_amount, subtotal) VALUES (?, ?, ?, ?, ?, ?)
             ");
             foreach ($order->getMenus() as $menu) {
                 $stmtMenu->execute([
@@ -354,6 +395,7 @@ class OrderRepository
                     $menu['id'],
                     $menu['number'],
                     $menu['price'],
+                    $menu['discount'],
                     $menu['subtotal']
                 ]);
             }

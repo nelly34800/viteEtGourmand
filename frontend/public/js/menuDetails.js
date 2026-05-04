@@ -4,24 +4,19 @@ const menuId = params.get("id");
 async function loadMenu(id) {
   try {
     const response = await fetch(`http://localhost:8082/menu/${id}`);
-
-    if (!response.ok) {
-      throw new Error("Erreur API");
-    }
-
     const data = await response.json();
-
 
     renderMenu(data);
     renderCarousel(data.dishes);
     renderDishes(data.dishes);
     renderConditions(data.conditions);
     renderInfos(data);
+
+    // lier l'id du backend
     addOrderButton(data.id);
 
   } catch (error) {
     console.error(error);
-    alert("Erreur chargement menu");
   }
 }
 
@@ -135,16 +130,52 @@ function renderInfos(menu) {
     <p>Prix : ${menu.price_per_person} € / personne</p>
   `;
 }
+async function addToCart(menuId) {
+  const user = isConnected();
 
-function addOrderButton(id) {
-  const btn = document.getElementById("reserve_btn");
+  if (!user) {
+      localStorage.setItem("redirectAfterLogin", window.location.href);
+      showMessage("Cette page est seulement accessible après connexion, merci de vous connecter s'il vous plait", "warning");
 
-  btn.addEventListener("click", () => {
-    const modal = new bootstrap.Modal(document.getElementById('cartModal'));
-    modal.show();
-  });
+      setTimeout(() => {
+        window.location.replace("/signin");
+      }, 2000);
+      return false;
+    }
+
+  // envoie le menu au backend et ajoute le panier dans la session php  
+  return await secureFetch(
+    'http://localhost:8082/cart', 
+      {
+        method: "POST", 
+        body: JSON.stringify({ 
+          type: "menu",
+          id: menuId,
+          quantity: 1
+        })
+    },
+    ['client']
+  );
 }
 
+function addOrderButton(menuId) {
+  // récupère le bouton HTML
+  const btn = document.getElementById("reserve_btn");
+  // vérifie si le bouton existe dans le DOM
+  if (btn) {
+    btn.addEventListener("click", async () => {
+      try {
+          await addToCart(menuId);
+          const modal = new bootstrap.Modal(document.getElementById('cartModal'));
+          modal.show();
+      } catch (error) {
+        console.error("Erreur ajout panier :", error);
+      }
+    });
+  }
+}
+// vérifie qu’un menu est sélectionné
 if (menuId) {
+  //charge les données du menu
   loadMenu(menuId);
 }

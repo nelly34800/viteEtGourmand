@@ -5,7 +5,6 @@ const quantityAvailable = document.getElementById("quantityAvailable");
 const price = document.getElementById("price");
 const category = document.getElementById("category");
 const materialValidation = document.getElementById("materialValidation");
-const messageDiv = document.getElementById('creat-message');
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const materialId = params.get('id');
@@ -47,12 +46,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // charger les catégories de matériel dans le select

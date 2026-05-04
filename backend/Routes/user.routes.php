@@ -5,7 +5,6 @@ use App\Middleware\AuthMiddleware;
 use App\Helper\CsrfHelper;
 
 $router->get('/user/{id}', function($id) {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new UserController())->show($id);
 });
@@ -29,7 +28,6 @@ $router->delete('/user/{id}', function($id) {
 $allowedRoles = ['admin'];
 
 $router->get('/user', function() use ($allowedRoles) {
-    CsrfHelper::validate();
     AuthMiddleware::requireRole($allowedRoles);
     (new UserController())->index();
 });

@@ -142,4 +142,24 @@ class MaterialRepository
             throw new RuntimeException('Material not found');
         }
     }
+    /**
+     * Retourne un tableau de forfaits boissons par leurs IDS.
+     */
+    public function findByIds(array $ids): array {
+        // Vérifie si l'array est vide
+        if (empty($ids)) return [];
+        // crée autant de ? qu’il y a d’IDs pour sécuriser la requête SQL
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $stmt = $this->pdo->prepare(
+            "SELECT id,
+                material_name,
+                quantity_available,
+                price
+            FROM drink_package WHERE id IN ($placeholders)"
+          );
+
+        $stmt->execute($ids);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

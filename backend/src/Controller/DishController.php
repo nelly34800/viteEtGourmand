@@ -123,15 +123,15 @@ public function store(): void
         ValidatorHelper::validateUuid($id);
         // Lecture du JSON
         $data = RequestHelper::getJson();
-            ValidatorHelper::validateUuid($data['id_category_dish']);
-            ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
-            ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
-            ValidatorHelper::validatePicture($data['picture']);
+        ValidatorHelper::validateUuid($data['id_category_dish']);
+        ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
+        ValidatorHelper::validatePicture($data['picture']);
         // Validation des champs obligatoires
         if (!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
             throw new InvalidArgumentException('Invalid input');
         }
-         $dietIds = $data['diet_id'] ?? [];
+        $dietIds = $data['diet_id'] ?? [];
         $allergenIds = $data['allergen_id'] ?? [];
         // Création de l'entité plat à partir des données reçues 
         $dish = new Dish(

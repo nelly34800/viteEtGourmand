@@ -19,7 +19,7 @@ class MenuController
 
     public function __construct()
     {
-      // Récupération de la connexion PDO et initialisation du repository
+        // Récupération de la connexion PDO et initialisation du repository
         $pdo = Database::getConnection();
         // Injection de la dépendance du repository
         $this->repository = new MenuRepository($pdo);

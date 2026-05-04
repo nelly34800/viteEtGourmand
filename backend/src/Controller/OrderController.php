@@ -41,16 +41,20 @@ class OrderController
                 'delivery_address' => $order->getDeliveryAddress(),
                 'city' => $order->getCity(),
                 'postal_code' => $order->getPostalCode(),
+                'latitude' => $order->getLatitude(),
+                'longitude' => $order->getLongitude(),
                 'number_of_people' => $order->getNumberOfPeople(),
-                'total_order_price' => $order->getTotalOrderPrice(),
+                'delivery_charges' => $order->getDeliveryCharges(),
+                'total_excluding_tax' => $order->getTotalExcludingTax(),
+                'total_including_tax' => $order->getTotalIncludingTax(),
                 'status' => $order->getStatus(),
                 'equipment_loan' => $order->getEquipmentLoan(),
                 'equipment_return' => $order->getEquipmentReturn(),
                 'id_user' => $order->getIdUser(),
-                'menus' => $order->getMenus(),
-                'materials' => $order->getMaterials(),
-                'drink_packages' => $order->getDrinkPackages(),
-                'personal_packages' => $order->getPersonalPackages()
+                'user_last_name' => $order->getUserLastName(),
+                'user_first_name' => $order->getUserFirstName(),
+                'user_email' => $order->getUserEmail(),
+                'user_phone' => $order->getUserPhone()
             ];
         }, $orders);
 
@@ -76,12 +80,20 @@ class OrderController
                 'delivery_address' => $order->getDeliveryAddress(),
                 'city' => $order->getCity(),
                 'postal_code' => $order->getPostalCode(),
+                'latitude' => $order->getLatitude(),
+                'longitude' => $order->getLongitude(),
                 'number_of_people' => $order->getNumberOfPeople(),
-                'total_order_price' => $order->getTotalOrderPrice(),
+                'delivery_charges' => $order->getDeliveryCharges(),
+                'total_excluding_tax' => $order->getTotalExcludingTax(),
+                'total_including_tax' => $order->getTotalIncludingTax(),
                 'status' => $order->getStatus(),
                 'equipment_loan' => $order->getEquipmentLoan(),
                 'equipment_return' => $order->getEquipmentReturn(),
                 'id_user' => $order->getIdUser(),
+                'user_last_name' => $order->getLastName(),
+                'user_first_name' => $order->getFirstName(),
+                'user_email' => $order->getEmail(),
+                'user_phone' => $order->getPhone(),
                 'menus' => $order->getMenus(),
                 'materials' => $order->getMaterials(),
                 'drink_packages' => $order->getDrinkPackages(),
@@ -94,21 +106,29 @@ class OrderController
         }
     }
 
-    /**
-     * Crée une nouvelle commande.
-     */
+/**
+ * Crée une nouvelle commande.
+ */
 public function store(): void
 {
 
     $data = RequestHelper::getJson();
+    ValidatorHelper::validateUuid($data['id_user']);
+    ValidatorHelper::validateUuidArray($data['menu_id'] ?? []);
+    ValidatorHelper::validateUuidArray($data['material_id'] ?? []);
+    ValidatorHelper::validateUuidArray($data['drink_package_id'] ?? []);
+    ValidatorHelper::validateUuidArray($data['personal_package_id'] ?? []);
+
     // Validation des champs obligatoires
-    if(!isset($data['order_date'], $data['service_date'], $data['delivery_address'], $data['city'], $data['postal_code'], $data['number_of_people'], $data['total_order_price'], $data['status'], $data['equipment_loan'], $data['equipment_return'], $data['id_user'])) {
+    if(!isset($data['order_date'], $data['service_date'], $data['delivery_address'], $data['city'], $data['postal_code'],
+      $data['latitude'], $data['longitude'], $data['number_of_people'], $data['delivery_charges'], $data['total_excluding_tax'],
+      $data['total_including_tax'], $data['status'], $data['equipment_loan'], $data['equipment_return'], $data['id_user'])) {
         throw new InvalidArgumentException('Invalid input');
     }
-    $menus = $data ['menus'] ?? [];
-    $materials = $data['materials'] ?? [];
-    $drinkPackages = $data['drink_packages'] ?? [];
-    $personalPackages = $data['personal_packages'] ?? [];
+    $menuIds = $data['menus'] ?? [];
+    $materialIds = $data['materials'] ?? [];
+    $drinkPackageIds = $data['drink_packages'] ?? [];
+    $personalPackageIds = $data['personal_packages'] ?? [];
     // Création de l'entité Order à partir des données reçues
     $order = new Order(
         id: '', // l'UUID sera généré côté repository
@@ -117,16 +137,24 @@ public function store(): void
         deliveryAddress: $data['delivery_address'],
         city: $data['city'],
         postalCode: $data['postal_code'],
+        latitude: $data['latitude'],
+        longitude: $data['longitude'],
         numberOfPeople: $data['number_of_people'],
-        totalOrderPrice: $data['total_order_price'],
+        deliveryCharges: $data['delivery_charges'],
+        totalExcludingTax: $data['total_excluding_tax'],
+        totalIncludingTax: $data['total_including_tax'],
         status: $data['status'],
         equipmentLoan: $data['equipment_loan'],
         equipmentReturn: $data['equipment_return'],
         idUser: $data['id_user'],
-        menus: $menus,
-        materials: $materials,
-        drinkPackages: $drinkPackages,
-        personalPackages: $personalPackages
+        userLastName: null,
+        userFirstName: null,
+        userEmail: null,
+        userPhone: null,
+        menus: $menuIds,
+        materials: $materialIds,
+        drinkPackages: $drinkPackageIds,
+        personalPackages: $personalPackageIds
     );
         //  appel du repository pour l'enregistrer en base
         try {
@@ -147,14 +175,21 @@ public function store(): void
         ValidatorHelper::validateUuid($id);
         // Lecture du JSON
         $data = RequestHelper::getJson();
+        ValidatorHelper::validateUuid($data['id_user']);
+        ValidatorHelper::validateUuidArray($data['menu_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['material_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['drink_package_id'] ?? []);
+        ValidatorHelper::validateUuidArray($data['personal_package_id'] ?? []);
         // Validation des champs obligatoires
-        if(!isset($data['order_date'], $data['service_date'], $data['delivery_address'], $data['city'], $data['postal_code'], $data['number_of_people'], $data['total_order_price'], $data['status'], $data['equipment_loan'], $data['equipment_return'], $data['id_user'])) {
+        if(!isset($data['order_date'], $data['service_date'], $data['delivery_address'], $data['city'], $data['postal_code'],
+         $data['latitude'], $data['longitude'], $data['number_of_people'], $data['delivery_charges'], $data['total_excluding_tax'],
+         $data['total_including_tax'], $data['status'], $data['equipment_loan'], $data['equipment_return'], $data['id_user'])) {
         throw new InvalidArgumentException('Invalid input');
         }
-        $menus = $data ['menus'] ?? [];
-        $materials = $data['materials'] ?? [];
-        $drinkPackages = $data['drink_packages'] ?? [];
-        $personalPackages = $data['personal_packages'] ?? [];
+        $menuIds = $data ['menus'] ?? [];
+        $materialIds = $data['materials'] ?? [];
+        $drinkPackageIds = $data['drink_packages'] ?? [];
+        $personalPackageIds = $data['personal_packages'] ?? [];
         // Création de l'entité commande à partir des données reçues 
         $order = new Order(
             $id,
@@ -163,16 +198,24 @@ public function store(): void
             $data['delivery_address'],
             $data['city'],
             $data['postal_code'],
+            $data['latitude'],
+            $data['longitude'],
             $data['number_of_people'],
-            $data['total_order_price'],
+            $data['delivery_charges'], 
+            $data['total_excluding_tax'],
+            $data['total_including_tax'],
             $data['status'],
             $data['equipment_loan'],
             $data['equipment_return'],
             $data['id_user'],
-            menus: $menus,
-            materials: $materials,
-            drinkPackages: $drinkPackages,
-            personalPackages: $personalPackages
+            null,
+            null,
+            null,
+            null,
+            $menuIds,
+            $materialIds,
+            $drinkPackageIds,
+            $personalPackageIds
         );
         // appel du repository pour mettre à jour en base
         $this->repository->update($order);

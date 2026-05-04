@@ -72,6 +72,7 @@ try {
     require_once '../routes/drinkPackage.routes.php';
     require_once '../routes/personalPackage.routes.php';
     require_once '../routes/order.routes.php';
+    require_once '../routes/cart.routes.php';
 
     $router->dispatch($method, $uri);
 
@@ -93,5 +94,5 @@ try {
 } catch (Throwable $e) {  //toutes les autres erreurs
 
     http_response_code(500);
-    echo json_encode(['error' => 'Internal server error']);
+    echo json_encode(['error' =>  $e->getMessage() ]);
 }

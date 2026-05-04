@@ -4,6 +4,20 @@ const postalCode = document.getElementById("postalCode");
 const city = document.getElementById("city");
 const btnDeliveryCharges = document.getElementById("btnDeliveryCharges");
 
+// fonction pour charger le panier
+async function loadOrder() {
+  try {
+    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    cart = await secureFetch("http://localhost:8082/cart", {
+      method: "GET"
+    }, ["client"]);
+
+
+  } catch (error) {
+    console.error("Erreur chargement panier :", error);
+  }
+}
+
 //écoute des événements
 address.addEventListener("keyup", validateForm);
 postalCode.addEventListener("keyup", validateForm);
@@ -37,3 +51,5 @@ function validateRequired(input){
         return false;
     }
 }
+
+loadOrder();

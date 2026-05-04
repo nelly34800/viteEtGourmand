@@ -3,7 +3,6 @@
 const conditionType = document.getElementById("conditionType");
 const description = document.getElementById("description");
 const conditionValidation = document.getElementById("conditionValidation");
-const messageDiv = document.getElementById('creat-message');
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const conditionId = params.get('id');
@@ -39,12 +38,6 @@ function validateForm(){
         input.classList.add("is-invalid");
         return false;
     }
-}
-
-// Affichage message
-function showMessage(message, type) {
-  messageDiv.textContent = message;
-  messageDiv.className = `alert alert-${type}`;
 }
 
 // Charger une condition (modification)

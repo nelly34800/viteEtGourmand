@@ -143,13 +143,9 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
     const data = await response.json();
 
-    const messageDiv = document.getElementById('signup-message');
-
     if (response.ok) {
       // afficher le message
-      messageDiv.textContent = "Inscription réussie ! Vous allez être redirigé sur la page de connexion";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-success");
+      showMessage("Inscription réussie ! Vous allez être redirigé sur la page de connexion", "success");
 
       // redirection après 3 secondes
       setTimeout(() => {
@@ -157,9 +153,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
       }, 3000);
     } else {
       // message d'erreur
-      messageDiv.textContent = data.error || "Une erreur est survenue";
-      messageDiv.classList.remove("d-none");
-      messageDiv.classList.add("alert-danger");
+      showMessage(data.error || "Une erreur est survenue, danger");
     }
 
   } catch (error) {

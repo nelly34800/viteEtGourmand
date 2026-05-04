@@ -3,46 +3,37 @@
 <div class="container p-4">
     <h1>Commander ou modifier la commande</h1>
     <form action="">
-      <table>
-        <div class="mb-3">
-          <label for="dateEvent">date et heure de l'événement</label>
-          <input type="datetime-local" id="dateEvent" name="dateEvent">
-          <div class="invalid-feedback">
-            La date et l'heure de l'événement sont requis
-          </div>
+      <div class="mb-3">
+        <label for="dateEvent">date et heure de l'événement</label>
+        <input type="datetime-local" id="dateEvent" name="dateEvent">
+        <div class="invalid-feedback">
+          La date et l'heure de l'événement sont requis
         </div>
+      </div>
+      <table>
         <thead class="bgc-primary">
           <tr>
             <th>menu choisi</th>
             <th>quantité</th>
-            <th>prix</th>
+            <th>prix unitaire</th>
             <th>total ligne</th>
             <th><i class="bi bi-trash"></i></th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>menu classique</td>
-            <td><input type="number" class="input-qty" id="numberPeople" name="numberPeople" min="6" step="1">
-                <div class="invalid-feedback">Le nombre de personnes est requis</div>
-                <label for="numberPeople">personnes</label></td>
-            <td>32€</td>
-            <td>320€</td>
-            <td><button class="btn btn-danger"> X </button></td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td class="align_right" colspan="3">total : </td>
-            <td>320€</td>
-          </tr>
-        </tfoot>
+      <tbody id="cart-body"></tbody>
+      <tfoot>
+        <tr>
+          <td class="align_right" colspan="3">total : </td>
+          <td id="cart-total"> €</td>
+          <td></td>
+        </tr>
+      </tfoot>
       </table>
-      <p>souhaitez vous ajouter :</p>
-        <p>un autre <button class="btn btn-primary">menu</button> ,</p> 
-        <p>un forfait <button class="btn btn-primary">boisson</button> ou </p>
-        <p>un forfait de <button class="btn btn-primary">personnel de service </button> .</p>
-        <p>Nous pouvons aussi vous prêtez du <button class="btn btn-primary">materiel </button>.</p>
+      <p>souhaitez vous ajouter : </p>
+        <p>un autre <a href="/menus" class="btn btn-primary">menu</a> ,</p> 
+        <p>un forfait <a href="/addDrinkPackages" class="btn btn-primary">boisson</a> ou </p>
+        <p>un forfait de <a href="/addPersonalPackages" class="btn btn-primary">personnel de service </a> .</p>
+        <p>Nous pouvons aussi vous prêtez du <a href="/addMaterial" class="btn btn-primary">materiel </a>.</p>
 
       <button type="submit" id="btnValidation" class="btn btn-primary">Valider le panier</button>
       <button class="btn btn-danger">Annuler la commande</button>
