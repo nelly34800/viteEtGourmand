@@ -88,6 +88,7 @@ const LoadContentPage = async () => {
 
   // Mise à jour UI (navbar etc.)
   showAndHideElementForRole();
+  updateCartNavbar();
 };
 
 // Gestion clics navigation
@@ -108,5 +109,8 @@ window.onpopstate = LoadContentPage;
 // Exposer la fonction globalement
 window.route = routeEvent;
 
-// Chargement initial
-LoadContentPage();
+// Attend la synchronisation de la session PHP
+document.addEventListener("sessionChecked", () => {
+  // Chargement initial
+  LoadContentPage();
+});

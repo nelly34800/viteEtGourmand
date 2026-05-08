@@ -32,7 +32,7 @@ async function checkCredentials(e) {
 
       // afficher le message
       showMessage("Connexion réussie ! Vous allez être redirigé", "success");
-      
+
       // redirection
       const redirect = localStorage.getItem("redirectAfterLogin");
 

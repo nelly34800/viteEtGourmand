@@ -13,3 +13,7 @@ $router->post('/logout', function() {
     AuthMiddleware::requireAuth();
     (new AuthController())->logout();
 });
+
+$router->get('/checkSession', function() {
+    (new AuthController())->checkSession();
+});

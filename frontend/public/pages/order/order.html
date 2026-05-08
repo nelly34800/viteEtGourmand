@@ -14,14 +14,14 @@
         </div>
         <div>
             <label for="postalCode" form-label>code postal</label>
-            <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode">
+            <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode"placeholder="code postal">
             <div class="invalid-feedback">
               Le code postal est requis
             </div>
         </div>
         <div>
             <label for="city" form-label>ville</label>
-            <input type="text" class="form-control" id="city" name="city">
+            <input type="text" class="form-control" id="city" name="city" placeholder="ville">
             <div class="invalid-feedback">
               La ville est requise
             </div>
@@ -31,38 +31,37 @@
 
 
 
-      <p>Calcul des frais de livraison pour votre évènement du 20 juin 2026</p>
+      <p>Calcul des frais de livraison pour votre évènement du </p>
       <table>
           <thead class="bgc-primary">
               <tr>
-                  <th>menu choisi</th>
+                  <th>produit choisi</th>
                   <th>nombre de personnes</th>
-                  <th>prix unitaire du menu</th>
+                  <th>prix unitaire du produit</th>
                   <th>total ligne</th>
               </tr>
           </thead>
-          <tbody>
+          <tbody id="order-body">
               <tr>
-                  <td>menu classique</td>
-                  <td>10 personnes</td>
-                  <td>32€</td>
-                  <td>320€</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
               </tr>
-              <tr>
-                  <td class="align_right" colspan="3">total menu: </td>
-                  <td>320€</td>
-              </tr>
-                  <td class="align_right" colspan="3">frais de livraisons : </td>
-                  <td>30€</td>
-              </tr>
-              <tr>
-          </tbody>
           <tfoot>
               <tr>
-                  <td class="align_right" colspan="3">total : </td>
-                  <td>350€</td>
+                  <td class="align_right" colspan="3">Total produits : </td>
+                  <td id="cart-total">0.00 €</td>
+              </tr>
+              <tr>
+                  <td class="align_right" colspan="3">Frais de livraison : </td>
+                  <td id="delivery-charges">0.00 €</td>
+              </tr>
+              <tr>
+                  <td class="align_right" colspan="3"><strong>Total : </strong></td>
+                  <td id="order-total"><strong>0.00 €</strong></td>
               </tr>
           </tfoot>
       </table>
-      <button class="btn btn-primary mt-4">confirmer la commande</button>
+      <button id="btnGoConfirmation" class="btn btn-primary mt-4" disabled>confirmer la commande</button>
 </div>

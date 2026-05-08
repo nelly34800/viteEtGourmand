@@ -2,47 +2,94 @@
 
 <h1>Mon compte</h1>
 <div class="container p-4">
-    <div class="row row-cols-1 row-cols-md-2">
-        <div class="col-md-3 p-2">
-            <div class="card-gold">
-                <div class="card bgc-secondary ">
-                    <div class="card-body p-3">
-                        <div class="text-center p-3">
-                            <a  href="/editUserInfo">modifier mes informations</a>
-                        </div>
-                        <div class="text-center p-3">
-                            <a href="/editPassword">modifier mon mot de passe</a>
-                        </div>
-                    </div>
-                </div>
+  <div class="row row-cols-1 row-cols-md-2">
+    <div class="col-md-3 p-2">
+      <h2>Edition</h2>
+      <div class="card-gold">
+        <div class="card bgc-secondary">
+          <div class="card-body p-3">
+            <div class="text-center p-3">
+              <a  href="/editUserInfo">modifier mes informations</a>
             </div>
+            <div class="text-center p-3">
+              <a href="/editPassword">modifier mon mot de passe</a>
+            </div>
+          </div>
         </div>
-        <div class="col-md-9 p-2">
-            <h2>Mes commandes</h2>
-            <table>
-                <thead class="bgc-primary">
-                    <tr>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Statut</th> 
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2024-05-01</td>
-                        <td>245,00 €</td>
-                        <td>En attente de validation</td>
-                        <td><button class="btn btn-primary">modifier</button></td>
-                    </tr>
-                    <tr>
-                        <td>2024-04-15</td>
-                        <td>130,00 €</td>
-                        <td>Livrée</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+      </div>
     </div>
+    <div class="col-md-9 p-2">
+      <h2>Mes commandes</h2>
+      <!--version desktop-->
+      <div class="d-none d-md-block">
+        <table class="table table-striped">
+          <thead class="bgc-primary">
+            <tr>
+              <th>Date évènement</th>
+              <th>Nombre de personnes</th>
+              <th>Prix</th>
+              <th>Statut</th>
+              <th>Détails de la commande</th> 
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!--version mobile-->
+      <div class="d-md-none" id="mobile-container">
+        <div class="card mb-3">
+          <div class="card-body bgc-secondary text-center">
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!--modale détail commande-->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5">Détail de la commande</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body bgc-secondary">
+            <h3>Produits commandés</h3>
+            <div id="orderItemsDetail"></div>
+            <p><strong>Date de commande : </strong></p>
+            <p id="OrderdateDetail"></p>
+            <p><strong>Date de l'évènement : </strong></p>
+            <p id="serviceDateDetail"></p>
+            <p><strong>Adresse de l'évènement : </strong></p>
+            <p id="deliveryAddressDetail"></p>
+            <p><strong>Nombre de personnes : </strong></p>
+            <p id="numberOfPeopleDetail"></p>
+            <p><strong>Frais de livraison : </strong></p>
+            <p id="deliveryChargesDetail"></p>
+            <p><strong>Montant total : </strong></p>
+            <p id="totalAmountDetail"></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>

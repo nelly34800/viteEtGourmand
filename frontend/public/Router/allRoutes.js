@@ -11,7 +11,7 @@ export const allRoutes = [
     // auth
     new Route("/signin", "Connexion", "/pages/auth/signin.html", ["disconnected"], "/js/auth/signin.js"),
     new Route("/signup", "Inscription", "/pages/auth/signup.html", ["disconnected"], "/js/auth/signup.js"),
-    new Route("/account", "Mon compte","/pages/auth/account.html", ["client", "admin", "employé"]),
+    new Route("/account", "Mon compte","/pages/auth/account.html", ["client", "admin", "employé"], "/js/auth/account.js"),
     new Route("/editUserInfo", "Modifier mes informations", "/pages/auth/editUserInfo.html", ["client"], "/js/auth/editUserInfo.js"),
     new Route("/editPassword", "Modifier mon mot de passe", "/pages/auth/editPassword.html", ["client"], "/js/auth/editPassword.js"),
     // order
@@ -20,7 +20,8 @@ export const allRoutes = [
     new Route("/addPersonalPackages", "Ajouter un forfait de personnel", "/pages/order/addPersonalPackages.html", ["client"], "/js/order/addPersonalPackages.js"),
     new Route("/addDrinkPackages", "Ajouter un forfait de boisson", "/pages/order/addDrinkPackages.html", ["client"], "/js/order/addDrinkPackages.js"),
     new Route("/order", "Livraison commande", "/pages/order/order.html", ["client"], "/js/order/order.js"), 
-    new Route("/orderConfirmation", "Confirmation de commande", "/pages/order/orderConfirmation.html", ["client"]),
+    new Route("/orderConfirmation", "Confirmation de commande", "/pages/order/orderConfirmation.html", ["client"], "/js/order/orderConfirmation.js"),
+    new Route("/editOrder", "Livraison commande", "/pages/order/editOrder.html", ["client"], "/js/order/editOrder.js"),
     // admin
     new Route("/admin", "Admin","/pages/admin/admin.html", ["admin"]),
     new Route("/createEmployee", "Créer un compte employé", "/pages/admin/createEmployee.html", ["admin"], "/js/admin/createEmployee.js"),

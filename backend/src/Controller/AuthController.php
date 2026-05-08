@@ -74,4 +74,20 @@ class AuthController
 
         ResponseHelper::json(['message' => 'Logout successful']);
     }
+
+    public function checkSession(): void
+    {
+        if (isset($_SESSION['user'])) {
+            ResponseHelper::json([
+                'connected' => true,
+                'user' => $_SESSION['user'],
+                'csrf_token' => CsrfHelper::generate()
+            ]);
+            return;
+        }
+
+        ResponseHelper::json([
+            'connected' => false
+        ]);
+    }
 }

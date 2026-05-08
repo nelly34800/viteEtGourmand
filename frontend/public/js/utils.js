@@ -122,3 +122,9 @@ function showMessage(message, type = "info") {
     messageDiv.classList.add("d-none");
   }, 3000);
 }
+//affichage icones emprunts et retours matériel
+function booleanIcon(value) {
+  return value
+    ? '<i class="bi bi-check-circle-fill text-success"></i>'
+    : '<i class="bi bi-x-circle-fill text-danger"></i>';
+}

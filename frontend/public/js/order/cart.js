@@ -17,6 +17,19 @@ async function loadCart() {
 
   } catch (error) {
     console.error("Erreur chargement panier :", error);
+
+    cart = [];
+
+    cartBody.innerHTML = `
+      <tr>
+        <td colspan="5" class="text-center text-danger">
+          Vous devez être connecté pour accéder au panier.
+        </td>
+      </tr>
+    `;
+
+    cartTotal.textContent = "0 €";
+    btnValidation.disabled = true;
   }
 }
 
@@ -53,7 +66,10 @@ function renderCart() {
       </td>
 
       <td>${item.price_per_person} €</td>
-      <td>${item.line_total} €</td>
+      <td>${item.discount > 0 
+        ? `<small class="text-success">Remise: -${item.discount.toFixed(2)} €</small>` 
+        : ""}<br>
+        ${item.line_total} €</td>
 
       <td>
         <button 
@@ -151,5 +167,23 @@ function validateForm() {
 
   btnValidation.disabled = !(dateOk && cartOk);
 }
+
+btnValidation.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (cart.length === 0) {
+    showMessage("Votre panier est vide", "warning");
+  }
+
+  if (!dateEvent.value) {
+    showMessage("Veuillez choisir une date", "warning");
+  }
+
+  localStorage.setItem("service_date", dateEvent.value);
+  showMessage("Votre panier est validé avec succès!", "success");
+
+  setTimeout(() => {
+    window.location.href = "/order";
+  }, 1000);
+});
 
 loadCart();

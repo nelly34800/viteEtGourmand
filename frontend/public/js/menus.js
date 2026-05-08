@@ -92,4 +92,6 @@ async function loadMenus() {
       alert(error.message);
   }
 }
-loadMenus();
+loadMenus().then(() => {
+  updateCartNavbar();
+});

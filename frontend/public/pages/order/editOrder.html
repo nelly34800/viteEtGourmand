@@ -1,0 +1,67 @@
+<div class="container p-4">
+  <h1>Modifier la commande</h1>
+  <form action="">
+    <div class="mb-3">
+      <label for="dateEvent">date et heure de l'événement</label>
+      <input type="datetime-local" id="dateEvent" name="dateEvent">
+      <div class="invalid-feedback">
+        La date et l'heure de l'événement sont requis
+      </div>
+    </div>
+    <div>
+      <label for="address" form-label>adresse</label>
+      <input type="text" class="form-control" id="address" name="address" placeholder="numéro et rue">
+      <div class="invalid-feedback">
+          L'adresse est requise
+      </div>
+    </div>
+    <div>
+      <label for="postalCode" form-label>code postal</label>
+      <input type="text" maxlength="5" pattern="[0-9]{5}" inputmode="numeric" class="form-control" id="postalCode" name="postalCode"placeholder="code postal">
+      <div class="invalid-feedback">
+        Le code postal est requis
+      </div>
+    </div>
+    <div>
+      <label for="city" form-label>ville</label>
+      <input type="text" class="form-control" id="city" name="city" placeholder="ville">
+      <div class="invalid-feedback">
+        La ville est requise
+      </div>
+    </div>
+    <button type="submit" id="btnDeliveryCharges" class="btn btn-primary m-4">Calculer les frais de livraison</button>
+  </form>
+
+  <table>
+          <thead class="bgc-primary">
+              <tr>
+                  <th>produit choisi</th>
+                  <th>nombre de personnes</th>
+                  <th>prix unitaire du produit</th>
+                  <th>total ligne</th>
+              </tr>
+          </thead>
+          <tbody id="order-body">
+              <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+              </tr>
+          <tfoot>
+              <tr>
+                  <td class="align_right" colspan="3">Total produits : </td>
+                  <td id="cart-total">0.00 €</td>
+              </tr>
+              <tr>
+                  <td class="align_right" colspan="3">Frais de livraison : </td>
+                  <td id="delivery-charges">0.00 €</td>
+              </tr>
+              <tr>
+                  <td class="align_right" colspan="3"><strong>Total : </strong></td>
+                  <td id="order-total"><strong>0.00 €</strong></td>
+              </tr>
+          </tfoot>
+      </table>
+  <button id="btnGoConfirmation" class="btn btn-primary mt-4" disabled>confirmer la commande</button>
+</div>

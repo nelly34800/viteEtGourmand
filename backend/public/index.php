@@ -41,9 +41,6 @@ session_set_cookie_params([
 session_start();
 
 use App\Helper\CsrfHelper;
-
-CsrfHelper::generate();
- 
 use App\Router\Router;
 
 try {
@@ -73,6 +70,7 @@ try {
     require_once '../routes/personalPackage.routes.php';
     require_once '../routes/order.routes.php';
     require_once '../routes/cart.routes.php';
+    require_once '../routes/delivery.routes.php';
 
     $router->dispatch($method, $uri);
 

@@ -92,3 +92,10 @@ async function getNotices() {
     ['employé', 'admin']
   );
 }
+
+async function getOrders() {
+  return await secureFetch(
+    'http://localhost:8082/order',
+    { method: 'GET' },
+  );
+}

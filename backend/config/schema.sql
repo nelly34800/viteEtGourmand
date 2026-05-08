@@ -247,22 +247,25 @@ CREATE TABLE orders(
   postal_code VARCHAR(10) NOT NULL,
   latitude DECIMAL(10,8) NOT NULL,
   longitude DECIMAL(11,8) NOT NULL,
+  distance_km DECIMAL(10,2) NOT NULL,
   number_of_people INT NOT NULL,
   delivery_charges DECIMAL(10,2) NOT NULL,
-  total_excluding_tax DECIMAL(10,2) NOT NULL,
-  total_including_tax DECIMAL(10,2) NOT NULL,
-  status VARCHAR(50) NOT NULL,
+  total_amount DECIMAL(10,2) NOT NULL,
+  status enum('en attente', 'accepté', 'en préparation', 'en cours de livraison', 'livrée', 'attente retour matériel', 'terminée', 'annulée') NOT NULL DEFAULT 'en attente',
+  status_changed_at DATETIME NULL,
   equipment_loan TINYINT(1) NOT NULL,
   equipment_return TINYINT(1) NOT NULL,
+  cancellation_reason TEXT NULL,
+  contact_mode VARCHAR(50) NULL,
   id_user CHAR(36) NOT NULL,
   FOREIGN KEY(id_user) REFERENCES user(id)
   ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `latitude`, `longitude`, `number_of_people`, `delivery_charges`, `total_excluding_tax`, `total_including_tax`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
-('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 44.837789, -0.579180, 50, 120.00, 1630.00, 1750.00,  'Confirmé', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
-('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000',  44.837789, -0.579180, 30, 80.00, 820.00, 900.00, 'Confirmé', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
-('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 44.837789, -0.579180, 25, 55.55, 600.00, 655.55, 'Confirmé', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
+INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `latitude`, `longitude`, `distance_km`, `number_of_people`, `delivery_charges`, `total_amount`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
+('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 44.837789, -0.579180, 0, 50, 120.00, 1750.00,  'terminée', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
+('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000',  44.837789, -0.579180, 0, 30, 80.00, 900.00, 'terminée', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
+('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 44.837789, -0.579180, 0, 25, 55.55, 655.55, 'terminée', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
 
 CREATE TABLE notice(
   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),

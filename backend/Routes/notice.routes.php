@@ -29,7 +29,7 @@ $router->post('/notice', function() use ($allowedRoles) {
 
 $router->put('/notice/{id}', function($id) use ($allowedRoles) {
     CsrfHelper::validate();
-    AuthMiddleware::requireAuth();
+    AuthMiddleware::requireRole();
     (new NoticeController())->update($id);
 });
 

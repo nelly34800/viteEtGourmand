@@ -16,7 +16,6 @@
         <li><a href="/material">Le materiel</a></li>
       </ul>
     </div>
-
     <div class="col-12 col-lg-9 ">
       <div class="form-signin w-100 m-auto">
         <div id="noticeCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -30,8 +29,6 @@
         </div>
       </div>
     </div>
-
-
 
     <div class="col-12">
       <h1>Les commandes</h1>
@@ -54,7 +51,7 @@
           </thead>
           <tbody>
             <tr>
-              <td>a</td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -69,10 +66,9 @@
         </table>
       </div>
        <!--version mobile-->
-       <div class="d-md-none">
+      <div class="d-md-none" id="mobile-container">
         <div class="card mb-3">
           <div class="card-body bgc-secondary text-center">
-            <p>a</p>
             <p></p>
             <p></p>
             <p></p>
@@ -82,6 +78,75 @@
             <p></p>
             <p></p>
             <p></p>
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--modale changement statut-->
+    <div class="modal fade" id="StatusChangeModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5">changer le status de la commande</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body bgc-primary">
+            <input type="hidden" id="statusOrderId">
+
+            <label for="newStatus">Nouveau statut</label>
+            <select id="newStatus" class="form-select  bgc-secondary">
+              <option value="en attente">en attente</option>
+              <option value="accepté">accepté</option>
+              <option value="en préparation">en préparation</option>
+              <option value="en cours de livraison">en cours de livraison</option>
+              <option value="livrée">livrée</option>
+              <option value="attente retour matériel">attente retour matériel</option>
+              <option value="terminée">terminée</option>
+              <option value="annulée">annulée</option>
+            </select>
+
+            <div id="cancellationFields" class="mt-3 d-none">
+              <label for="statusContactMode">Mode de contact</label>
+              <select id="statusContactMode" class="form-select">
+                <option value="">Choisir...</option>
+                <option value="téléphone">Téléphone</option>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+              </select>
+
+              <label for="statusCancellationReason" class="mt-2">Motif d’annulation</label>
+              <textarea id="statusCancellationReason" class="form-control"></textarea>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="button" class="btn btn-primary" id="confirmStatusChangeBtn">Valider</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--modale détail annulation-->
+    <div class="modal fade" id="cancellationModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5">Détail de l’annulation</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body bgc-secondary">
+            <p><strong>Motif :</strong></p>
+            <p id="cancellationReason"></p>
+
+            <p><strong>Mode de contact :</strong></p>
+            <p id="cancellationContact"></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
         </div>
       </div>
     </div>

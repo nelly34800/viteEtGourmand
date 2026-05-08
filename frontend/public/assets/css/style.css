@@ -193,6 +193,10 @@ dl dt {
   text-align: right;
 }
 
+.modal-header {
+  color: var(--primary);
+}
+
 /* Utilitaires
  ========================= */
 

@@ -16,13 +16,16 @@ class Order
     private string $postalCode;
     private float $latitude;
     private float $longitude;
+    private float $distanceKm;
     private int $numberOfPeople;
     private float $deliveryCharges;
-    private float $totalExcludingTax;
-    private float $totalIncludingTax;
+    private float $totalAmount;
     private string $status;
+    private ?\DateTimeImmutable $statusChangedAt;
     private bool $equipmentLoan;
     private bool $equipmentReturn;
+    private ?string $cancellationReason;
+    private ?string $contactMode;
     private string $idUser;
     private ?string $userLastName;
     private ?string $userFirstName;
@@ -44,13 +47,16 @@ class Order
         string $postalCode,
         float $latitude,
         float $longitude,
+        float $distanceKm,
         int $numberOfPeople,
         float $deliveryCharges,
-        float $totalExcludingTax,
-        float $totalIncludingTax,
+        float $totalAmount,
         string $status,
+        ?\DateTimeImmutable $statusChangedAt,
         bool $equipmentLoan,
         bool $equipmentReturn,
+        ?string $cancellationReason = null,
+        ?string $contactMode = null,
         string $idUser,
         ?string $userLastName = null,
         ?string $userFirstName = null,
@@ -69,13 +75,16 @@ class Order
         $this->postalCode = $postalCode;
         $this->latitude = $latitude;
         $this->longitude =  $longitude;
+        $this->distanceKm = $distanceKm;
         $this->numberOfPeople = $numberOfPeople;
         $this->deliveryCharges = $deliveryCharges;
-        $this->totalExcludingTax = $totalExcludingTax;
-        $this->totalIncludingTax = $totalIncludingTax;
+        $this->totalAmount = $totalAmount;
         $this->status = $status;
+        $this->statusChangedAt = $statusChangedAt;
         $this->equipmentLoan = $equipmentLoan;
         $this->equipmentReturn = $equipmentReturn;
+        $this->cancellationReason = $cancellationReason;
+        $this->contactMode = $contactMode;
         $this->idUser = $idUser;
         $this->userLastName = $userLastName;
         $this->userFirstName = $userFirstName;
@@ -95,13 +104,16 @@ class Order
     public function getPostalCode(): string { return $this->postalCode; }
     public function getLatitude(): float { return $this->latitude; }
     public function getLongitude(): float { return $this->longitude; }
+    public function getDistanceKm(): float { return $this->distanceKm; }
     public function getNumberOfPeople(): int { return $this->numberOfPeople; }
     public function getDeliveryCharges(): float { return $this->deliveryCharges; }
-    public function getTotalExcludingTax(): float { return $this->totalExcludingTax; }
-    public function getTotalIncludingTax(): float { return $this->totalIncludingTax; }
+    public function getTotalAmount(): float { return $this->totalAmount; }
     public function getStatus(): string { return $this->status; }
+    public function getStatusChangedAt(): ?\DateTimeImmutable { return $this->statusChangedAt; }
     public function getEquipmentLoan(): bool { return $this->equipmentLoan; }
     public function getEquipmentReturn(): bool { return $this->equipmentReturn; }
+    public function getCancellationReason(): ?string { return $this->cancellationReason; }
+    public function getContactMode(): ?string { return $this->contactMode; }
     public function getIdUser(): string { return $this->idUser; }
     public function getUserLastName(): ?string { return $this->userLastName; }
     public function getUserFirstName(): ?string { return $this->userFirstName; }

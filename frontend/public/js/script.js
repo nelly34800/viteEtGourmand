@@ -48,6 +48,36 @@ async function signout() {
 
   window.location.href = "/";
 }
+// vérifie la session php
+async function checkSession() {
+    try {
+        const response = await fetch("http://localhost:8082/checkSession", {
+            method: "GET",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.connected) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            if (data.csrf_token) {
+                localStorage.setItem("csrf_token", data.csrf_token);
+            }
+            return true;
+        }
+
+        localStorage.removeItem("user");
+        localStorage.removeItem("csrf_token");
+        return false;
+
+    } catch (error) {
+        console.error("Erreur vérification session :", error);
+        localStorage.removeItem("user");
+        localStorage.removeItem("csrf_token");
+        return false;
+    }
+}
 
 //afficher et masquer les élément en fonction du role
 function showAndHideElementForRole(){
@@ -94,9 +124,7 @@ function showAndHideElementForRole(){
         }
     })
 }
-
-document.addEventListener('DOMContentLoaded', showAndHideElementForRole);
-
+// charger la page de profil en fonction du rôle
 function loadProfileByRole(role) {
   switch (role) {
     case "client": 
@@ -126,4 +154,47 @@ document.addEventListener("click", (e) => {
     const role = getRole();
     loadProfileByRole(role);
   }
+});
+// récupère le panier de l'utilisateur et change affichage si vide
+async function updateCartNavbar() {
+  const cartContainer = document.getElementById("cart-navbar");
+
+  if (!cartContainer) return;
+
+  if (!isConnected() || getRole() !== "client") {
+    cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
+    cartContainer.setAttribute("href", "/cart");
+    return;
+  }
+
+  try {
+    const cart = await secureFetch("http://localhost:8082/cart", {
+      method: "GET"
+    }, ["client"]);
+
+    if (!cart || cart.length === 0) {
+      cartContainer.innerHTML = `<i class="bi bi-cart-x"></i> Panier vide`;
+      cartContainer.removeAttribute("href");
+      cartContainer.style.cursor = "default";
+    } else {
+      cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
+      cartContainer.setAttribute("href", "/cart");
+      cartContainer.style.cursor = "pointer";
+    }
+
+  } catch (error) {
+    console.error("Erreur navbar panier :", error);
+    cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
+    cartContainer.setAttribute("href", "/cart");
+  }
+}
+// Attend la vérification de la session PHP avant
+// d'afficher ou masquer les éléments selon le rôle utilisateur
+document.addEventListener("DOMContentLoaded", async () => {
+    await checkSession();
+    showAndHideElementForRole();
+    await updateCartNavbar();
+
+    window.sessionChecked = true;
+    document.dispatchEvent(new Event("sessionChecked"));
 });
