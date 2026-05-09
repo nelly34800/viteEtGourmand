@@ -1,77 +1,81 @@
 // les avis : 
-// données "en dur" simulant la base de données
-const noticesDB = [
-    {
-    note: "****",
-    description: "très bien",
-    prenom: "pren1"
-  },
-  {
-    note: "**",
-    description: "pas content",
-    prenom: "pren2"
-  },
-  {
-    note: "*****",
-    description: "très bien",
-    prenom: "pren3"
-  },
-  {
-    note: "*",
-    description: "pas content",
-    prenom: "pren4"
-  }
-];
+// // fonction pour charger les avis en attente
+async function loadNoticeUnvalidated() {
+  try {
+    // Appel sécurisé vers l'API
+    const data = await secureFetch("http://localhost:8082/noticeUnvalidated", {
+        method: 'GET' }, 
+        ['admin', 'employé']);
 
-const carouselInner = document.getElementById("carouselInner");
+    const carouselInner = document.getElementById("carouselInner");
 
-// détermine combien d'avis selon la largeur de l'écran
-let noticesPerSlide;
+    carouselInner.innerHTML = '';
 
-if (window.innerWidth >= 680) {   // breakpoint
-  noticesPerSlide = 3;             // grand écran 3 images
-} else {
-  noticesPerSlide = 1;             // petit écran 1 image
-}
+    // détermine combien d'avis selon la largeur de l'écran
+    let noticesPerSlide = 2;
 
-// Générer les slides
-for (let i = 0; i < noticesDB.length; i += noticesPerSlide) {
-  // Sélection des avis pour cette slide
-  const slideNotices = noticesDB.slice(i, i + noticesPerSlide);
-  // Création de la div de slide
+    // Générer les slides
+    for (let i = 0; i < data.length; i += noticesPerSlide) {
+      // Sélection des avis pour cette slide
+
   const slideDiv = document.createElement("div");
   slideDiv.classList.add("carousel-item");
   // La première slide prend la classe active
   if (i === 0) slideDiv.classList.add("active");
+
   // Construit la slide
-  let rowHTML = `<div class="row">`;
-  slideNotices.forEach(p => {
-    // Chaque avis prend toute la largeur en mobile, 1/3 en desktop
-    rowHTML += `
-      <div class="col-12 col-md-${12 / noticesPerSlide}">
-        <div class="card p-3 bgc-primary">
-          <p>Note: ${p.note}</p>
-          <p>Commentaire: ${p.description}</p>
-          <cite>${p.prenom}</cite>
-        </div>
-        <button type="submit" class="btn btn-secondary m-3" name="valider">Valider</button>
-        <button type="submit" class="btn btn-danger m-3" name="rejeter">Rejeter</button>
+  const row = document.createElement("div");
+  row.classList.add("row", "justify-content-space-between");
+
+  const slideNotices = data.slice(i, i + noticesPerSlide);
+
+    slideNotices.forEach((notice) => {
+      // création d'une ligne d'un avis
+      const col = document.createElement("div");
+
+      // desktop = 3 colonnes / Mobile = 1 colonne
+      col.classList.add("col-12", "col-md-6", "mb-3");
+
+col.innerHTML = `
+  <div class="card bgc-primary p-2 w-100" style="min-width: 300px;">
+    <div class="d-flex flex-column align-items-center pb-3">
+      <div class="note p-2">
+        ${renderStars(Number(sanitizeHTML(notice.note)))}
       </div>
-    `;
-  });
-  rowHTML += `</div>`;
-  //  Ajouter le HTML dans la slide
-  slideDiv.innerHTML = rowHTML;
-  // Ajouter la slide dans le carousel
-  carouselInner.appendChild(slideDiv);
+      <p class="p-2">
+        ${sanitizeHTML(notice.description)}
+      </p>
+      <p class="signature">
+        ${sanitizeHTML(notice.signature)}
+      </p>
+      <div class"p-2">
+        <button class="btn btn-secondary btn-sm">Valider</button>
+        <button class="btn btn-primary btn-sm">Supprimer</button>
+      </div>
+    </div>
+  </div>
+`;
+      row.appendChild(col);
+    });
+
+    slideDiv.appendChild(row);
+    // Ajouter la slide dans le carousel
+    carouselInner.appendChild(slideDiv);
+    }
+  } catch (error) {
+      // Affiche l'erreur si problème API
+      alert(error.message);
+  }
 }
+// se lance au chargement
+loadNoticeUnvalidated();
+
 // tableau des commandes
 // fonction pour charger les commnades
 async function loadOrders() {
   try {
     // Appel sécurisé vers l'API (GET: fonction dans api.js)
     const data = await getOrders();
-    console.log (data);
     // dekstop: vide le tableau
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
@@ -285,7 +289,7 @@ if (status === "annulée" && (!contactMode || !reason)) {
 }
 
 try {
-  await secureFetch(`http://localhost:8082/order/${orderId}/status`, {
+  await secureFetch(`http://localhost:8082/order/${orderId}/updateStatus`, {
     method: "PUT",
     body: JSON.stringify({
       status,

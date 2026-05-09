@@ -69,7 +69,7 @@ function renderCart() {
       <td>${item.discount > 0 
         ? `<small class="text-success">Remise: -${item.discount.toFixed(2)} €</small>` 
         : ""}<br>
-        ${item.line_total} €</td>
+        ${item.line_total.toFixed(2)} €</td>
 
       <td>
         <button 
@@ -86,7 +86,7 @@ function renderCart() {
     cartBody.appendChild(tr);
   });
 
-  cartTotal.textContent = `${total} €`;
+  cartTotal.textContent = `${total.toFixed(2)} €`;
 
   bindCartEvents();
   validateForm();

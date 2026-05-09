@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Services\CartService;
 use App\Services\GeocodingService;
 use App\Services\DeliveryService;
+use App\Services\MailService;
 use App\Repository\OrderRepository;
 use App\Entity\Order;
 use App\Helper\RequestHelper;
@@ -252,9 +253,17 @@ class OrderController
                 personalPackages: $personalPackages
             );
             //enregistre en BDD
-            $this->repository->create($order);
+            $orderId = $this->repository->create($order);
+            $orderNumber = 'CMD-' . substr($orderId, 0, 8);
             // vide le panier 
             unset($_SESSION['cart'], $_SESSION['delivery']);
+            //  email client
+            $mailService = new MailService();
+
+            $mailService->sendOrderCreatedMail(
+                $user['email'],
+                $orderNumber
+            );
 
             ResponseHelper::json(['success' => true,'message' => 'Commande créée'], 201);
 
@@ -395,9 +404,24 @@ class OrderController
                     'error' => 'Le motif et le mode de contact sont obligatoires pour une annulation'
                 ], 400);
             }
-
+            // récupère l'id de la commande
             $this->repository->updateStatus($id, $status, $reason, $contactMode);
+            $orderId = $id;
 
+            if ($status === 'terminée' || $status === 'attente retour matériel') {
+                $customerEmail = $this->repository->findCustomerEmailByOrderId($orderId);
+                $orderNumber = 'CMD-' . substr($orderId, 0, 8);
+
+                $mailService = new MailService();
+
+                if ($status === 'terminée') {
+                  $mailService->sendOrderCompletedMail($customerEmail, $orderNumber);
+                }
+
+                if ($status === 'attente retour matériel') {
+                    $mailService->sendReturnMaterialMail($customerEmail, $orderNumber);
+                }
+            }
             ResponseHelper::json(['success' => true]);
 
         } catch (\Throwable $e) {

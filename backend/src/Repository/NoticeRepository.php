@@ -144,4 +144,23 @@ class NoticeRepository
         }
         return $notices;
     }
+    /**
+     * Retourne un tableau de tous les avis non validés.
+     */
+    public function findAllNoticeUnvalidated(): array
+    {
+        $stmt = $this->pdo->query("
+        SELECT id, note, description, signature, status, date, id_order 
+        FROM notice 
+        WHERE status = 'en attente'");
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $notices = [];
+        foreach ($rows as $row) {
+            $notices[] = $this->mapRowToNotice($row);
+        }
+        return $notices;
+    }
 }
+
+

@@ -59,6 +59,8 @@ a:hover {
 
 .btn {
   font-size: var(--bs-font-size);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 /* Navbar
@@ -119,7 +121,7 @@ a.nav-link:hover {
 
 .btn:hover {
   border: 3px solid var(--primary);
-   font-weight: 700;
+  font-weight: 700;
 }
 
 .d-block {

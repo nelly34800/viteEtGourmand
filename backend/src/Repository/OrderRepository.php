@@ -255,7 +255,7 @@ class OrderRepository
      /**
      * Insère un nouveau commande.
      */
-    public function create(Order $order): void
+    public function create(Order $order): string
     {
         // Génération UUID côté PHP
         $orderId = Uuid::uuid4()->toString();
@@ -387,9 +387,10 @@ class OrderRepository
                     $personalPackage['subtotal']
                 ]);
             }
-
             // commit
             $this->pdo->commit();
+
+            return $order->getId();
 
         } catch (\Exception $e) {
           // rollback en cas d’erreur
@@ -493,7 +494,7 @@ class OrderRepository
         }
     }
     // fonction modifier le statut
-    public function updateStatus(string $id, string $status, ?string $reason = null, ?string $contactMode = null): void 
+    public function updateStatus(string $id, string $status, ?string $reason = null, ?string $contactMode = null): void
     {
         $equipmentReturn = 0;
         // si statut terminée retour de matériel passe à true
@@ -524,4 +525,21 @@ class OrderRepository
             throw new RuntimeException("Commande introuvable");
         }
     }
+    // récupérer email du client
+    public function findCustomerEmailByOrderId(string $orderId): string
+  {
+      $stmt = $this->pdo->prepare("
+          SELECT user.email 
+          FROM orders
+          JOIN user ON user.id = orders.id_user
+          WHERE orders.id = ?
+      ");
+      $stmt->execute([$orderId]);
+      $email = $stmt->fetchColumn();
+
+      if (!$email) {
+          throw new RuntimeException("Email client introuvable");
+      }
+      return $email;
+  }
 }

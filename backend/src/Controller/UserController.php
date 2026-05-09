@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\MailService;
 use App\Repository\UserRepository;
 use App\Entity\User;
 use App\Helper\RequestHelper;
@@ -109,6 +110,14 @@ class UserController
         //  appel du repository pour l'enregistrer en base
         try {
             $this->repository->create($user);
+
+            $mailService = new MailService();
+
+            $mailService->sendWelcomeCustomerMail(
+              $user->getEmail(),
+              $user->getFirstName()
+          );
+
             ResponseHelper::json(['message' => 'User created'], 201);
         } catch (\Exception $e) {
             ResponseHelper::json(['error' => 'Error creating user', 'details' => $e->getMessage()], 500);
@@ -212,6 +221,14 @@ class UserController
         //  appel du repository pour l'enregistrer en base
         try {
             $this->repository->create($user);
+
+             $mailService = new MailService();
+
+            $mailService->sendWelcomeEmployeeMail(
+              $user->getEmail(),
+              $user->getFirstName()
+            );
+
             ResponseHelper::json(['message' => 'Employee created'], 201);
         } catch (\Exception $e) {
             ResponseHelper::json(['error' => 'Error creating employee', 'details' => $e->getMessage()], 500);

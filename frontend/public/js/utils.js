@@ -51,7 +51,15 @@ async function secureFetch(url, options = {}, allowedRoles = []) {//prend en par
 
   try {
     const response = await fetch(url, fetchOptions);
-    const data = await response.json();
+    const text = await response.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    console.error("Réponse brute serveur non JSON :", text);
+    throw new Error("Le serveur a renvoyé une réponse invalide.");
+  }
 
     if (!response.ok) {
       throw new Error(data.error || "Une erreur est survenue");

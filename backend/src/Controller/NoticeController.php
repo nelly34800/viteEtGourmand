@@ -167,5 +167,25 @@ class NoticeController
 
         ResponseHelper::json($response);
     }
+    public function indexUnvalidated(): void
+    {
+        // Appel du repository pour récupérer tous les avis validés et affichage au format JSON
+        $notices = $this->repository->findAllNoticeUnvalidated();
+
+        $response = array_map(function(Notice $notice) {
+          // Transformation en array pour JSON (hydratation inverse)
+            return [
+                'id' => $notice->getId(),
+                'note' => $notice->getNote(),
+                'description' => $notice->getDescription(),
+                'signature' => $notice->getSignature(),
+                'status' => $notice->getStatus(),
+                'date' => $notice->getDate()->format('Y-m-d'),
+                'id_order' => $notice->getIdOrder(),
+            ];
+        }, $notices);
+
+        ResponseHelper::json($response);
+    }
 }
 

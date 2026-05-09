@@ -21,6 +21,11 @@ $router->get('/notice/{id}', function($id) {
 $allowedRoles = ['client'];
 $allowedRoles2 = ['admin', 'employé'];
 
+$router->get('/noticeUnvalidated', function() use ($allowedRoles2) {
+    AuthMiddleware::requireRole($allowedRoles2);
+    (new NoticeController())->indexUnvalidated();
+});
+
 $router->post('/notice', function() use ($allowedRoles) {
     CsrfHelper::validate();
     AuthMiddleware::requireRole($allowedRoles);

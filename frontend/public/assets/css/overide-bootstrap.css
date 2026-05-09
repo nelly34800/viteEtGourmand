@@ -27,7 +27,7 @@
 .btn-primary {
   --bs-btn-color: var(--secondary);
   --bs-btn-bg: var(--primary);
-  --bs-btn-border-color: var(--primary);
+  --bs-btn-border-color: var(--secondary);
   --bs-btn-hover-color: var(--primary);
   --bs-btn-hover-bg: var(--secondary);
   --bs-btn-hover-border-color: var(--primary);

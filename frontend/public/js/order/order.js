@@ -47,7 +47,7 @@ function renderTable() {
       <td>${item.discount > 0 
         ? `<small class="text-success">Remise: -${item.discount.toFixed(2)} €</small>` 
         : ""}<br>
-        ${item.line_total} €</td>
+        ${item.line_total.toFixed(2)} €</td>
     `;
     orderBody.appendChild(tr);
   });
