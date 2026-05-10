@@ -161,6 +161,21 @@ class NoticeRepository
         }
         return $notices;
     }
+    // rechercher les avis par l'id de commande (pour vérifier ds store qu'il n'y a pas déjà un avis pour la commande)
+    public function findByOrderId(string $idOrder): ?array
+    {
+        $sql = "SELECT id FROM notice WHERE id_order = :id_order";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            "id_order" => $idOrder
+        ]);
+
+        $notice = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $notice ?: null;
+    }
 }
+
 
 

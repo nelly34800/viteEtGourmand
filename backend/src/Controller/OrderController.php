@@ -72,7 +72,8 @@ class OrderController
                 'user_last_name' => $order->getUserLastName(),
                 'user_first_name' => $order->getUserFirstName(),
                 'user_email' => $order->getUserEmail(),
-                'user_phone' => $order->getUserPhone()
+                'user_phone' => $order->getUserPhone(),
+                'has_notice' => $order->hasNotice(),
             ];
         }, $orders);
 
@@ -237,12 +238,12 @@ class OrderController
                 deliveryCharges: $deliveryCharges,
                 totalAmount: $totalAmount,
                 status: 'en attente',
-                statusChangedAt: null,
                 equipmentLoan: $equipmentLoan,
+                idUser: $user['id'],
+                statusChangedAt: null,
                 equipmentReturn: false,
                 cancellationReason: null,
                 contactMode: null,
-                idUser: $user['id'],
                 userLastName: null,
                 userFirstName: null,
                 userEmail: null,

@@ -43,7 +43,24 @@ async function loadOrders() {
       tr.appendChild(tdDetails);
       // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
       const tdAction = document.createElement("td");
-      tdAction.appendChild(createActionButtons(order.id));
+        // si statut en attente bouton modifier + supprimer
+        if(order.status === "en attente") {
+          tdAction.appendChild(createActionButtons(order.id));
+        // si statut terminée et qu'il n'y a pas déjà un avis bouton laisser un avis
+        } else if (order.status === "terminée" && !order.has_notice) {
+          const noticeButton = document.createElement("a");
+          noticeButton.href = `/createNotice?id_order=${order.id}`;
+          noticeButton.classList.add("btn", "btn-primary");
+          noticeButton.textContent = "Laisser un avis";
+
+          tdAction.appendChild(noticeButton);
+          //s'il y a déjà un avis affiche message "Avis déjà déposé"
+        } else if (order.has_notice) {
+          tdAction.textContent = "Avis déjà déposé";
+        } else {
+          //sinon rien 
+          tdAction.textContent = "";
+        }
       tr.appendChild(tdAction);
       // Ajout dans le DOM
       tbody.appendChild(tr);
@@ -67,33 +84,49 @@ async function loadOrders() {
       const cardPrice = document.createElement('p');
       cardPrice.textContent = `Prix : ${order.total_amount} €`;
       cardBody.appendChild(cardPrice);
+           // Statut
+      const cardStatus = document.createElement("p");
+      cardStatus.textContent = order.status;
+      cardBody.appendChild(cardStatus);
       // détails
       const cardDetails = document.createElement("p");
       const cardDetailsBtn = document.createElement("button");
         cardDetailsBtn.type = "button";
         cardDetailsBtn.className = "btn btn-primary btn-sm orderDetailModalBtn m-1";
-        detailsBtn.dataset.id = order.id;
+        cardDetailsBtn.dataset.id = order.id;
         cardDetailsBtn.textContent = "Détail";
 
         cardDetails.appendChild(cardDetailsBtn);
       cardBody.appendChild(cardDetails);
-         // Statut
-      const cardStatus = document.createElement("p");
-      cardStatus.textContent = order.status;
-      cardBody.appendChild(cardStatus);
-      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
-      if (order.status === "en attente") {
-          // bouton modifier + supprimer seulement si statut en attente
-          const action = document.createElement('p');
-          action.appendChild(createActionButtons(order.id));
-          cardBody.appendChild(action);
-      }
 
+      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      const action = document.createElement('p');
+        // bouton modifier + supprimer seulement si statut en attente
+       if (order.status === "en attente") {
+        action.appendChild(createActionButtons(order.id));
+      // si statut terminée et qu'il n'y a pas déjà un avis bouton laisser un avis
+        } else if (order.status === "terminée" && !order.has_notice) {
+          const cardNoticeButton = document.createElement("a");
+          cardNoticeButton.href = `/createNotice?id_order=${order.id}`;
+          cardNoticeButton.classList.add("btn", "btn-primary");
+          cardNoticeButton.textContent = "Laisser un avis";
+
+          action.appendChild(cardNoticeButton);
+          //s'il y a déjà un avis affiche message "Avis déjà déposé"
+        } else if (order.has_notice) {
+          action.textContent = "Avis déjà déposé";
+        } else {
+          //sinon rien 
+          action.textContent = "";
+        }
+      cardBody.appendChild(action);
       card.appendChild(cardBody);
+      console.log(order);
+      console.log("has_notice =", order.has_notice);
+      // Ajout dans le DOM
       mobileContainer.appendChild(card);
     });
- 
-    } catch (error) {
+  } catch (error) {
       // Affiche l'erreur si problème API
       alert(error.message);
   }
@@ -111,7 +144,7 @@ document.addEventListener("click", async (event) => {
       method: "GET"
     }, ["client", "employé", "admin"]);
 
-    document.getElementById("OrderdateDetail").textContent = order.order_date;
+    document.getElementById("orderDateDetail").textContent = order.order_date;
     document.getElementById("serviceDateDetail").textContent = order.service_date;
     document.getElementById("deliveryAddressDetail").textContent =
       `${order.delivery_address}, ${order.postal_code} ${order.city}`;

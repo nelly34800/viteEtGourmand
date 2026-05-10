@@ -274,7 +274,7 @@ CREATE TABLE notice(
   signature VARCHAR(50) NOT NULL,
   status  enum('en attente', 'validé') NOT NULL DEFAULT 'en attente',
   date DATE NOT NULL,
-  id_order CHAR(36) NOT NULL,
+  id_order CHAR(36) NOT NULL UNIQUE,
   FOREIGN KEY(id_order) REFERENCES orders(id)
   ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

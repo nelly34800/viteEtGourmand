@@ -46,16 +46,17 @@ class OrderRepository
                     $row['delivery_charges'],
                     $row['total_amount'],
                     $row['status'],
-                    $row['status_changed_at'] ? new \DateTimeImmutable($row['status_changed_at']): null,
                     $row['equipment_loan'],
                     $row['equipment_return'],
+                    $row['id_user'],
+                    $row['has_notice'],
+                    $row['status_changed_at'] ? new \DateTimeImmutable($row['status_changed_at']): null,
                     $row['cancellation_reason'] ?? null,
                     $row['contact_mode'] ?? null,
-                    $row['id_user'],
                     $row['user_last_name'],
                     $row['user_first_name'],
                     $row['user_email'],
-                    $row['user_phone']
+                    $row['user_phone'],
                 );
             }
             // Ajouter le menu si pas déjà présent
@@ -130,6 +131,7 @@ class OrderRepository
                 orders.cancellation_reason,
                 orders.contact_mode,
                 orders.id_user,
+                notice.id IS NOT NULL AS has_notice,
                 user.last_name AS user_last_name,
                 user.first_name AS user_first_name,
                 user.email AS user_email,
@@ -157,6 +159,7 @@ class OrderRepository
                 personal_package.event_type AS personal_package_event_type
             FROM orders
             LEFT JOIN user ON orders.id_user = user.id
+            LEFT JOIN notice ON notice.id_order = orders.id
             LEFT JOIN order_menu ON orders.id = order_menu.id_order
             LEFT JOIN menu ON order_menu.id_menu = menu.id
             LEFT JOIN order_material ON orders.id = order_material.id_order
@@ -493,7 +496,7 @@ class OrderRepository
             throw $e;
         }
     }
-    // fonction modifier le statut
+    // modifier le statut
     public function updateStatus(string $id, string $status, ?string $reason = null, ?string $contactMode = null): void
     {
         $equipmentReturn = 0;

@@ -31,6 +31,7 @@ class Order
     private ?string $userFirstName;
     private ?string $userEmail;
     private ?string $userPhone;
+    private bool $hasNotice;
     private array $menus;
     private array $materials;
     private array $drinkPackages;
@@ -52,12 +53,13 @@ class Order
         float $deliveryCharges,
         float $totalAmount,
         string $status,
-        ?\DateTimeImmutable $statusChangedAt,
         bool $equipmentLoan,
         bool $equipmentReturn,
+        string $idUser,
+        bool $hasNotice= false,
+        ?\DateTimeImmutable $statusChangedAt,
         ?string $cancellationReason = null,
         ?string $contactMode = null,
-        string $idUser,
         ?string $userLastName = null,
         ?string $userFirstName = null,
         ?string $userEmail = null,
@@ -90,6 +92,7 @@ class Order
         $this->userFirstName = $userFirstName;
         $this->userEmail = $userEmail;
         $this->userPhone = $userPhone;
+        $this->hasNotice = $hasNotice;
         $this->menus = $menus;
         $this->materials = $materials;
         $this->drinkPackages = $drinkPackages;
@@ -119,6 +122,7 @@ class Order
     public function getUserFirstName(): ?string { return $this->userFirstName; }
     public function getUserEmail(): ?string { return $this->userEmail; }
     public function getUserPhone(): ?string { return $this->userPhone; }
+    public function hasNotice(): bool { return $this->hasNotice; }
     public function getMenus(): array { return $this->menus; }
     public function getMaterials(): array { return $this->materials; }
     public function getDrinkPackages(): array { return $this->drinkPackages; }

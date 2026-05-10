@@ -82,9 +82,16 @@ class NoticeController
         // Lecture du JSON envoyé
         $data = RequestHelper::getJson();
         // Validation des champs obligatoires
-        if(!isset($data['note'], $data['description'], $data['signature'], $data['date'], $data['id_order'])) {
-            throw new InvalidArgumentException('Invalid input');
+        if (!isset($data['note'], $data['description'], $data['signature'], $data['id_order'])) {
+            ResponseHelper::json(["error" => "Invalid input","data_received" => $data], 400);
         }
+        $idOrder = $data['id_order'];
+        $existingNotice = $this->repository->findByOrderId($idOrder);
+
+        if ($existingNotice) {
+            ResponseHelper::json(["message" => "Un avis existe déjà pour cette commande."], 409);
+        }
+
         $status = self::CREATION_STATUS;
         // Création de l'entité notice à partir des données reçues
         $notice = new Notice(
@@ -93,8 +100,8 @@ class NoticeController
             $data['description'],
             $data['signature'],
             $status,
-            new \DateTimeImmutable($data['date']),
-            $data['id_order']
+            new \DateTimeImmutable(),
+            $idOrder
         );
         //  appel du repository pour l'enregistrer en base
         try {

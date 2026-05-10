@@ -35,9 +35,19 @@ async function loadUsers() {
       const tdphone = document.createElement("td");
       tdphone.textContent = user.phone;
       tr.appendChild(tdphone);
-      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
+      // Actions
       const tdAction = document.createElement("td");
-      tdAction.appendChild(createActionButtons(user.id));
+
+      const tdDeleteButton = document.createElement("button");
+      tdDeleteButton.className = "btn btn-danger deleteBtn m-1";
+      tdDeleteButton.dataset.id = user.id;
+
+      const tdIcon = document.createElement("i");
+      tdIcon.className = "bi bi-trash";
+
+      tdDeleteButton.appendChild(tdIcon);
+      tdAction.appendChild(tdDeleteButton);
+
       tr.appendChild(tdAction);
 
       // ajout dans le DOM
@@ -65,11 +75,17 @@ async function loadUsers() {
       const cardPhone = document.createElement('p');
       cardPhone.textContent = user.phone;
       cardBody.appendChild(cardPhone);
-      // Actions (récupère la fonction dans utils.js pour créer les boutons d'action)
-      const cardAction = document.createElement("td");
-      cardBody.appendChild(createActionButtons(user.id));
-      card.appendChild(cardAction);
+      // Actions
+      const cardAction = document.createElement("p");
+      const deleteButton = document.createElement("button");
+      deleteButton.className = "btn btn-danger deleteBtn m-1";
+      deleteButton.dataset.id = user.id;
 
+      const icon = document.createElement("i");
+      icon.className = "bi bi-trash";
+      deleteButton.appendChild(icon);
+      cardAction.appendChild(deleteButton);
+      cardBody.appendChild(cardAction);
       card.appendChild(cardBody);
       mobileContainer.appendChild(card);
     });
