@@ -22,6 +22,7 @@ async function loadMenu(id) {
 
 function renderMenu(menu) {
   document.getElementById("menu-title").textContent = menu.menu_name;
+  document.getElementById("menu-theme").textContent = menu.theme;
   document.getElementById("menu-description").textContent = menu.description;
 }
 

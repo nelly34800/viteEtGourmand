@@ -10,6 +10,7 @@ class Menu
 {
     private string $id;
     private string $menuName;
+    private string $theme;
     private string $description;
     private string $illustrationDishId; // stockage BDD
     private int $minimumPeople;
@@ -22,6 +23,7 @@ class Menu
     public function __construct(
         string $id,
         string $menuName,
+        string $theme,
         string $description,
         string $illustrationDishId,
         int $minimumPeople,
@@ -34,6 +36,7 @@ class Menu
 
         $this->id = $id;
         $this->menuName = $menuName;
+        $this->theme = $theme;
         $this->description = $description;
         $this->illustrationDishId = $illustrationDishId;
         $this->minimumPeople = $minimumPeople;
@@ -48,6 +51,7 @@ class Menu
     // Getters: permet d'accéder aux propriétés privées de l'objet
     public function getId(): string { return $this->id; }
     public function getMenuName(): string { return $this->menuName; }
+    public function getTheme(): string { return $this->theme; }
     public function getDescription(): string { return $this->description; }
     public function getIllustrationDishId(): string { return $this->illustrationDishId; }
     public function getMinimumPeople(): int { return $this->minimumPeople; }

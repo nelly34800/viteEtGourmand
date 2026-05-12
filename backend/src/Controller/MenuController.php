@@ -37,6 +37,7 @@ class MenuController
             return [
                 'id' => $menu->getId(),
                 'menu_name' => $menu->getMenuName(),
+                'theme' => $menu->getTheme(),
                 'description' => $menu->getDescription(),
                 'minimum_people' => $menu->getMinimumPeople(),
                 'price_per_person' => $menu->getPricePerPerson(),
@@ -65,6 +66,7 @@ class MenuController
         $response =([
             'id' => $menu->getId(),
             'menu_name' => $menu->getMenuName(),
+            'theme' => $menu->getTheme(),
             'description' => $menu->getDescription(),
             'minimum_people' => $menu->getMinimumPeople(),
             'price_per_person' => $menu->getPricePerPerson(),
@@ -90,7 +92,7 @@ class MenuController
         ValidatorHelper::validateUuidArray($data['condition_id'] ?? []);
 
         // Validation des champs obligatoires
-        if(!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
+        if(!isset($data['menu_name'], $data['theme'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');
         }
         // Validation de l'illustration (obligatoire)
@@ -103,6 +105,7 @@ class MenuController
         $menu = new Menu(
             id: '', // l'UUID sera généré côté repository
             menuName: $data['menu_name'],
+            theme: $data['theme'],
             description: $data['description'],
             illustrationDishId: $data['illustration_dish_id'],
             minimumPeople: $data['minimum_people'],
@@ -133,7 +136,7 @@ class MenuController
         ValidatorHelper::validateUuidArray($data['dish_id'] ?? []);
         ValidatorHelper::validateUuidArray($data['condition_id'] ?? []);
         // Validation des champs obligatoires
-        if (!isset($data['menu_name'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
+        if (!isset($data['menu_name'], $data['theme'], $data['description'], $data['minimum_people'], $data['price_per_person'], $data['remaining_quantity'])) {
             throw new InvalidArgumentException('Invalid input');
         }
         // Validation de l'illustration (obligatoire)
@@ -146,6 +149,7 @@ class MenuController
         $menu = new Menu(
             $id,
             $data['menu_name'],
+            $data['theme'],
             $data['description'],
             $data['illustration_dish_id'],
             $data['minimum_people'],

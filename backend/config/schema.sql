@@ -114,6 +114,7 @@ INSERT INTO `dish` (`dish_title`, `description`, `picture`, `id_category_dish`) 
 CREATE TABLE menu(
   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
   menu_name VARCHAR(250) NOT NULL,
+  theme VARCHAR(250) NOT NULL,
   description TEXT NOT NULL,
   illustration_dish_id CHAR(36) NOT NULL,
   minimum_people INT NOT NULL,
@@ -122,15 +123,15 @@ CREATE TABLE menu(
   FOREIGN KEY(illustration_dish_id) REFERENCES dish(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `menu` (`menu_name`, `description`, `illustration_dish_id`, `minimum_people`, `price_per_person`, `remaining_quantity`) VALUES
-('Menu Classique (toute saison)', 'Un menu gourmand, équilibré et généreux, mettant à l’honneur des recettes traditionnelles revisitées, adaptées à tous vos événements tout au long de l’année.', (SELECT id FROM dish WHERE dish_title = 'Velouté de potimarron'), 6, 32.00, 20),
-('Menu Festif de Noël', 'Un menu raffiné aux saveurs festives, pensé pour sublimer vos repas de fin d’année avec des produits emblématiques et gourmands.', (SELECT id FROM dish WHERE dish_title = 'Bûche chocolat praliné'), 10, 49.00, 8),
-('Menu Mariage – Élégance & Raffinement', 'Un menu d’exception, élégant et sophistiqué, conçu pour accompagner les moments uniques de votre réception de mariage.', (SELECT id FROM dish WHERE dish_title = 'Noix de Saint-Jacques poêlées, crème légère au citron vert'), 40, 35.00, 5),
-('Option Buffet – Convivial & Modulable', 'Une formule flexible et variée, idéale pour tout événement, offrant un large choix de plats à partager adaptés à tous les régimes alimentaires.', (SELECT id FROM dish WHERE dish_title = 'Options végétariennes & vegan'), 20, 15.00, 20),
-('Menu Printanier / Pâques', 'Un menu frais et de saison, aux notes printanières, idéal pour célébrer Pâques et les repas conviviaux autour de produits délicats.', (SELECT id FROM dish WHERE dish_title = 'Gigot d’agneau rôti aux herbes'), 8, 35.00, 12),
-('Menu Communion – Tradition & Douceur', 'Un menu familial et réconfortant, mêlant tradition et douceur, parfaitement adapté aux repas de communion et aux rassemblements intergénérationnels.', (SELECT id FROM dish WHERE dish_title = 'Suprême de poulet rôti, riz pilaf aux légumes'), 15, 35.00, 10),
-('Menu EVG – Convivial & Gourmand', 'Un menu convivial et généreux, pensé pour le partage et la bonne humeur lors de vos événements festifs entre amis.', (SELECT id FROM dish WHERE dish_title = 'Planche apéritive à partager'), 10, 19.00, 18),
-('Menu Enfant – « Petit Gourmet »', 'Un menu ludique et élaboré avec des plats simples et savoureux pour satisfaire les plus jeunes gourmands.', (SELECT id FROM dish WHERE dish_title = 'Steak de bœuf Charolais, frites maison'), 1, 12.00, 50);
+INSERT INTO `menu` (`menu_name`, `theme`, `description`, `illustration_dish_id`, `minimum_people`, `price_per_person`, `remaining_quantity`) VALUES
+('Menu Classique (toute saison)', 'Classique', 'Un menu gourmand, équilibré et généreux, mettant à l’honneur des recettes traditionnelles revisitées, adaptées à tous vos événements tout au long de l’année.', (SELECT id FROM dish WHERE dish_title = 'Velouté de potimarron'), 6, 32.00, 20),
+('Menu Festif de Noël', 'Noël',  'Un menu raffiné aux saveurs festives, pensé pour sublimer vos repas de fin d’année avec des produits emblématiques et gourmands.', (SELECT id FROM dish WHERE dish_title = 'Bûche chocolat praliné'), 10, 49.00, 8),
+('Menu Mariage – Élégance & Raffinement', 'Mariage', 'Un menu d’exception, élégant et sophistiqué, conçu pour accompagner les moments uniques de votre réception de mariage.', (SELECT id FROM dish WHERE dish_title = 'Noix de Saint-Jacques poêlées, crème légère au citron vert'), 40, 35.00, 5),
+('Option Buffet – Convivial & Modulable', 'Buffet', 'Une formule flexible et variée, idéale pour tout événement, offrant un large choix de plats à partager adaptés à tous les régimes alimentaires.', (SELECT id FROM dish WHERE dish_title = 'Options végétariennes & vegan'), 20, 15.00, 20),
+('Menu Printanier / Pâques', 'Pâques', 'Un menu frais et de saison, aux notes printanières, idéal pour célébrer Pâques et les repas conviviaux autour de produits délicats.', (SELECT id FROM dish WHERE dish_title = 'Gigot d’agneau rôti aux herbes'), 8, 35.00, 12),
+('Menu Communion – Tradition & Douceur', 'Communion', 'Un menu familial et réconfortant, mêlant tradition et douceur, parfaitement adapté aux repas de communion et aux rassemblements intergénérationnels.', (SELECT id FROM dish WHERE dish_title = 'Suprême de poulet rôti, riz pilaf aux légumes'), 15, 35.00, 10),
+('Menu EVC – Convivial & Gourmand', 'Enterrement de célibat', 'Un menu convivial et généreux, pensé pour le partage et la bonne humeur lors de vos événements festifs entre amis.', (SELECT id FROM dish WHERE dish_title = 'Planche apéritive à partager'), 10, 19.00, 18),
+('Menu Enfant – « Petit Gourmet »', 'Enfant', 'Un menu ludique et élaboré avec des plats simples et savoureux pour satisfaire les plus jeunes gourmands.', (SELECT id FROM dish WHERE dish_title = 'Steak de bœuf Charolais, frites maison'), 1, 12.00, 50);
 
 CREATE TABLE material_category(
   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
@@ -416,23 +417,23 @@ INSERT INTO menu_dish (id_menu, id_dish) VALUES
   (SELECT id FROM dish WHERE dish_title='Moelleux au chocolat, crème anglaise')),
 ((SELECT id FROM menu WHERE menu_name='Menu Communion – Tradition & Douceur'),
   (SELECT id FROM dish WHERE dish_title='Brochettes de fruits frais')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Alternative végétale aux noix de cajou')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Plateau de fromages affinés')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Planche apéritive à partager')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Salade fraîcheur tomates et concombre')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Burger gourmet au bœuf, cheddar affiné')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Burger végétarien gourmet, pommes grenaille')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Brochettes de bœuf marinées')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Brownie chocolat & caramel beurre salé')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
   (SELECT id FROM dish WHERE dish_title='Brochettes de fruits frais')),
 ((SELECT id FROM menu WHERE menu_name='Menu Enfant – « Petit Gourmet »'),
   (SELECT id FROM dish WHERE dish_title='Velouté de légumes de saison')),

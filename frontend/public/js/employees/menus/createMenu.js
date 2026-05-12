@@ -1,6 +1,7 @@
 //validation des données
 // Implémenter js de ma page
 const menuName = document.getElementById("menuName");
+const theme = document.getElementById("theme");
 const description = document.getElementById("description");
 const minPeople = document.getElementById("minPeople");
 const price = document.getElementById("price");
@@ -13,7 +14,7 @@ const params = new URLSearchParams(window.location.search);
 const menuId = params.get('id');
 
 //écoute des événements
-[menuName, description, minPeople, price, remainingQuantity].forEach(input => {
+[menuName, theme, description, minPeople, price, remainingQuantity].forEach(input => {
   input.addEventListener("input", validateForm);
 });
 
@@ -25,12 +26,13 @@ function validateCheckboxGroup(containerId) {
 //fonction permettant de valider le formulaire
 function validateForm(){
   const menuNameOk = validateRequired(menuName);
+  const themeOk = validateRequired(theme);
   const descriptionOk = validateRequired(description);
   const minPeopleOk = validateRequired(minPeople);
   const priceOk = validateRequired(price);
   const remainingQuantityOk = validateRequired(remainingQuantity);
 
-  if(menuNameOk && descriptionOk && minPeopleOk && priceOk && remainingQuantityOk){
+  if(menuNameOk && themeOk && descriptionOk && minPeopleOk && priceOk && remainingQuantityOk){
     menuValidation.disabled = false;
   } else{
     menuValidation.disabled = true;
@@ -177,6 +179,7 @@ async function loadMenu(id) {
     );
     // pré-rempli les champs du formulaire
     menuName.value = data.menu_name;
+    theme.value = data.theme;
     description.value = data.description;
     minPeople.value = data.minimum_people;
     price.value = data.price_per_person;
@@ -226,6 +229,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const name = menuName.value;
+  const themeValue = theme.value;
   const descriptionValue = description.value;
   const illustrationDishId = document.querySelector(
     'input[name="menu-image"]:checked'
@@ -258,6 +262,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
           body: JSON.stringify({
             menu_name: name,
             description: descriptionValue,
+            theme: themeValue,
             illustration_dish_id: illustrationDishId,
             minimum_people: minPeopleValue,
             price_per_person: priceValue,
@@ -284,6 +289,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
           body: JSON.stringify({
             menu_name: name,
             description: descriptionValue,
+            theme: themeValue,
             illustration_dish_id: illustrationDishId,
             minimum_people: minPeopleValue,
             price_per_person: priceValue,

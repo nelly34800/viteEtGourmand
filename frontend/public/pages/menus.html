@@ -12,29 +12,27 @@
                              <h3 class="card-title playfair p-2 text-center">Filtres <i class="bi bi-funnel"></i></h3>
                             <fieldset>
                                 <label>Prix : </label>
-                                <input type="number" name="minPrice" id="minPrice" class="input-qty">
+                                <input type="number" name="minPrice" id="minPrice" class="input-qty" step="1" min="1">
                                 <label for="minPrice" class="p-2">min</label>
-                                <input type="number" name="maxPrice" id="maxPrice" class="input-qty">
+                                <input type="number" name="maxPrice" id="maxPrice" class="input-qty" step="1" min="1">
                                 <label for="maxPrice" class="p-2">max</label>
                             </fieldset>
                             <fieldset>
                                 <label for="minPeople">Nombre de personne minimum : </label>
-                                <input type="number" name="minPeople" id="minPeople" class="input-qty">
+                                <input type="number" name="minPeople" id="minPeople" class="input-qty "step="1" min="1">
                             </fieldset>
                             <fieldset>
-                                <label for="menuTheme">Thème du menu : </label>
-                                <input type="text" name="menuTheme" id="menuTheme">
+                                <label for="menuTheme">Thème du menu : </label><br>
+                                <select name="menuTheme" id="menuTheme"></select>
                             </fieldset>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-8">
-            <div class="row align-items-stretch"  id="container">
-                <a href="/menuDetails" class="btn btn-primary playfair stretched-link">Détails</a>
-            </div>
+            <div class="row align-items-stretch"  id="container"></div>
         </div>
     </div>
 </div>

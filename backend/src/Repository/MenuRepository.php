@@ -35,6 +35,7 @@ class MenuRepository
                 $menus[$menuId] = new Menu(
                     $menuId,
                     $row['menu_name'],
+                    $row['theme'],
                     $row['description'],
                     $row['illustration_dish_id'],
                     $row['minimum_people'],
@@ -115,6 +116,7 @@ class MenuRepository
         ("SELECT 
             menu.id AS menu_id,
             menu.menu_name,
+            menu.theme,
             menu.description,
             menu.illustration_dish_id,
             menu.minimum_people,
@@ -158,6 +160,7 @@ class MenuRepository
         ("SELECT 
             menu.id AS menu_id,
             menu.menu_name,
+            menu.theme,
             menu.description,
             menu.illustration_dish_id,
             menu.minimum_people,
@@ -214,13 +217,14 @@ class MenuRepository
 
             // insertion du menu
             $stmt = $this->pdo->prepare("
-                INSERT INTO menu (id, menu_name, description, illustration_dish_id, minimum_people, price_per_person, remaining_quantity)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO menu (id, menu_name, theme, description, illustration_dish_id, minimum_people, price_per_person, remaining_quantity)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
             // exécute la requête avec les données du menu
             $stmt->execute([
                 $menu->getId(),
                 $menu->getMenuName(),
+                $menu->getTheme(),
                 $menu->getDescription(),
                 $menu->getIllustrationDishId(),
                 $menu->getMinimumPeople(),
@@ -262,12 +266,13 @@ class MenuRepository
             // modifie le menu
             $stmt = $this->pdo->prepare("
                 UPDATE menu
-                SET menu_name = ?, description = ?, illustration_dish_id = ?, minimum_people = ?, price_per_person = ?, remaining_quantity = ?
+                SET menu_name = ?, theme = ?, description = ?, illustration_dish_id = ?, minimum_people = ?, price_per_person = ?, remaining_quantity = ?
                 WHERE id = ?
             ");
 
             $stmt->execute([
                 $menu->getMenuName(),
+                $menu->getTheme(),
                 $menu->getDescription(),
                 $menu->getIllustrationDishId(),
                 $menu->getMinimumPeople(),

@@ -70,6 +70,10 @@ async function loadMenus() {
       const name = document.createElement('h2');
       name.textContent = menu.menu_name;
       cardBody.appendChild(name);
+      // Thème
+      const theme = document.createElement('p');
+      theme.textContent = menu.theme;
+      cardBody.appendChild(theme);
       // Description
       const desc = document.createElement('p');
       desc.textContent = menu.description;
