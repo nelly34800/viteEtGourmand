@@ -1,28 +1,34 @@
-const password = document.getElementById("password");
+const currentPassword = document.getElementById("currentPassword");
+const newPassword = document.getElementById("newPassword");
 const confirmPassword = document.getElementById("confirmPassword");
 const btnModification = document.getElementById("validationModification");
-
-const params = new URLSearchParams(window.location.search);
-const token = params.get("token");
 
 btnModification.disabled = true;
 
 //écoute des événements
-password.addEventListener("keyup", validateForm);
+currentPassword.addEventListener("keyup", validateForm);
+newPassword.addEventListener("keyup", validateForm);
 confirmPassword.addEventListener("keyup", validateForm);
 
 //fonction permettant de valider le formulaire
 function validateForm(){
-const passwordOk = validatePassword(password);
-const confirmPasswordOk = validateConfirmationPassword(password, confirmPassword);
+    const currentPasswordOk = validatePassword(currentPassword);
+    const newPasswordOk = validatePassword(newPassword);
+    const confirmPasswordOk = validateConfirmationPassword(newPassword, confirmPassword);
 
-    if(passwordOk && confirmPasswordOk) {
+    if(currentPasswordOk && newPasswordOk && confirmPasswordOk) {
         btnModification.disabled = false;
     }
     else{
         btnModification.disabled = true;
     }
 }
+
+function invalidateCurrentPassword(inputPpassword){
+    if(error) {
+      currentPassword.classList.add("is-invalid");
+    }
+  }
 
 function validateConfirmationPassword(inputPwd, inputConfirmPwd){
       if (inputConfirmPwd.value === "") {
@@ -77,22 +83,31 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   //empêche le rechargement
   e.preventDefault();
 
-   const password = document.getElementById('password').value;
-   const confirmPassword = document.getElementById('confirmPassword').value;
+   const currentPasswordValue = currentPassword.value;
+  const newPasswordValue = newPassword.value;
 
-   // envoie au backend pour récupérer l'adresse mail
+  //récupération de l'utilisateur par son id
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Utilisateur non connecté !");
+    window.location.href = "/signin";
+  }
+  const userId = user.id;
+
+   // envoie au backend
   try {
-    const passwordValue = document.getElementById('password').value;
+    const csrfToken = localStorage.getItem('csrf_token');
 
-    const response = await fetch('http://localhost:8082/passwordReset/update', {
+    const response = await fetch(`http://localhost:8082/user/${userId}/changePassword`, {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({
-        token: token,
-        password: passwordValue,
+        currentPassword: currentPasswordValue,
+        newPassword: newPasswordValue,
       })
     });
 
@@ -105,14 +120,18 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
       // redirection après 3 secondes
       setTimeout(() => {
-        window.location.href = '/signin';
+        window.location.href = '/';
       }, 3000);
     } else {
+      currentPassword.classList.add("is-invalid");
+      currentPassword.classList.remove("is-valid");
+
       // message d'erreur
       showMessage(data.error || "Une erreur est survenue, danger");
     }
 
   } catch (error) {
     console.error("Erreur fetch :", error);
+    showMessage("Erreur de connexion au serveur", "danger");
   }
 });

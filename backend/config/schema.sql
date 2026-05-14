@@ -239,6 +239,14 @@ INSERT INTO `user` (`last_name`, `first_name`, `email`, `password`, `postal_addr
 ('Test', 'Sophie', 'sophie.empl1@test.com', '$2y$10$SoGpgkGNrlvfJiKU9CpLgOPPL9HaCV4e3tSbjhOI391tZI7nlsNGy', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 78', (SELECT id FROM role WHERE role_name = 'employé')),
 ('Admin', 'José', 'jose.admin@test.com', '$2y$10$GxFGCM7acUe9BrMooaIxXeiAhLy10UuuS9KuGGdBQe/ATMaQTHtWu', '12 rue des Saveurs', 'Bordeaux', '33000', '06 12 34 56 81', (SELECT id FROM role WHERE role_name = 'admin'));
 
+CREATE TABLE password_reset (
+    id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+    token CHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    id_user CHAR(36) NOT NULL,
+    FOREIGN KEY (id_user) REFERENCES user(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE orders(
   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
   order_date DATE NOT NULL,
@@ -770,3 +778,4 @@ INSERT INTO menu_condition_menu (id_menu, id_condition_menu) VALUES
  (SELECT id FROM condition_menu WHERE description='plats froids : +4°C.')),
 ((SELECT id FROM menu WHERE menu_name='Option Buffet – Convivial & Modulable'),
  (SELECT id FROM condition_menu WHERE description='tous nos menus comprennent des options vegan, donc sans lactose et sans porc.'));
+

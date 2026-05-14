@@ -13,7 +13,10 @@ export const allRoutes = [
     new Route("/signup", "Inscription", "/pages/auth/signup.html", ["disconnected"], "/js/auth/signup.js"),
     new Route("/account", "Mon compte","/pages/auth/account.html", ["client", "admin", "employé"], "/js/auth/account.js"),
     new Route("/editUserInfo", "Modifier mes informations", "/pages/auth/editUserInfo.html", ["client"], "/js/auth/editUserInfo.js"),
-    new Route("/editPassword", "Modifier mon mot de passe", "/pages/auth/editPassword.html", ["client"], "/js/auth/editPassword.js"),
+    new Route("/editPassword", "Récupération de mon email", "/pages/auth/editPassword.html", [], "/js/auth/editPassword.js"),
+    new Route("/resetLink", "Modifier mon mot de passe", "/pages/auth/resetLink.html", [], "/js/auth/resetLink.js"),
+    new Route("/changePassword", "Récupération de mon email", "/pages/auth/changePassword.html", [], "/js/auth/changePassword.js"),
+
     // order
     new Route("/cart", "Panier", "/pages/order/cart.html", ["client"], "/js/order/cart.js"),
     new Route("/addMaterial", "Ajouter du matériel", "/pages/order/addMaterial.html", ["client"], "/js/order/addMaterial.js"),

@@ -23,7 +23,7 @@ class UserRepository
 
     private function mapRowToUser(array $row): User
     {
-        // transforme une ligne SQL de la table `user` en objet User
+        // transforme une ligne SQL de la table `user` en objet User.
         return new User(
             $row['user_id'],
             $row['last_name'],
@@ -101,7 +101,7 @@ class UserRepository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$row) {
-            // Si aucun résultat n'est trouvé lance une exception
+            // Si aucun résultat n'est trouvé lance une exception.
             throw new RuntimeException('User not found');
         }
         return $this->mapRowToUser($row);
@@ -160,7 +160,7 @@ class UserRepository
             $user->getId()
 
         ]);
-        // Si l'utilisateur n'existe pas retourne une erreur
+        // Si l'utilisateur n'existe pas retourne une erreur.
         if ($stmt->rowCount() === 0) {
             throw new RuntimeException("User not found");
       }
@@ -208,5 +208,25 @@ class UserRepository
             throw new RuntimeException('User not found');
         }
         return $this->mapRowToUser($result);
+    }
+    /**
+     * Modifie le mot de passe.
+     */
+    public function updatePassword(string $id, string $password): void
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE user
+            SET password = :password
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            ':password' => $password,
+            ':id' => $id
+        ]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new RuntimeException("User not found");
+        }
     }
 }

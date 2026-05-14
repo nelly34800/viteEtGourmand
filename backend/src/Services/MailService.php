@@ -160,12 +160,14 @@ class MailService
         );
     }
     // mail réinitialisation mot de passe
-    public function sendResetPasswordMail(string $email, string $resetLink): bool
+    public function sendResetPasswordMail(string $email, string $firstname, string $token): bool
     {
+        $resetLink = "http://localhost:8086/editPassword?token=" . urlencode($token);
+
         return $this->sendMail(
             $email,
             'Réinitialisation de votre mot de passe',
-            "<p>Bonjour,</p>
+            "<p>Bonjour {$firstname},</p>
             <p>Une demande de réinitialisation de mot de passe a été effectuée pour votre compte.</p>
             <p>Pour définir un nouveau mot de passe, cliquez sur le lien ci-dessous :</p>
             <p>

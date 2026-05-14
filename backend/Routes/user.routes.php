@@ -37,3 +37,9 @@ $router->post('/employee', function() use ($allowedRoles) {
     AuthMiddleware::requireRole($allowedRoles);
     (new UserController())->createEmployee();
 });
+
+$router->post('/user/{id}/changePassword', function($id) {
+    CsrfHelper::validate();
+    AuthMiddleware::requireAuth();
+    (new UserController())->changePassword($id);
+});

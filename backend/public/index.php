@@ -72,6 +72,7 @@ try {
     require_once '../routes/cart.routes.php';
     require_once '../routes/delivery.routes.php';
     require_once '../routes/contact.routes.php';
+    require_once '../routes/passwordReset.routes.php';
 
     $router->dispatch($method, $uri);
 

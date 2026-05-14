@@ -193,7 +193,7 @@ class UserController
         ResponseHelper::json(['message' => 'Deleted']);
     }
     /**
-    * Crée un nouvel utilisateur.
+    * Crée un nouvel employé.
     */
     public function createEmployee(): void
     {
@@ -236,18 +236,84 @@ class UserController
     }
 
     private function getRoleIdByName(string $roleName): string
-{
-    $pdo = Database::getConnection();
+    {
+        $pdo = Database::getConnection();
 
-    $stmt = $pdo->prepare("SELECT id FROM role WHERE role_name = :name");
-    $stmt->execute(['name' => $roleName]);
+        $stmt = $pdo->prepare("SELECT id FROM role WHERE role_name = :name");
+        $stmt->execute(['name' => $roleName]);
 
-    $id = $stmt->fetchColumn();
+        $id = $stmt->fetchColumn();
 
-    if (!$id) {
-        throw new RuntimeException("Role not found");
+        if (!$id) {
+            throw new RuntimeException("Role not found");
+        }
+
+        return $id;
     }
 
-    return $id;
-}
+     /**
+     * Met à jour le mot de passe oublie de mot de passe
+     */
+    public function updatePassword(string $id): void
+    {
+        //si l'id n'a pas le format UUID retourne une erreur
+        ValidatorHelper::validateUuid($id);
+        // autorisation : un utilisateur ne peut modifier que son propre compte
+        if (['Password_reset']['user_id'] !== ['user']['id']) {
+            ResponseHelper::json(['error' => 'Forbidden'], 403);
+            return;
+        }
+        // Lecture du JSON
+        $data = RequestHelper::getJson();
+        // Validation des champs obligatoires
+        if (!isset($data['password'])) {
+            throw new InvalidArgumentException('Invalid input');
+        }
+        $existingUser = $this->repository->findById($id);
+        // Création de l'entité utilisateur à partir des données reçues 
+        $user = new User(
+            $id,
+            $existingUser->getLastName(),
+            $existingUser->getFirstName(),
+            $existingUser->getEmail(),
+            $data['password'],
+            $existingUser->getCity(),
+            $existingUser->getPostalCode(),
+            $existingUser->getPhone(),
+            $existingUser->getIdRole(),
+            null, // roleName
+        );
+    }
+       /**
+     * Met à jour le mot de passe utilisateur connecté
+     */
+    public function changePassword(string $id): void
+    {   
+        //si l'id n'a pas le format UUID retourne une erreur
+        ValidatorHelper::validateUuid($id);
+
+        $userId = $_SESSION['user']['id'];
+        // autorisation : un utilisateur ne peut modifier que son propre compte
+        if ($userId !== $id) {
+            ResponseHelper::json(['error' => 'Forbidden'], 403);
+        }
+        // Récupération des données du formulaire
+        $data = RequestHelper::getJson();
+
+        if (!isset($data['currentPassword'], $data['newPassword'])) {
+            throw new InvalidArgumentException('Invalid input');
+        }
+
+        $user = $this->repository->findById($userId);
+
+        if (!password_verify($data['currentPassword'], $user->getPassword())) {
+            ResponseHelper::json(['error' => 'Ancien mot de passe incorrect'], 400);
+        }
+
+        $hashedPassword = password_hash($data['newPassword'], PASSWORD_DEFAULT);
+
+        $this->repository->updatePassword($userId, $hashedPassword);
+
+        ResponseHelper::json(['message' => 'Mot de passe modifié']);
+    }
 }
