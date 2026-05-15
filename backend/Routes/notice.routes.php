@@ -43,3 +43,9 @@ $router->delete('/notice/{id}', function($id) use ($allowedRoles2) {
     AuthMiddleware::requireRole($allowedRoles2);
     (new NoticeController())->delete($id);
 });
+
+$router->put('/notice/{id}/updateStatus', function($id) use ($allowedRoles2) {
+    CsrfHelper::validate();
+    AuthMiddleware::requireRole($allowedRoles2);
+    (new NoticeController())->updateStatus($id);
+});

@@ -48,9 +48,13 @@ col.innerHTML = `
       <p class="signature">
         ${sanitizeHTML(notice.signature)}
       </p>
-      <div class"p-2">
-        <button class="btn btn-secondary btn-sm">Valider</button>
-        <button class="btn btn-primary btn-sm">Supprimer</button>
+      <div class="p-2">
+        <button class="validateBtn btn btn-secondary btn-sm" data-id="${notice.id}">
+          Valider
+        </button>
+        <button class="deleteBtn btn btn-danger btn-sm" data-id="${notice.id}">
+          Supprimer
+        </button>
       </div>
     </div>
   </div>
@@ -70,173 +74,213 @@ col.innerHTML = `
 // se lance au chargement
 loadNoticeUnvalidated();
 
+
+//supprimer l'avis
+document.addEventListener("click", async (e) => {
+  // Vérifie si bouton supprimer
+  if (!e.target.closest(".deleteBtn")) return;
+  const button = e.target.closest(".deleteBtn");
+  // Récupère l'id
+  const noticeId = button.dataset.id;
+  // Confirmation utilisateur
+  if (!confirm("Supprimer cet avis ?")) return;
+
+  try {
+    // Appel API DELETE
+    await secureFetch(
+      `http://localhost:8082/notice/${noticeId}`,
+      { method: 'DELETE' },
+      ['employé', 'admin']
+    );
+    // Message succès
+    alert("Avis supprimé avec succès");
+    // Recharge la liste
+    loadNoticeUnvalidated();
+ 
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+// valider l'avis
+document.addEventListener("click", async (e) => {
+  // Vérifie si bouton valider
+  if (!e.target.closest(".validateBtn")) return;
+  const button = e.target.closest(".validateBtn");
+  // Récupère l'id
+  const noticeId = button.dataset.id;
+  try {
+    // Appel API PUT pour valider
+    await secureFetch(
+      `http://localhost:8082/notice/${noticeId}/updateStatus`, { 
+        method: 'PUT',
+        body: JSON.stringify({
+          status: "validé"
+       })
+    }, ['employé', 'admin']);
+      // afficher le message
+      showMessage("avis validé avec succès", "success");
+      loadNoticeUnvalidated();
+
+  } catch (error) {
+    console.error("Erreur fetch :", error);
+  }
+});
+
+
 // tableau des commandes
-// fonction pour charger les commnades
+// Implémenter js de ma page
+const filterName = document.getElementById("filterName");
+const filterStatus = document.getElementById("filterStatus");
+
+const tbody = document.querySelector("tbody");
+const mobileContainer = document.getElementById("mobile-container");
+
+let allOrders = [];
+// Charger les commandes
 async function loadOrders() {
   try {
     // Appel sécurisé vers l'API (GET: fonction dans api.js)
-    const data = await getOrders();
-    // dekstop: vide le tableau
-    const tbody = document.querySelector('tbody');
-    tbody.innerHTML = '';
+    allOrders = await getOrders();
 
-    //mobile
-    const mobileContainer = document.getElementById('mobile-container');
-    mobileContainer.innerHTML = '';
+    fillStatusFilter(allOrders);
+    displayOrders(allOrders);
 
-    // Boucle sur chaque commande reçu
-    data.forEach(order => {
-      // Création d'une ligne
-      const tr = document.createElement('tr');
-      //inject dans le DOM
-      // Date
-      const tdDate = document.createElement("td");
-      tdDate.textContent = order.service_date;
-      tr.appendChild(tdDate);
-      // nom
-      const tdName = document.createElement("td");
-      tdName.textContent = `${order.user_first_name} ${order.user_last_name}`;
-      tr.appendChild(tdName);
-      // email
-      const tdMail = document.createElement("td");
-      tdMail.textContent = order.user_email;
-      tr.appendChild(tdMail);
-      // téléphone
-      const tdPhone = document.createElement("td");
-      tdPhone.textContent = order.user_phone;
-      tr.appendChild(tdPhone);
-      // Nombre de persones
-      const tdPeople = document.createElement("td");
-      tdPeople.textContent = `${order.number_of_people} pers`;
-      tr.appendChild(tdPeople);
-      // prix
-      const tdPrice = document.createElement("td");
-      tdPrice.textContent = `${order.total_amount} €`;
-      tr.appendChild(tdPrice);
-      // pret matériel
-      const tdEquipmentLoan = document.createElement("td");
-      tdEquipmentLoan.innerHTML = order.equipment_loan
-      ? '<i class="bi bi-check-circle-fill text-success"></i>'
-      : '<i class="bi bi-x-circle-fill text-danger"></i>';
-      tr.appendChild(tdEquipmentLoan);
-      // retour matériel
-      const tdEquipmentReturn = document.createElement("td");
-      tdEquipmentReturn.innerHTML = order.equipment_return
-        ? '<i class="bi bi-check-circle-fill text-success"></i>'
-        : '<i class="bi bi-x-circle-fill text-danger"></i>';
-      tr.appendChild(tdEquipmentReturn);
-      // Statut
-      const tdStatus = document.createElement("td");
-      if (order.status === "annulée") {
-        tdStatus.innerHTML = `<span class="badge bg-danger">Commande annulée</span>`;
-      } else {
-        tdStatus.innerHTML = order.status;
-      }
-      tr.appendChild(tdStatus);
-      // Action 
-      const tdAction = document.createElement("td");
-      if (order.status === "annulée") {
-        const detailBtn = document.createElement("button");
-        detailBtn.type = "button";
-        detailBtn.className = "btn btn-secondary btn-sm cancellationDetailBtn";
-        detailBtn.dataset.reason = order.cancellation_reason ?? "";
-        detailBtn.dataset.contact = order.contact_mode ?? "";
-        detailBtn.textContent = "Voir motif";
-
-        tdAction.appendChild(detailBtn);
-      } else {
-        const statusBtn = document.createElement("button");
-        statusBtn.type = "button";
-        statusBtn.className = "btn btn-primary btn-sm statusChangeBtn";
-        statusBtn.dataset.id = order.id;
-        statusBtn.dataset.status = order.status;
-        statusBtn.textContent = "Changer statut";
-
-        tdAction.appendChild(statusBtn);
-      }
-
-      tr.appendChild(tdAction);
-      // Ajout dans le DOM
-      tbody.appendChild(tr);
-
-      //mobile: boucle pour afficher les cartes de toutes les commandes
-      const card = document.createElement('div');
-      card.className = 'card mb-3';
-
-      const cardBody = document.createElement('div');
-      cardBody.className = 'card-body bgc-secondary text-center';
-      // Date
-      const cardDate = document.createElement('p');
-      cardDate.textContent = `Date évènement : ${order.service_date}`;
-      cardBody.appendChild(cardDate);
-      // nom
-      const cardName = document.createElement("p");
-      cardName.textContent = `nom : ${order.user_first_name} ${order.user_last_name}`;
-      cardBody.appendChild(cardName);
-      // email
-      const cardMail = document.createElement("p");
-      cardMail.textContent = `email : ${order.user_email}`;
-      cardBody.appendChild(cardMail);
-      // téléphone
-      const cardPhone = document.createElement("p");
-      cardPhone.textContent = `téléphone : ${order.user_phone}`;
-      cardBody.appendChild(cardPhone);
-      // Nombre de personnes
-      const cardPeople = document.createElement('p');
-      cardPeople.textContent = `Nombre de personnes : ${order.number_of_people} pers`;
-      cardBody.appendChild(cardPeople);
-      // Prix
-      const cardPrice = document.createElement('p');
-      cardPrice.textContent = `Prix : ${order.total_amount} €`;
-      cardBody.appendChild(cardPrice);
-      // pret matériel
-      const cardEquipmentLoan = document.createElement("p");
-      cardEquipmentLoan.innerHTML = `matériel loué : ${booleanIcon(order.equipment_loan)}`;
-      cardBody.appendChild(cardEquipmentLoan);
-      // retour matériel
-      const cardEquipmentReturn = document.createElement("p");
-      cardEquipmentReturn.innerHTML = `retour matériel : ${booleanIcon(order.equipment_return)}`;
-      cardBody.appendChild(cardEquipmentReturn);
-         // Statut
-      const cardStatus = document.createElement("p");
-       if (order.status === "annulée") {
-        cardStatus.innerHTML = `statut : <span class="badge bg-danger">Commande annulée</span>`;
-      } else {
-        cardStatus.innerHTML = `statut : ${order.status}`;
-      }
-      cardBody.appendChild(cardStatus);
-      //action
-      const cardAction = document.createElement("p");
-
-      if (order.status === "annulée") {
-        const cardDetailBtn = document.createElement("button");
-        cardDetailBtn.type = "button";
-        cardDetailBtn.className = "btn btn-secondary btn-sm cancellationDetailBtn";
-        cardDetailBtn.dataset.reason = order.cancellation_reason ?? "";
-        cardDetailBtn.dataset.contact = order.contact_mode ?? "";
-        cardDetailBtn.textContent = "Voir motif";
-
-        cardAction.appendChild(cardDetailBtn);
-      } else {
-        const cardStatusBtn = document.createElement("button");
-        cardStatusBtn.type = "button";
-        cardStatusBtn.className = "btn btn-primary btn-sm statusChangeBtn";
-        cardStatusBtn.dataset.id = order.id;
-        cardStatusBtn.dataset.status = order.status;
-        cardStatusBtn.textContent = "Changer statut";
-
-        cardAction.appendChild(cardStatusBtn);
-      }
-      cardBody.appendChild(cardAction);
-      card.appendChild(cardBody);
-      mobileContainer.appendChild(card);
-    });
   } catch (error) {
-    // Affiche l'erreur si problème API
     alert(error.message);
   }
 }
 loadOrders();
+// appliquer filtres 
+function applyFilters() {
+  const nameValue = filterName.value.toLowerCase();
+  const statusValue = filterStatus.value;
+
+  const filteredOrders = allOrders.filter(order => {
+    const matchName = !nameValue || order.user_last_name.toLowerCase().includes(nameValue);
+    const matchStatus = !statusValue || order.status === statusValue;
+
+    return matchName && matchStatus;
+  });
+  displayOrders(filteredOrders);
+}
+//écoute des changements
+filterName.addEventListener("input", applyFilters);
+filterStatus.addEventListener("change", applyFilters);
+// rempli le select des statuts
+function fillStatusFilter(orders) {
+  filterStatus.innerHTML = `<option value="">Tous les statuts</option>`;
+
+  const status = [...new Set(orders.map(order => order.status))];
+
+  status.forEach(status => {
+    const option = document.createElement("option");
+    option.value = status;
+    option.textContent = status;
+    filterStatus.appendChild(option);
+  });
+}
+// affichage desktop + mobile
+function displayOrders(orders) {
+  tbody.innerHTML = "";
+  mobileContainer.innerHTML = "";
+
+  if (orders.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10" class="text-center">Aucune commande ne correspond aux filtres.</td>
+      </tr>
+    `;
+
+    mobileContainer.innerHTML = `
+      <p class="text-center">Aucune commande ne correspond aux filtres.</p>
+    `;
+    return;
+  }
+  orders.forEach(order => {
+    displayOrderRow(order);
+    displayOrderCard(order);
+  });
+}
+// affichage des ligne desktop
+function displayOrderRow(order) {
+  const tr = document.createElement("tr");
+
+  tr.innerHTML = `
+    <td>${order.service_date}</td>
+    <td>${order.user_first_name} ${order.user_last_name}</td>
+    <td>${order.user_email}</td>
+    <td>${order.user_phone}</td>
+    <td>${order.number_of_people} pers</td>
+    <td>${order.total_amount} €</td>
+    <td>${booleanIcon(order.equipment_loan)}</td>
+    <td>${booleanIcon(order.equipment_return)}</td>
+    <td>
+      ${
+        order.status === "annulée"
+          ? `<span class="badge bg-danger">Commande annulée</span>`
+          : order.status
+      }
+    </td>
+    <td></td>
+  `;
+
+  const tdAction = tr.querySelector("td:last-child");
+  tdAction.appendChild(createActionButton(order));
+
+  tbody.appendChild(tr);
+}
+// affichage des lignes mobile
+function displayOrderCard(order) {
+  const card = document.createElement("div");
+  card.className = "card mb-3";
+
+  card.innerHTML = `
+    <div class="card-body bgc-secondary text-center">
+      <p>Date évènement : ${order.service_date}</p>
+      <p>Nom : ${order.user_first_name} ${order.user_last_name}</p>
+      <p>Email : ${order.user_email}</p>
+      <p>Téléphone : ${order.user_phone}</p>
+      <p>Nombre de personnes : ${order.number_of_people} pers</p>
+      <p>Prix : ${order.total_amount} €</p>
+      <p>Matériel loué : ${booleanIcon(order.equipment_loan)}</p>
+      <p>Retour matériel : ${booleanIcon(order.equipment_return)}</p>
+      <p>
+        Statut :
+        ${
+          order.status === "annulée"
+            ? `<span class="badge bg-danger">Commande annulée</span>`
+            : order.status
+        }
+      </p>
+      <div class="card-action"></div>
+    </div>
+  `;
+
+  const actionContainer = card.querySelector(".card-action");
+  actionContainer.appendChild(createActionButton(order));
+
+  mobileContainer.appendChild(card);
+}
+// création du bouton d'action
+function createActionButton(order) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn btn-sm";
+
+  if (order.status === "annulée") {
+    button.classList.add("btn-secondary", "cancellationDetailBtn");
+    button.dataset.reason = order.cancellation_reason ?? "";
+    button.dataset.contact = order.contact_mode ?? "";
+    button.textContent = "Voir motif";
+  } else {
+    button.classList.add("btn-primary", "statusChangeBtn");
+    button.dataset.id = order.id;
+    button.dataset.status = order.status;
+    button.textContent = "Changer statut";
+  }
+  return button;
+}
 // ouvrir la modale statut
 document.addEventListener("click", (event) => {
   const button = event.target.closest(".statusChangeBtn");

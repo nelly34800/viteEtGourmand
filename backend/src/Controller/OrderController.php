@@ -279,7 +279,6 @@ class OrderController
      */
     public function update(string $id): void
     {
-      
         try {
             //si l'id n'a pas le format UUID retourne une erreur
             ValidatorHelper::validateUuid($id);

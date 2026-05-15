@@ -57,7 +57,7 @@ class Order
         bool $equipmentReturn,
         string $idUser,
         bool $hasNotice= false,
-        ?\DateTimeImmutable $statusChangedAt,
+        ?\DateTimeImmutable $statusChangedAt = null,
         ?string $cancellationReason = null,
         ?string $contactMode = null,
         ?string $userLastName = null,

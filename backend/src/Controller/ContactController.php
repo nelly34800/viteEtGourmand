@@ -11,7 +11,7 @@ class ContactController
     public function send(): void
     {
         $data = RequestHelper::getJson();
-        if (empty($data['email']) ||empty($data['message'])) {
+        if (empty($data['email']) || empty($data['title']) || empty($data['description'])) {
             ResponseHelper::json(['error' => 'Missing fields'], 400);
         }
 
@@ -23,7 +23,8 @@ class ContactController
 
         $success = $mailService->sendContactMail(
             $data['email'],
-            $data['message']
+            $data['title'],
+            $data['description']
         );
 
         if (!$success) {

@@ -16,7 +16,7 @@ class MailService
         $this->config = require __DIR__ . '/../../config/mail.php';
     }
     // récupére mail de contact 
-    public function sendContactMail(string $email, string $message): bool
+    public function sendContactMail(string $email, string $title, string $description): bool
     {
         // création objet mail
         $mail = new PHPMailer(true);
@@ -45,12 +45,22 @@ class MailService
             $mail->addAddress($this->config['from_email']);
             $mail->addReplyTo($email);
 
-            $mail->isHTML(true);
-            $mail->Subject = 'Nouveau message de contact';
-            $mail->Body = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
-            $mail->AltBody = $message;
+            $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+            $safeDescription = nl2br(htmlspecialchars($description, ENT_QUOTES, 'UTF-8'));
+            $safeEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
 
+            $mail->isHTML(true);
+            $mail->Subject = 'Nouveau message de contact : ' . $safeTitle;
+
+            $mail->Body = "
+                <p><strong>Email :</strong> {$safeEmail}</p>
+                <p><strong>Titre :</strong> {$safeTitle}</p>
+                <p><strong>Description :</strong></p>
+                <p>{$safeDescription}</p>
+            ";
+            $mail->AltBody = "Email : {$email}\nTitre : {$title}\nDescription : {$description}";
             return $mail->send();
+
         } catch (Exception $e) {
           ResponseHelper::json([
               'error' => 'Mail send failed',

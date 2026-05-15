@@ -10,6 +10,8 @@ const city = document.getElementById("city");
 const phone = document.getElementById("phone");
 const btnValidation = document.getElementById("validation-inscription");
 
+btnValidation.disabled = true;
+
 //écoute des événements
 lastName.addEventListener("keyup", validateForm);
 firstName.addEventListener("keyup", validateForm);

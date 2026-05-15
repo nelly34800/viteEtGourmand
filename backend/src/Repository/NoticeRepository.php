@@ -175,6 +175,16 @@ class NoticeRepository
 
         return $notice ?: null;
     }
+    // changer le status d'un avis (validation)
+    public function updateStatus(string $id, string $status): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE notice SET status = ? WHERE id = ?");
+        $stmt->execute([$status, $id]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new RuntimeException('Notice not found');
+        }
+    }
 }
 
 

@@ -194,5 +194,20 @@ class NoticeController
 
         ResponseHelper::json($response);
     }
-}
+    // modifier le statut d'un avis (validation)
+    public function updateStatus(string $id): void
+    {
+        //si l'id n'a pas le format UUID retourne une erreur
+        ValidatorHelper::validateUuid($id);
+        // Lecture du JSON
+        $data = RequestHelper::getJson();
+        // Validation du champ status
+        if (!isset($data['status'])) {
+            throw new InvalidArgumentException('Invalid input');
+        }
+        // Appel du repository pour mettre à jour le statut de l'avis en base
+        $this->repository->updateStatus($id, $data['status']);
 
+        ResponseHelper::json(['message' => 'Status updated']);
+    }
+}
