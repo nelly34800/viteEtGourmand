@@ -56,7 +56,7 @@ async function loadConditions() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 loadConditions();
@@ -102,6 +102,6 @@ document.addEventListener("click", async (e) => {
     loadConditions();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

@@ -5,6 +5,7 @@ const staffRatio = document.getElementById("staffRatio");
 const packagePrice = document.getElementById("packagePrice");
 const personalPackageValidation = document.getElementById("personalPackageValidation");
 
+personalPackageValidation.disabled = true;
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const personalPackageId = params.get('id');
@@ -57,7 +58,7 @@ async function loadPersonalPackage(id) {
     packagePrice.value = data.package_price;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -119,7 +120,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

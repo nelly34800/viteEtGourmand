@@ -26,7 +26,7 @@ export const allRoutes = [
     new Route("/orderConfirmation", "Confirmation de commande", "/pages/order/orderConfirmation.html", ["client"], "/js/order/orderConfirmation.js"),
     new Route("/editOrder", "Livraison commande", "/pages/order/editOrder.html", ["client"], "/js/order/editOrder.js"),
     // admin
-    new Route("/admin", "Admin","/pages/admin/admin.html", ["admin"]),
+    new Route("/admin", "Admin","/pages/admin/admin.html", ["admin"], "/js/admin/admin.js"),
     new Route("/createEmployee", "Créer un compte employé", "/pages/admin/createEmployee.html", ["admin"], "/js/admin/createEmployee.js"),
     new Route("/employeesList", "liste des employés", "/pages/admin/employeesList.html", ["admin"], "/js/admin/employeesList.js"),
     // employé

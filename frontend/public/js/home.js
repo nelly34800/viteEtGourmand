@@ -58,7 +58,7 @@ async function loadNoticeValidate() {
 
   } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 // se lance au chargement

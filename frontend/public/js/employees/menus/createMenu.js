@@ -9,6 +9,8 @@ const remainingQuantity = document.getElementById("remainingQuantity");
 const dishes = document.getElementById("dishes-container");
 const conditions= document.getElementById("conditions-container");
 const menuValidation = document.getElementById("menuValidation");
+
+menuValidation.disabled = true;
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const menuId = params.get('id');
@@ -141,7 +143,7 @@ async function loadDishes() {
     renderDishesByCategory(data);
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 
@@ -165,7 +167,7 @@ async function loadConditions() {
       document.getElementById("conditions-container").appendChild(label);
     });
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 
@@ -209,7 +211,7 @@ async function loadMenu(id) {
       });
     }
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -309,7 +311,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-        console.error("FULL ERROR:", error);
-        showMessage(error.message, "danger");
+        showMessage("Une erreur est survenue", "danger");
   }
 });

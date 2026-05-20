@@ -7,6 +7,8 @@ const openingTime = document.getElementById("openingTime");
 const closingTime = document.getElementById("closingTime");
 const scheduleValidation = document.getElementById("scheduleValidation");
 
+scheduleValidation.disabled = true;
+
 const params = new URLSearchParams(window.location.search);
 const scheduleId = params.get('id');
 
@@ -62,7 +64,7 @@ async function loadSchedule(id) {
     closingTime.value = data.closing_time;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -130,7 +132,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

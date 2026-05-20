@@ -4,6 +4,8 @@ const nameDrinkPackage = document.getElementById("nameDrinkPackage");
 const priceDrinkPackage = document.getElementById("priceDrinkPackage");
 const drinkPackageValidation = document.getElementById("drinkPackageValidation");
 
+drinkPackageValidation.disabled = true;
+
 const params = new URLSearchParams(window.location.search);
 const drinkPackageId = params.get('id');
 
@@ -53,7 +55,7 @@ async function loadDrinkPackage(id) {
     priceDrinkPackage.value = data.price_per_person;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -112,7 +114,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

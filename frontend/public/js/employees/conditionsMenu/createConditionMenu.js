@@ -3,6 +3,9 @@
 const conditionType = document.getElementById("conditionType");
 const description = document.getElementById("description");
 const conditionValidation = document.getElementById("conditionValidation");
+
+conditionValidation.disabled = true;
+
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const conditionId = params.get('id');
@@ -53,7 +56,7 @@ async function loadCondition(id) {
     description.value = data.description;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -112,7 +115,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

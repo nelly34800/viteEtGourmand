@@ -44,7 +44,7 @@ async function loadPersonalsPackage() {
 
         } catch (error) {
           console.error("Erreur ajout forfait de personnel :", error);
-          alert(error.message);
+          showMessage("Une erreur est survenue", "danger");
         }
       });
 
@@ -88,7 +88,7 @@ async function loadPersonalsPackage() {
 
         } catch (error) {
           console.error("Erreur ajout forfait de personnel :", error);
-          alert(error.message);
+          showMessage("Une erreur est survenue", "danger");
         }
       });
 
@@ -101,7 +101,7 @@ async function loadPersonalsPackage() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 

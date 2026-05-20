@@ -75,17 +75,29 @@ function displayMenus(menus) {
 
     // Description
     const desc = document.createElement('p');
-    desc.innerHTML = `<i class="bi bi-star-fill"> </i> ${menu.description}`;
+    const descIcon = document.createElement('i');
+    descIcon.className = 'bi bi-star-fill';
+
+    desc.appendChild(descIcon);
+    desc.append(' ' + menu.description);
     cardBody.appendChild(desc);
 
     // nombre de personne minimum
     const minPerson = document.createElement('p');
-    minPerson.innerHTML = `<i class="bi bi-star-fill"> </i>Nombre minimum : ${menu.minimum_people} personnes`;
+    const minIcon = document.createElement('i');
+    minIcon.className = 'bi bi-star-fill';
+
+    minPerson.appendChild(minIcon);
+    minPerson.append(` Nombre minimum : ${menu.minimum_people} personnes`);
     cardBody.appendChild(minPerson);
 
     // prix du menu
     const price = document.createElement('p');
-    price.innerHTML = `<i class="bi bi-star-fill"> </i>Prix par personne : ${menu.price_per_person} €`;
+    const priceIcon = document.createElement('i');
+    priceIcon.className = 'bi bi-star-fill';
+
+    price.appendChild(priceIcon);
+    price.append(` Prix par personne : ${menu.price_per_person} €`);
     cardBody.appendChild(price);
 
     const cardFooter = document.createElement('div');
@@ -128,8 +140,7 @@ async function loadMenus() {
     displayMenus(allMenus);
 
   } catch (error) {
-    console.error(error);
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // remplir le select avec les thèmes des menus

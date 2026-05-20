@@ -16,7 +16,7 @@ async function loadMenu(id) {
     addOrderButton(data.id);
 
   } catch (error) {
-    console.error(error);
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 
@@ -121,16 +121,23 @@ function renderConditions(conditions) {
     container.appendChild(p);
   });
 }
-
+// Affiche les infos du menu (prix, nombre de personnes, disponibilité)
 function renderInfos(menu) {
   const container = document.getElementById("menu-infos");
+  container.textContent = "";
 
-  container.innerHTML = `
-    <p>Nombre de personnes minimum : ${menu.minimum_people} personnes</p>
-    <p>Disponibilité : il reste ${menu.remaining_quantity} commandes disponible pour ce menu</p>
-    <p>Prix : ${menu.price_per_person} € / personne</p>
-  `;
+  const minimumPeople = document.createElement("p");
+  minimumPeople.textContent = `Nombre de personnes minimum : ${menu.minimum_people} personnes`;
+
+  const remainingQuantity = document.createElement("p");
+  remainingQuantity.textContent = `Disponibilité : il reste ${menu.remaining_quantity} commandes disponibles pour ce menu`;
+
+  const price = document.createElement("p");
+  price.textContent = `Prix : ${menu.price_per_person} € / personne`;
+
+  container.append(minimumPeople, remainingQuantity, price);
 }
+// fonction pour ajouter un menu au panier
 async function addToCart(menuId) {
   const user = isConnected();
 
@@ -170,7 +177,7 @@ function addOrderButton(menuId) {
           const modal = new bootstrap.Modal(document.getElementById('cartModal'));
           modal.show();
       } catch (error) {
-        console.error("Erreur ajout panier :", error);
+        showMessage("Une erreur est survenue", "danger");
       }
     });
   }

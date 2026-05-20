@@ -83,14 +83,17 @@ class DishController
 public function store(): void
 {
     $data = RequestHelper::getJson();
-    ValidatorHelper::validateUuid($data['id_category_dish']);
-    ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
-    ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
-    ValidatorHelper::validatePicture($data['picture']);
+
+    
     // Validation des champs obligatoires
     if(!isset($data['dish_title'], $data['description'], $data['picture'], $data['id_category_dish'])) {
         throw new InvalidArgumentException('Invalid input');
     }
+    ValidatorHelper::validateUuid($data['id_category_dish']);
+    ValidatorHelper::validateUuidArray($data['allergen_id'] ?? []);
+    ValidatorHelper::validateUuidArray($data['diet_id'] ?? []);
+    ValidatorHelper::validatePicture($data['picture']);
+
     $dietIds = $data['diet_id'] ?? [];
     $allergenIds = $data['allergen_id'] ?? [];
     // Création de l'entité Dish à partir des données reçues

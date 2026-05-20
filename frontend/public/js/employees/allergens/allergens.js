@@ -24,7 +24,7 @@ async function loadAllergens() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 loadAllergens();
@@ -70,6 +70,6 @@ document.addEventListener("click", async (e) => {
     loadAllergens();
  
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

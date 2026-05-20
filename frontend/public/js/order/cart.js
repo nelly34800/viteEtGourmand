@@ -16,7 +16,7 @@ async function loadCart() {
     renderCart();
 
   } catch (error) {
-    console.error("Erreur chargement panier :", error);
+    showMessage("Une erreur est survenue", "danger");
 
     cart = [];
 
@@ -142,7 +142,7 @@ async function updateCartItem(itemId, quantity) {
     await loadCart();
 
   } catch (error) {
-    console.error("Erreur modification panier :", error);
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 
@@ -155,7 +155,7 @@ async function deleteCartItem(itemId) {
     await loadCart();
 
   } catch (error) {
-    console.error("Erreur suppression panier :", error);
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 

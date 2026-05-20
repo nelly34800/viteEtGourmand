@@ -11,6 +11,8 @@ const dishValidation = document.getElementById("dishValidation");
 const params = new URLSearchParams(window.location.search);
 const dishId = params.get('id');
 
+dishValidation.disabled = true;
+
 //écoute des événements
 [dishTitle, description, picture].forEach(input => {
   input.addEventListener("input", validateForm);
@@ -88,7 +90,7 @@ async function loadCategoriesDish() {
     category.addEventListener("change", validateForm);
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // charger les allergènes
@@ -110,7 +112,7 @@ async function loadAllergens() {
       document.getElementById("allergens-container").appendChild(label);
     });
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // charger les régimes alimentaires
@@ -132,7 +134,7 @@ async function loadDiets() {
       document.getElementById("diets-container").appendChild(label);
     });
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
  
@@ -176,7 +178,7 @@ async function loadDish(id) {
     }
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -263,7 +265,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

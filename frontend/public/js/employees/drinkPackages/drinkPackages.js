@@ -29,7 +29,7 @@ async function loadDrinksPackage() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 loadDrinksPackage();
@@ -69,12 +69,12 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("forfait de boisson supprimé avec succès");
+    showMessage("forfait de boisson supprimé avec succès", "success");
 
     // Recharge la liste
     loadDrinksPackage();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

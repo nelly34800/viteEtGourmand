@@ -133,7 +133,7 @@ async function loadMenus() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 loadMenus();
@@ -173,12 +173,12 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("Menu supprimé avec succès");
+    showMessage("Menu supprimé avec succès", "success");
 
     // Recharge la liste
     loadMenus();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

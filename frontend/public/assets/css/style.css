@@ -201,11 +201,23 @@ dl dt {
   color: var(--primary);
 }
 
+/* filtres
+ ========================= */
+
 .orderFilters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
+}
+
+/* Diagrammes
+ ========================= */
+
+.chart-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
 }
 
 /* Utilitaires

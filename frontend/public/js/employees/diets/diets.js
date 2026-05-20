@@ -24,7 +24,7 @@ async function loadDiets() {
     });
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 loadDiets();
@@ -64,12 +64,12 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("Régime alimentaire supprimé avec succès");
+    showMessage("Régime alimentaire supprimé avec succès", "success");
 
     // Recharge la liste
     loadDiets();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

@@ -21,11 +21,17 @@ class ValidatorHelper
         self::validateUuid($id);
     }
 }
-    // Valide le format de l'image
-    public static function validatePicture(string $filename): void
-    {
-        if (!preg_match('/\.(jpg|jpeg|png|webp)$/i', $filename)) {
-            throw new \InvalidArgumentException("Invalid image format");
-        }
+   // Valide le format et le nom de l'image
+public static function validatePicture(string $filename): void
+{
+    $filename = trim($filename);
+
+    if (empty($filename)) {
+        throw new \InvalidArgumentException("Image required");
     }
+    // Autorise uniquement :lettres, chiffres, tirets, underscores + extension image
+    if (!preg_match('/^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|webp)$/i', $filename)) {
+        throw new \InvalidArgumentException("Invalid image format");
+    }
+  }
 }

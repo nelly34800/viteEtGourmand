@@ -121,7 +121,7 @@ async function loadOrders() {
         }
       cardBody.appendChild(action);
       card.appendChild(cardBody);
-      console.log(order);
+       console.log(order);
       console.log("has_notice =", order.has_notice);
       // Ajout dans le DOM
       mobileContainer.appendChild(card);
@@ -164,9 +164,9 @@ document.addEventListener("click", async (event) => {
     modal.show();
 
   } catch (error) {
-    console.error("Erreur détail commande :", error);
-    showMessage("Impossible de charger le détail de la commande", "error");
-  }
+  console.error("Erreur détail commande :", error);
+  showMessage(error.message, "danger");
+}
 });
 // affiche les menus, forfaits, matériel dans la modale
 function renderDetailItems(order) {
@@ -188,18 +188,36 @@ function renderDetailItems(order) {
     container.appendChild(title);
 
     section.items.forEach(item => {
-      const p = document.createElement("p");
 
-      p.innerHTML = `
-        <strong>${item.name}</strong><br>
-        Quantité : ${item.number}<br>
-        Prix unitaire : ${item.price} €<br>
-        ${item.discount ? `Remise : -${item.discount} €<br>` : ""}
-        Sous-total : ${item.subtotal} €
-      `;
+    const p = document.createElement("p");
 
-      container.appendChild(p);
-    });
+    const name = document.createElement("strong");
+    name.textContent = item.name;
+    p.appendChild(name);
+
+    p.appendChild(document.createElement("br"));
+    const quantity = document.createElement("p");
+    quantity.textContent = `Quantité : ${item.number}`;
+    p.appendChild(quantity);
+
+    p.appendChild(document.createElement("br"));
+    const price = document.createElement("p");
+    price.textContent = `Prix unitaire : ${item.price} €`;
+    p.appendChild(price);
+
+    if (item.discount) {
+      const discount = document.createElement("p");
+      p.appendChild(document.createElement("br"));
+      discount.append(`Remise : -${item.discount} €`);
+      p.appendChild(discount);
+    }
+    const subTotal = document.createElement("p");
+    p.appendChild(document.createElement("br"));
+    subTotal.append(`Sous-total : ${item.subtotal} €`);
+    p.appendChild(subTotal);
+
+    container.appendChild(p);
+  });
   });
 }
 

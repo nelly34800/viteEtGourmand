@@ -68,12 +68,11 @@ col.innerHTML = `
     }
   } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 // se lance au chargement
 loadNoticeUnvalidated();
-
 
 //supprimer l'avis
 document.addEventListener("click", async (e) => {
@@ -98,7 +97,7 @@ document.addEventListener("click", async (e) => {
     loadNoticeUnvalidated();
  
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });
 
@@ -147,7 +146,7 @@ async function loadOrders() {
     displayOrders(allOrders);
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 loadOrders();
@@ -206,27 +205,63 @@ function displayOrders(orders) {
 function displayOrderRow(order) {
   const tr = document.createElement("tr");
 
-  tr.innerHTML = `
-    <td>${order.service_date}</td>
-    <td>${order.user_first_name} ${order.user_last_name}</td>
-    <td>${order.user_email}</td>
-    <td>${order.user_phone}</td>
-    <td>${order.number_of_people} pers</td>
-    <td>${order.total_amount} €</td>
-    <td>${booleanIcon(order.equipment_loan)}</td>
-    <td>${booleanIcon(order.equipment_return)}</td>
-    <td>
-      ${
-        order.status === "annulée"
-          ? `<span class="badge bg-danger">Commande annulée</span>`
-          : order.status
-      }
-    </td>
-    <td></td>
-  `;
+  // Date
+  const tdDate = document.createElement("td");
+  tdDate.textContent = order.service_date;
+  tr.appendChild(tdDate);
 
-  const tdAction = tr.querySelector("td:last-child");
+  // Nom prénom
+  const tdName = document.createElement("td");
+  tdName.textContent = `${order.user_first_name} ${order.user_last_name}`;
+  tr.appendChild(tdName);
+
+  // Email
+  const tdEmail = document.createElement("td");
+  tdEmail.textContent = order.user_email;
+  tr.appendChild(tdEmail);
+
+  // Téléphone
+  const tdPhone = document.createElement("td");
+  tdPhone.textContent = order.user_phone;
+  tr.appendChild(tdPhone);
+
+  // Nombre de personnes
+  const tdPeople = document.createElement("td");
+  tdPeople.textContent = `${order.number_of_people} pers`;
+  tr.appendChild(tdPeople);
+
+  // Prix total
+  const tdTotal = document.createElement("td");
+  tdTotal.textContent = `${order.total_amount} €`;
+  tr.appendChild(tdTotal);
+
+  // Prêt matériel
+  const tdLoan = document.createElement("td");
+  tdLoan.appendChild(booleanIcon(order.equipment_loan));
+  tr.appendChild(tdLoan);
+
+  // Retour matériel
+  const tdReturn = document.createElement("td");
+  tdReturn.appendChild(booleanIcon(order.equipment_return));
+  tr.appendChild(tdReturn);
+
+  // Statut
+  const tdStatus = document.createElement("td");
+
+  if (order.status === "annulée") {
+    const badge = document.createElement("span");
+    badge.className = "badge bg-danger";
+    badge.textContent = "Commande annulée";
+
+    tdStatus.appendChild(badge);
+  } else {
+    tdStatus.textContent = order.status;
+  }
+  tr.appendChild(tdStatus);
+
+  const tdAction = document.createElement("td");
   tdAction.appendChild(createActionButton(order));
+  tr.appendChild(tdAction);
 
   tbody.appendChild(tr);
 }
@@ -235,31 +270,71 @@ function displayOrderCard(order) {
   const card = document.createElement("div");
   card.className = "card mb-3";
 
-  card.innerHTML = `
-    <div class="card-body bgc-secondary text-center">
-      <p>Date évènement : ${order.service_date}</p>
-      <p>Nom : ${order.user_first_name} ${order.user_last_name}</p>
-      <p>Email : ${order.user_email}</p>
-      <p>Téléphone : ${order.user_phone}</p>
-      <p>Nombre de personnes : ${order.number_of_people} pers</p>
-      <p>Prix : ${order.total_amount} €</p>
-      <p>Matériel loué : ${booleanIcon(order.equipment_loan)}</p>
-      <p>Retour matériel : ${booleanIcon(order.equipment_return)}</p>
-      <p>
-        Statut :
-        ${
-          order.status === "annulée"
-            ? `<span class="badge bg-danger">Commande annulée</span>`
-            : order.status
-        }
-      </p>
-      <div class="card-action"></div>
-    </div>
-  `;
+  const cardBody = document.createElement("div");
+  cardBody.className = "card-body bgc-secondary text-center";
 
-  const actionContainer = card.querySelector(".card-action");
+  // Date
+  const date = document.createElement("p");
+  date.textContent = `Date évènement : ${order.service_date}`;
+  cardBody.appendChild(date);
+
+  // Nom prénom
+  const name = document.createElement("p");
+  name.textContent = `Nom : ${order.user_first_name} ${order.user_last_name}`;
+ cardBody.appendChild(name);
+
+  // Email
+  const email = document.createElement("p");
+  email.textContent = `Email : ${order.user_email}`;
+  cardBody.appendChild(email);
+
+  // Téléphone
+  const phone = document.createElement("p");
+  phone.textContent = `Téléphone : ${order.user_phone}`;
+ cardBody.appendChild(phone);
+
+  // Nombre de personnes
+  const people = document.createElement("p");
+  people.textContent = `Nombre de personnes : ${order.number_of_people} pers`;
+  cardBody.appendChild(people);
+
+  // Prix total
+  const total = document.createElement("p");
+  total.textContent = `Prix : ${order.total_amount} €`;
+  cardBody.appendChild(total);
+
+  // Prêt matériel
+  const loan = document.createElement("p");
+  loan.append("Matériel loué : ");
+  loan.appendChild(booleanIcon(order.equipment_loan));
+  cardBody.appendChild(loan);
+
+  // Retour matériel
+  const returnMaterial = document.createElement("p");
+  returnMaterial.append("Retour matériel : ");
+  returnMaterial.appendChild(booleanIcon(order.equipment_return));
+  cardBody.appendChild(returnMaterial);
+
+  // Statut
+  const status = document.createElement("p");
+
+  if (order.status === "annulée") {
+    const badge = document.createElement("span");
+    badge.className = "badge bg-danger";
+    badge.textContent = "Commande annulée";
+
+    status.appendChild(badge);
+  } else {
+    status.textContent = order.status;
+  }
+  cardBody.appendChild(status);
+
+  const actionContainer = document.createElement("div");
+  actionContainer.className = "card-action";
   actionContainer.appendChild(createActionButton(order));
-
+  cardBody.appendChild (actionContainer)
+  
+  card.appendChild(cardBody);
   mobileContainer.appendChild(card);
 }
 // création du bouton d'action

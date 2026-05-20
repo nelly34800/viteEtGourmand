@@ -65,7 +65,7 @@ async function loadPersonalsPackage() {
 
     } catch (error) {
       // Affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 // se lance au chargement
@@ -106,12 +106,12 @@ document.addEventListener("click", async (e) => {
     );
 
     // Message succès
-    alert("forfait de personnel supprimé avec succès");
+    showMessage("forfait de personnel supprimé avec succès");
 
     // Recharge la liste
     loadPersonalsPackage();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

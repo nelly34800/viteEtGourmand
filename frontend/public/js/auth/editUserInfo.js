@@ -165,7 +165,7 @@ deleteAccount.addEventListener("click", async function() {
 
     if (response.ok) {
       // afficher le message
-      showMessage("Suppression réussie ! Vous allez être redirigé sur la page d'accueil, danger");
+      showMessage("Suppression réussie ! Vous allez être redirigé sur la page d'accueil, success");
 
       // nettoyage côté front
       localStorage.removeItem('user');

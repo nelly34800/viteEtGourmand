@@ -1,7 +1,7 @@
 # Image PHP 8.2 avec Apache
 FROM php:8.2-apache
 
-# Installer les dépendances système nécessaires
+# Installe les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
@@ -15,17 +15,17 @@ RUN apt-get update && apt-get install -y \
         zip \
     && a2enmod rewrite
 
-# Installer l'extension MongoDB
+# Installe l'extension MongoDB
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
-# Installer Composer
+# Installe Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Définir le dossier de travail
+# Définit le dossier de travail
 WORKDIR /var/www/html
 
-# Copier le code du backend
+# Copie le code du backend
 COPY ./backend /var/www/html
 
 # Index.php est dans /public
@@ -35,5 +35,5 @@ RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf \
     /etc/apache2/apache2.conf
 
-# Exposer le port Apache
+# Expose le port Apache
 EXPOSE 80

@@ -4,7 +4,6 @@ const description = document.getElementById("description");
 const email = document.getElementById("email");
 const btnValidation = document.getElementById("validation");
 
-
 btnValidation.disabled = true;
 
 //écoute des événements
@@ -93,10 +92,10 @@ document.querySelector('form').addEventListener('submit', async (e) => {
       }, 3000);
     } else {
       // message d'erreur
-      showMessage(data.error || "Une erreur est survenue, danger");
+      showMessage( "Une erreur est survenue, danger");
     }
 
   } catch (error) {
-    console.error("Erreur fetch :", error);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

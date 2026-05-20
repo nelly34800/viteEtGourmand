@@ -27,7 +27,6 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
         service_date: localStorage.getItem("service_date")
       })
     }, ["client"]);
-    console.log(response);
     showMessage("Commande enregistrée avec succès", "success");
 
     setTimeout(() => {
@@ -35,7 +34,7 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
     }, 2000);
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });
   validateConfirmation();

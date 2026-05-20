@@ -28,6 +28,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../vendor/autoload.php';
 // Connexion à la base de données
 require_once '../config/database.php';
+require_once '../config/mongodb.php';
 
 // gestion dynamique HTTPS
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
@@ -73,6 +74,7 @@ try {
     require_once '../routes/delivery.routes.php';
     require_once '../routes/contact.routes.php';
     require_once '../routes/passwordReset.routes.php';
+    require_once '../routes/statistic.routes.php';
 
     $router->dispatch($method, $uri);
 

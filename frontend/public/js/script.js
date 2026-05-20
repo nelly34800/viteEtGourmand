@@ -36,11 +36,11 @@ async function signout() {
       }
     });
     if (!response.ok) {
-        console.error("Erreur logout");
+        showMessage("Une erreur est survenue", "danger");
       }
 
   } catch (error) {
-    console.error("Erreur fetch :", error);
+    showMessage("Une erreur est survenue", "danger");
   }
 
   localStorage.removeItem('user');
@@ -72,7 +72,6 @@ async function checkSession() {
         return false;
 
     } catch (error) {
-        console.error("Erreur vérification session :", error);
         localStorage.removeItem("user");
         localStorage.removeItem("csrf_token");
         return false;
@@ -183,7 +182,6 @@ async function updateCartNavbar() {
     }
 
   } catch (error) {
-    console.error("Erreur navbar panier :", error);
     cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
     cartContainer.setAttribute("href", "/cart");
   }

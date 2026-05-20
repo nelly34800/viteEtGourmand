@@ -48,7 +48,7 @@ async function loadMaterial() {
 
         } catch (error) {
           console.error("Erreur ajout matériel :", error);
-          alert(error.message);
+          showMessage("Une erreur est survenue", "danger");
         }
       });
 
@@ -96,7 +96,7 @@ async function loadMaterial() {
 
         } catch (error) {
           console.error("Erreur ajout matériel :", error);
-          alert(error.message);
+          showMessage("Une erreur est survenue", "danger");
         }
       });
 
@@ -109,7 +109,7 @@ async function loadMaterial() {
 
     } catch (error) {
       // affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 async function addMaterialToCart(id) {

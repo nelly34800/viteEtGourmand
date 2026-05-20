@@ -5,6 +5,8 @@ const quantityAvailable = document.getElementById("quantityAvailable");
 const price = document.getElementById("price");
 const category = document.getElementById("category");
 const materialValidation = document.getElementById("materialValidation");
+
+materialValidation.disabled = true;
 // Récupère l'id dans l'URL pour savoir si on est en création ou modification
 const params = new URLSearchParams(window.location.search);
 const materialId = params.get('id');
@@ -62,7 +64,7 @@ async function loadCategoriesMaterial() {
     category.addEventListener("change", validateForm);
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 
@@ -81,7 +83,7 @@ async function loadMaterial(id) {
     category.value = data.id_material_category;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -151,7 +153,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

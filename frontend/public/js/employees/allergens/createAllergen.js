@@ -3,6 +3,8 @@
 const nameAllergen = document.getElementById("nameAllergen");
 const allergenValidation = document.getElementById("allergenValidation");
 
+allergenValidation.disabled = true;
+
 const params = new URLSearchParams(window.location.search);
 const allergenId = params.get('id');
 
@@ -48,7 +50,7 @@ async function loadAllergen(id) {
     nameAllergen.value = data.allergen_name;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -102,7 +104,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });

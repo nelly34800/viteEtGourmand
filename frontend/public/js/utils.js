@@ -57,19 +57,17 @@ async function secureFetch(url, options = {}, allowedRoles = []) {//prend en par
   try {
     data = JSON.parse(text);
   } catch (e) {
-    console.error("Réponse brute serveur non JSON :", text);
     throw new Error("Le serveur a renvoyé une réponse invalide.");
   }
 
     if (!response.ok) {
-      throw new Error(data.error || "Une erreur est survenue");
+      throw new Error("Une erreur est survenue");
     }
 
     return data;
 
   } catch (error) {
-    console.error("Erreur fetch sécurisé :", error);
-    throw error;
+    throw new Error("Erreur fetch sécurisé");
   }
 }
 // fonction pour les boutons d'action (modifier/supprimer: évite répétition)
@@ -130,9 +128,16 @@ function showMessage(message, type = "info") {
     messageDiv.classList.add("d-none");
   }, 3000);
 }
-//affichage icones emprunts et retours matériel
+// affichage icones emprunts et retours matériel
 function booleanIcon(value) {
-  return value
-    ? '<i class="bi bi-check-circle-fill text-success"></i>'
-    : '<i class="bi bi-x-circle-fill text-danger"></i>';
+
+  const icon = document.createElement("i");
+
+  if (value) {
+    icon.className = "bi bi-check-circle-fill text-success";
+  } else {
+    icon.className = "bi bi-x-circle-fill text-danger";
+  }
+
+  return icon;
 }

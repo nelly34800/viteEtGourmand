@@ -6,6 +6,7 @@ use App\Services\CartService;
 use App\Services\GeocodingService;
 use App\Services\DeliveryService;
 use App\Services\MailService;
+use App\Services\StatisticsService;
 use App\Repository\OrderRepository;
 use App\Entity\Order;
 use App\Helper\RequestHelper;
@@ -117,6 +118,7 @@ class OrderController
                 'user_email' => $order->getUserEmail(),
                 'user_phone' => $order->getUserPhone(),
                 'menus' => $order->getMenus(),
+                'has_notice' => $order->hasNotice(),
                 'materials' => $order->getMaterials(),
                 'drink_packages' => $order->getDrinkPackages(),
                 'personal_packages' => $order->getPersonalPackages()
@@ -182,6 +184,7 @@ class OrderController
 
                     $menus[] = [
                         'id' => $item['id'],
+                        'name' => $item['name'] ,
                         'number' => $item['quantity'],
                         'price' => $item['price_per_person'],
                         'discount' => $item['discount'] ?? 0,
@@ -256,6 +259,40 @@ class OrderController
             //enregistre en BDD
             $orderId = $this->repository->create($order);
             $orderNumber = 'CMD-' . substr($orderId, 0, 8);
+            // enregistre les statistiques de la commande dans MongoDB
+            try {
+                $items = [];
+                $totalOrder = 0;
+
+                foreach ($menus as $menu) {
+                    $quantity = (int) $menu['number'];
+                    $unitPrice = (float) $menu['price'];
+                    $totalPrice = (float) $menu['subtotal'];
+
+                    $items[] = [
+                        'menu_id' => (string) $menu['id'],
+                        'menu_name' => $menu['name'],
+                        'quantity' => $quantity,
+                        'unit_price' => $unitPrice,
+                        'total_price' => $totalPrice
+                    ];
+
+                    $totalOrder += $totalPrice;
+                }
+
+                global $mongoDb;
+
+                $statisticsService = new StatisticsService($mongoDb);
+
+                $statisticsService->saveOrderStatistics([
+                    'order_id' => (string) $orderId,
+                    'total_order' => $totalOrder,
+                    'items' => $items
+                ]);
+
+            } catch (\Throwable $e) {
+                error_log('Erreur MongoDB stats : ' . $e->getMessage());
+            }
             // vide le panier 
             unset($_SESSION['cart'], $_SESSION['delivery']);
             //  email client

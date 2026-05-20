@@ -25,7 +25,7 @@ let updateReady = false;
 async function loadOrder() {
   try {
     if (!orderId) {
-      showMessage("Commande introuvable", "error");
+      showMessage("Commande introuvable", "danger");
       return;
     }
     // Appel sécurisé vers l'API (GET: fonction dans api.js)
@@ -39,8 +39,7 @@ async function loadOrder() {
     validateForm();
 
   } catch (error) {
-    console.error("Erreur chargement commande :", error);
-    showMessage("Impossible de charger la commande", "error");
+    showMessage("Impossible de charger la commande", "danger");
   }
 }
 // rempli le formulaire avec les données rentrées initialement
@@ -99,20 +98,48 @@ function renderTable() {
 
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>
-        <strong>${item.name}</strong><br>
-        <small>${getTypeLabel(item.type)}</small>
-      </td>
-      <td>${item.quantity}</td>
-      <td>${item.price} €</td>
-      <td>
-        ${Number(item.discount) > 0 
-          ? `<small class="text-success">Remise : -${Number(item.discount).toFixed(2)} €</small><br>` 
-          : ""}
-        ${Number(item.subtotal).toFixed(2)} €
-      </td>
-    `;
+  // Colonne nom/type
+  const tdInfo = document.createElement("td");
+
+  const strong = document.createElement("strong");
+  strong.textContent = item.name;
+  tdInfo.appendChild(strong);
+
+  const br = document.createElement("br");
+  tdInfo.appendChild(br);
+
+  const small = document.createElement("small");
+  small.textContent = getTypeLabel(item.type);
+  tdInfo.appendChild(small);
+
+  tr.appendChild(tdInfo);
+
+  // Colonne quantité
+  const tdQuantity = document.createElement("td");
+  tdQuantity.textContent = item.quantity;
+  tr.appendChild(tdQuantity);
+
+  // Colonne prix
+  const tdPrice = document.createElement("td");
+  tdPrice.textContent = `${item.price_per_person} €`;
+  tr.appendChild(tdPrice);
+
+  // Colonne total/remise
+  const tdTotal = document.createElement("td");
+  tr.appendChild(tdTotal);
+
+  if (item.discount > 0) {
+    const discount = document.createElement("small");
+    discount.className = "text-success";
+    discount.textContent = `Remise : -${item.discount.toFixed(2)} €`;
+
+    tdTotal.appendChild(discount);
+    tdTotal.appendChild(document.createElement("br"));
+  }
+
+  tdTotal.append(`${item.line_total.toFixed(2)} €`);
+
+  // Ajout des cellules à la ligne
 
     orderBody.appendChild(tr);
   });
@@ -145,8 +172,7 @@ async function calculateDeliveryCharges(event) {
       btnGoConfirmation.disabled = false;
 
     } catch (error) {
-      console.error("Erreur frais de livraison :", error);
-      showMessage("Impossible de calculer les frais de livraison", "error");
+      showMessage("Impossible de calculer les frais de livraison", "danger");
     }
 }
 
@@ -175,8 +201,7 @@ async function updateOrder(event) {
     }, 2000);
 
   } catch (error) {
-    console.error("Erreur modification commande :", error);
-    showMessage(error.message, "error");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 

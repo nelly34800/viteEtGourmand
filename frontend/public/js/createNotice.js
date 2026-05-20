@@ -7,8 +7,6 @@ const noticeValidation = document.getElementById("noticeValidation");
 // récupère l'id de la commande
 const params = new URLSearchParams(window.location.search);
 const idOrder = params.get("id_order");
-console.log("createNotice.js chargé6");
-console.log(idOrder);
 
 noticeValidation.disabled = true;
 

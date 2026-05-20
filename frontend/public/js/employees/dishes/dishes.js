@@ -105,7 +105,7 @@ async function loadDishes() {
 
     } catch (error) {
       // affiche l'erreur si problème API
-      alert(error.message);
+      showMessage("Une erreur est survenue", "danger");
   }
 }
 // se lance au chargement
@@ -146,12 +146,12 @@ document.addEventListener("click", async (e) => {
     );
 
     // message succès
-    alert("Plat supprimé avec succès");
+    showMessage("Plat supprimé avec succès", "success");
 
     // recharge la liste
     loadDishes();
 
   } catch (error) {
-    alert(error.message);
+    showMessage("Une erreur est survenue", "danger");
   }
 });

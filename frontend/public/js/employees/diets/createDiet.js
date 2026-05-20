@@ -3,6 +3,8 @@
 const nameDiet = document.getElementById("nameDiet");
 const dietValidation = document.getElementById("dietValidation");
 
+dietValidation.disabled = true;
+
 const params = new URLSearchParams(window.location.search);
 const dietId = params.get('id');
 
@@ -49,7 +51,7 @@ async function loadDiet(id) {
     nameDiet.value = data.diet_name;
 
   } catch (error) {
-    showMessage(error.message, "danger");
+    showMessage("Une erreur est survenue", "danger");
   }
 }
 // pré-rempli si edit
@@ -103,7 +105,6 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     }
   } catch (error) {
       // message d'erreur
-      showMessage(error.message, "danger");
-      console.error(error);
+      showMessage("Une erreur est survenue", "danger");
   }
 });
