@@ -6,6 +6,7 @@ const minPeople = document.getElementById("minPeople");
 const menuTheme = document.getElementById("menuTheme");
 const container = document.getElementById("container");
 
+// Stocker tous les menus pour pouvoir les filtrer côté client
 let allMenus = [];
 
 function applyFilters() {

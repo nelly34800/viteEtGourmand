@@ -8,7 +8,7 @@ let cart = [];
 // fonction pour charger le panier
 async function loadCart() {
   try {
-    // Appel sécurisé vers l'API (GET: fonction dans api.js)
+    // Appel sécurisé vers l'API
     cart = await secureFetch("http://localhost:8082/cart", {
       method: "GET"
     }, ["client"]);
@@ -91,7 +91,7 @@ function renderCart() {
   bindCartEvents();
   validateForm();
 }
-
+// recupère le type d'article pour l'afficher dans le panier
 function getTypeLabel(type) {
   switch (type) {
     case "menu":
@@ -110,7 +110,7 @@ function getTypeLabel(type) {
       return "Article";
   }
 }
-
+// lier les événements aux éléments du panier
 function bindCartEvents() {
   document.querySelectorAll(".input-qty").forEach(input => {
     input.addEventListener("change", async (event) => {
@@ -131,7 +131,7 @@ function bindCartEvents() {
     });
   });
 }
-
+// met à jour la quantité d'un article du panier
 async function updateCartItem(itemId, quantity) {
   try {
     await secureFetch(`http://localhost:8082/cart/${itemId}`, {
@@ -145,7 +145,7 @@ async function updateCartItem(itemId, quantity) {
     showMessage("Une erreur est survenue", "danger");
   }
 }
-
+// supprime l'article du panier
 async function deleteCartItem(itemId) {
   try {
     await secureFetch(`http://localhost:8082/cart/${itemId}`, {

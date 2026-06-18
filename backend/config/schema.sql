@@ -288,7 +288,7 @@ CREATE TABLE notice(
   ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-insert into notice (note, description, signature, status, date, id_order) values
+INSERT INTO notice (note, description, signature, status, date, id_order) values
   (5, 'Mon mariage s’est très bien passé grâce au sérieux de l’équipe.', 'Mathieu33', 'validé', '2026-01-15', (SELECT id FROM orders WHERE order_date = '2026-01-15')),
   (4, 'Traiteur très sérieux.', 'RobinDesBois', 'en attente', '2026-01-16', (SELECT id FROM orders WHERE order_date = '2026-01-16')),
   (5, 'Merci encore pour la qualité et la présentation. Merci à Julie, José et toute la team.', 'EliseB', 'validé', '2026-01-17', (SELECT id FROM orders WHERE order_date = '2026-01-17'));
@@ -766,9 +766,9 @@ INSERT INTO menu_condition_menu (id_menu, id_condition_menu) VALUES
  (SELECT id FROM condition_menu WHERE description='7 jours avant l’événement.')),
 ((SELECT id FROM menu WHERE menu_name='Menu Communion – Tradition & Douceur'),
  (SELECT id FROM condition_menu WHERE description='tous nos menus comprennent des options vegan, donc sans lactose et sans porc.')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
  (SELECT id FROM condition_menu WHERE description='5 jours avant l’événement.')),
-((SELECT id FROM menu WHERE menu_name='Menu EVG – Convivial & Gourmand'),
+((SELECT id FROM menu WHERE menu_name='Menu EVC – Convivial & Gourmand'),
  (SELECT id FROM condition_menu WHERE description='tous nos menus comprennent des options vegan, donc sans lactose et sans porc.')),
 ((SELECT id FROM menu WHERE menu_name='Menu Enfant – « Petit Gourmet »'),
  (SELECT id FROM condition_menu WHERE description='5 jours avant l’événement.')),

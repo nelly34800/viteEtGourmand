@@ -5,10 +5,70 @@
     <form action="">
         <fieldset class="align_left">
             <legend>La commande est concidérée comme définitive une fois les 3 cases suivantes cochées: </legend>
-            <label><input type="checkbox" id="acceptCgv" name="cgv" /> J’accepte les Conditions Générales de Vente</label><br>
+            <label><input type="checkbox" id="acceptCgv" name="cgv" /> J’accepte les Conditions Générales de Vente </label><br>
             <label><input type="checkbox" id="acceptAllergens" name="allergens" /> J’ai pris connaissance des allergènes</label><br>
             <label><input type="checkbox" id="acceptConditions" name="conditions" /> J’ai lu et j’accepte les conditions du/des menu(s) commandé(s)</label>
         </fieldset>
+
+        <div>
+          <a class="btn btn-primary" href="/cgv">Voir les CGV</a><br>
+            <button type="button" class="btn btn-primary btn-sm allergensModalBtn">liste des allèrgènes des menus de la commande</button><br>
+            <button type="button" class="btn btn-primary btn-sm conditionsModalBtn">liste des conditions des menus de la commande</button>
+        </div>
+
         <button type="button" id="confirmOrderBtn" class="btn btn-primary mt-4">confirmation définitive de la commande</button>
     </form>
 </div>
+
+<!--modale allergènes-->
+    <div class="modal fade" id="allergensModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5">Liste des allèrgènes</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body bgc-secondary">
+              <ul id="allergensList"></ul>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--modale conditions-->
+    <div class="modal fade" id="conditionsModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title fs-5">Liste des conditions</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body bgc-secondary">
+            <table class="table table-striped">
+              <thead class="bgc-primary">
+                <tr>
+                  <th>type de condition</th>
+                  <th>description</th>
+                </tr>
+              </thead>
+              <tbody id="conditionsTableBody">
+                <tr>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>

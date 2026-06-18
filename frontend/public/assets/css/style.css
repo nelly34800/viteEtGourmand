@@ -162,21 +162,22 @@ fieldset {
 
 .map {
   position: relative;
-  width: 320px;
+  width: 760px;
   margin: 0 auto;
 }
 
-.map iframe{
-  width: auto;
+.map iframe {
+  width: 100%;
+  height: 560px;
   border: 0;
+  display: block;
 }
 
 .map-address {  /*fausse addresse sur contact */
   position: absolute;
   top: 0px;
-  left: 5px;
   background: var(--secondary);
-  padding: 5px;
+  padding: 7px;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }

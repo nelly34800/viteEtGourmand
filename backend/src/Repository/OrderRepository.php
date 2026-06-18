@@ -111,76 +111,76 @@ class OrderRepository
      */
     public function findAll(?string $userId = null): array
     {
-        $sql = "SELECT 
-                orders.id AS order_id,
-                orders.order_date,
-                orders.service_date,
-                orders.delivery_address,
-                orders.city,
-                orders.postal_code,
-                orders.latitude,
-                orders.longitude,
-                orders.distance_km,
-                orders.number_of_people,
-                orders.delivery_charges,
-                orders.total_amount,
-                orders.status,
-                orders.status_changed_at,
-                orders.equipment_loan,
-                orders.equipment_return,
-                orders.cancellation_reason,
-                orders.contact_mode,
-                orders.id_user,
-                notice.id IS NOT NULL AS has_notice,
-                user.last_name AS user_last_name,
-                user.first_name AS user_first_name,
-                user.email AS user_email,
-                user.phone AS user_phone,
-                order_menu.number_people AS menu_number_people,
-                order_menu.price_person,
-                order_menu.discount_amount,
-                order_menu.subtotal AS menu_subtotal,
-                menu.id AS menu_id,
-                menu.menu_name,
-                order_material.quantity,
-                order_material.unit_price,
-                order_material.subtotal AS material_subtotal,
-                material.id AS material_id,
-                material.material_name,
-                order_drink_package.number_people AS drink_number_people,
-                order_drink_package.price_person AS drink_price_person,
-                order_drink_package.subtotal AS drink_subtotal,
-                drink_package.id AS drink_package_id,
-                drink_package.drink_package_name,
-                order_personal_package.number_people AS personal_number_people,
-                order_personal_package.price_package,
-                order_personal_package.subtotal AS personal_subtotal,
-                personal_package.id AS personal_package_id,
-                personal_package.event_type AS personal_package_event_type
-            FROM orders
-            LEFT JOIN user ON orders.id_user = user.id
-            LEFT JOIN notice ON notice.id_order = orders.id
-            LEFT JOIN order_menu ON orders.id = order_menu.id_order
-            LEFT JOIN menu ON order_menu.id_menu = menu.id
-            LEFT JOIN order_material ON orders.id = order_material.id_order
-            LEFT JOIN material ON order_material.id_material = material.id
-            LEFT JOIN order_drink_package ON orders.id = order_drink_package.id_order
-            LEFT JOIN drink_package ON order_drink_package.id_drink_package = drink_package.id
-            LEFT JOIN order_personal_package ON orders.id = order_personal_package.id_order
-            LEFT JOIN personal_package ON order_personal_package.id_personal_package = personal_package.id";
+        $sql = "SELECT
+            orders.id AS order_id,
+            orders.order_date,
+            orders.service_date,
+            orders.delivery_address,
+            orders.city,
+            orders.postal_code,
+            orders.latitude,
+            orders.longitude,
+            orders.distance_km,
+            orders.number_of_people,
+            orders.delivery_charges,
+            orders.total_amount,
+            orders.status,
+            orders.status_changed_at,
+            orders.equipment_loan,
+            orders.equipment_return,
+            orders.cancellation_reason,
+            orders.contact_mode,
+            orders.id_user,
+            notice.id IS NOT NULL AS has_notice,
+            user.last_name AS user_last_name,
+            user.first_name AS user_first_name,
+            user.email AS user_email,
+            user.phone AS user_phone,
+            order_menu.number_people AS menu_number_people,
+            order_menu.price_person,
+            order_menu.discount_amount,
+            order_menu.subtotal AS menu_subtotal,
+            menu.id AS menu_id,
+            menu.menu_name,
+            order_material.quantity,
+            order_material.unit_price,
+            order_material.subtotal AS material_subtotal,
+            material.id AS material_id,
+            material.material_name,
+            order_drink_package.number_people AS drink_number_people,
+            order_drink_package.price_person AS drink_price_person,
+            order_drink_package.subtotal AS drink_subtotal,
+            drink_package.id AS drink_package_id,
+            drink_package.drink_package_name,
+            order_personal_package.number_people AS personal_number_people,
+            order_personal_package.price_package,
+            order_personal_package.subtotal AS personal_subtotal,
+            personal_package.id AS personal_package_id,
+            personal_package.event_type AS personal_package_event_type
+        FROM orders
+        LEFT JOIN user ON orders.id_user = user.id
+        LEFT JOIN notice ON notice.id_order = orders.id
+        LEFT JOIN order_menu ON orders.id = order_menu.id_order
+        LEFT JOIN menu ON order_menu.id_menu = menu.id
+        LEFT JOIN order_material ON orders.id = order_material.id_order
+        LEFT JOIN material ON order_material.id_material = material.id
+        LEFT JOIN order_drink_package ON orders.id = order_drink_package.id_order
+        LEFT JOIN drink_package ON order_drink_package.id_drink_package = drink_package.id
+        LEFT JOIN order_personal_package ON orders.id = order_personal_package.id_order
+        LEFT JOIN personal_package ON order_personal_package.id_personal_package = personal_package.id";
 
-            $params = [];
+        $params = [];
 
-            if ($userId !== null) {
-                $sql .= " WHERE orders.id_user = ?";
-                $params[] = $userId;
-            }
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute($params);
+        if ($userId !== null) {
+            $sql .= " WHERE orders.id_user = ?";
+            $params[] = $userId;
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $this->hydrate($rows);
+        return $this->hydrate($rows);
     }
     /**
      * Retourne un commande par son ID.
@@ -188,7 +188,7 @@ class OrderRepository
     public function findById(string $id): Order
     {
         $stmt = $this->pdo->prepare
-            ("SELECT 
+            ("SELECT
                 orders.id AS order_id,
                 orders.order_date,
                 orders.service_date,
@@ -256,7 +256,7 @@ class OrderRepository
         }
 
         return $this->hydrate($rows)[0];
-        }
+    }
      /**
      * Insère un nouveau commande.
      */
@@ -324,18 +324,20 @@ class OrderRepository
                 $stmtUpdateMenu->execute([
                     $menu['id']
                 ]);
-            }
+
                 if ($stmtUpdateMenu->rowCount() === 0) {
                      $unavailableMenus[] = $menu['name'];
                 }
-                if (!empty($unavailableMenus)) {
-                    throw new RuntimeException(
-                        "Menus indisponibles : " . implode(', ', $unavailableMenus)
-                    );
-
-              // insertion dans table pivot order_material
+            }
+            if (!empty($unavailableMenus)) {
+                throw new RuntimeException(
+                    "Menus indisponibles : " . implode(', ', $unavailableMenus)
+                );
+            }
+            // insertion dans table pivot order_material
             $stmtMaterial = $this->pdo->prepare("
-                INSERT INTO order_material (id_order, id_material, quantity, unit_price, subtotal) VALUES (?, ?, ?, ?, ?)
+                INSERT INTO order_material (id_order, id_material, quantity, unit_price, subtotal)
+                VALUES (?, ?, ?, ?, ?)
             ");
 
             $stmtUpdateMaterial = $this->pdo->prepare("
@@ -345,27 +347,24 @@ class OrderRepository
                 AND quantity_available >= ?
             ");
             foreach ($order->getMaterials() as $material) {
-                $stmtMaterial->execute([
+                $stmtUpdateMaterial->execute([
+                    $material['number'], // quantité à retirer
+                    $material['id'],
+                    $material['number'] // vérification que la quantité disponible est suffisante pour la commande
+                ]);
+            }
+            if ($stmtUpdateMaterial->rowCount() === 0) {
+                throw new RuntimeException(
+                    "Stock insuffisant pour le matériel : " . $material['id']
+                );
+             }
+            $stmtMaterial->execute([
                     $order->getId(),
                     $material['id'],
                     $material['number'],
                     $material['price'],
                     $material['subtotal']
                 ]);
-
-                $stmtUpdateMaterial->execute([
-                    $material['number'],
-                    $material['id'],
-                    $material['number']
-                ]);
-            }
-
-                if ($stmtUpdateMaterial->rowCount() === 0) {
-                    throw new RuntimeException(
-                        "Stock insuffisant pour le matériel : " . $material['id']
-                    );
-                }
-            }
                 // insertion dans table pivot order_drink_package
             $stmtDrinkPackage = $this->pdo->prepare("
                 INSERT INTO order_drink_package (id_order, id_drink_package, number_people, price_person, subtotal) VALUES (?, ?, ?, ?, ?)
@@ -424,31 +423,31 @@ class OrderRepository
      * Met à jour un commande existant.
      */
     public function update(string $id, string $serviceDate, string $deliveryAddress, string $city,
-    string $postalCode, float $latitude, float $longitude, float $distanceKm, float $deliveryCharges,
-    float $totalAmount ): void 
+        string $postalCode, float $latitude, float $longitude, float $distanceKm, float $deliveryCharges,
+        float $totalAmount ): void
     {
         $stmt = $this->pdo->prepare("UPDATE orders SET service_date = ?, delivery_address = ?,
                 city = ?, postal_code = ?, latitude = ?, longitude = ?, distance_km = ?,
                 delivery_charges = ?, total_amount = ?
             WHERE id = ? AND status = 'en attente'");
 
-    $stmt->execute([
-        $serviceDate,
-        $deliveryAddress,
-        $city,
-        $postalCode,
-        $latitude,
-        $longitude,
-        $distanceKm,
-        $deliveryCharges,
-        $totalAmount,
-        $id
-    ]);
+        $stmt->execute([
+            $serviceDate,
+            $deliveryAddress,
+            $city,
+            $postalCode,
+            $latitude,
+            $longitude,
+            $distanceKm,
+            $deliveryCharges,
+            $totalAmount,
+            $id
+        ]);
 
-    if ($stmt->rowCount() === 0) {
-        throw new RuntimeException("Commande non modifiable");
+        if ($stmt->rowCount() === 0) {
+            throw new RuntimeException("Commande non modifiable");
+        }
     }
-}
     /**
      * Supprime un commande.
      */
@@ -501,50 +500,101 @@ class OrderRepository
     // modifier le statut
     public function updateStatus(string $id, string $status, ?string $reason = null, ?string $contactMode = null): void
     {
-        $equipmentReturn = 0;
-        // si statut terminée retour de matériel passe à true
-        $sql = "UPDATE orders
-        SET status = ?,
-            cancellation_reason = ?,
-            contact_mode = ?,
-            status_changed_at = NOW()";
+        try {
+            $this->pdo->beginTransaction();
+            // Si le statut devient "terminée", on doit vérifier que le matériel n'a pas déjà été retourné et mettre à jour les stocks
+            if ($status === 'terminée') {
+                $stmtCheck = $this->pdo->prepare("
+                    SELECT equipment_return
+                    FROM orders
+                    WHERE id = ?
+                ");
+                $stmtCheck->execute([$id]);
 
-        $params = [
-            $status,
-            $status === 'annulée' ? $reason : null,
-            $status === 'annulée' ? $contactMode : null
-        ];
+                $orderData = $stmtCheck->fetch(PDO::FETCH_ASSOC);
 
-        if ($status === 'terminée') {
-            $sql .= ", equipment_return = 1";
-        }
+                if (!$orderData) {
+                    throw new RuntimeException("Commande introuvable");
+                }
 
-        $sql .= " WHERE id = ?";
+                if ((int)$orderData['equipment_return'] === 1) {
+                    throw new RuntimeException("Le matériel a déjà été retourné");
+                }
+                // Récupérer le matériel de la commande
+                $stmtMaterials = $this->pdo->prepare("
+                    SELECT id_material, quantity
+                    FROM order_material
+                    WHERE id_order = ?
+                ");
+                $stmtMaterials->execute([$id]);
 
-        $params[] = $id;
+                $materials = $stmtMaterials->fetchAll(PDO::FETCH_ASSOC);
+               // remet à jour la quantité disponible du matériel
+                $stmtUpdateMaterial = $this->pdo->prepare("
+                    UPDATE material
+                    SET quantity_available = quantity_available + ?
+                    WHERE id = ?
+                ");
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
+                foreach ($materials as $material) {
+                    $stmtUpdateMaterial->execute([
+                        $material['quantity'],
+                        $material['id_material']
+                    ]);
+                }
+            }
+            // met à jour statut et infos de l'annulation de la commande si status = annulée
+            $sql = "UPDATE orders
+                    SET status = ?,
+                        cancellation_reason = ?,
+                        contact_mode = ?,
+                        status_changed_at = NOW()";
 
-        if ($stmt->rowCount() === 0) {
-            throw new RuntimeException("Commande introuvable");
+            $params = [
+                $status,
+                $status === 'annulée' ? $reason : null,
+                $status === 'annulée' ? $contactMode : null
+            ];
+            // si le statut = terminée, booléan equipment_return = true
+            if ($status === 'terminée') {
+                $sql .= ", equipment_return = 1";
+            }
+
+            $sql .= " WHERE id = ?";
+            $params[] = $id;
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($params);
+
+            if ($stmt->rowCount() === 0) {
+                throw new RuntimeException("Commande introuvable");
+            }
+
+            $this->pdo->commit();
+
+        } catch (\Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $e;
         }
     }
     // récupérer email du client
     public function findCustomerEmailByOrderId(string $orderId): string
-  {
-      $stmt = $this->pdo->prepare("
-          SELECT user.email 
-          FROM orders
-          JOIN user ON user.id = orders.id_user
-          WHERE orders.id = ?
-      ");
-      $stmt->execute([$orderId]);
-      $email = $stmt->fetchColumn();
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT user.email
+            FROM orders
+            JOIN user ON user.id = orders.id_user
+            WHERE orders.id = ?
+        ");
+        $stmt->execute([$orderId]);
+        $email = $stmt->fetchColumn();
 
-      if (!$email) {
-          throw new RuntimeException("Email client introuvable");
-      }
-      return $email;
-  }
+        if (!$email) {
+            throw new RuntimeException("Email client introuvable");
+        }
+        return $email;
+    }
 }
