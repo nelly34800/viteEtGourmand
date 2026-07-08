@@ -1,6 +1,5 @@
 # Backend PHP
 backend/vendor/
-backend/composer.lock
 
 # Fichiers d'environnement
 .env

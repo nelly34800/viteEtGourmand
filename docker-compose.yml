@@ -23,7 +23,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_HOST: ${MYSQL_HOST}
-      MONGODB_URL: mongodb://mongo:27017
+      MONGODB_URL: ${MONGODB_URL}
 
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
