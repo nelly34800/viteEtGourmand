@@ -3,7 +3,7 @@
 FROM nginx:alpine
 
 # Copie frontend existant dans Nginx
-COPY ./frontend/public /usr/share/nginx/html
+COPY ./public /usr/share/nginx/html
 
 # Copie la config Nginx (avec try_files pour router JS)
 COPY ./config/nginx/default.conf /etc/nginx/conf.d/default.conf

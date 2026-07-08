@@ -123,7 +123,7 @@ function showMessage(message, type = "info") {
   messageDiv.className = `alert alert-${type}`;
   messageDiv.classList.remove("d-none");
 
-  // disparition automatique (optionnel mais propre)
+  // disparition automatique
   setTimeout(() => {
     messageDiv.classList.add("d-none");
   }, 3000);

@@ -4,11 +4,13 @@ namespace App\Services;
 
 class DeliveryService
 {
+    // coordonnées du traiteur
     private float $originLat = 44.837789;
     private float $originLng = -0.579180;
     // calculer les frais de livraisons 
     public function calculate(float $destLat, float $destLng): array
     {
+      //récupération des coordonnées du traiteur et du client et appel de la fonction haversine pour calculer la distance entre les deux points
         $distance = $this->haversine(
             $this->originLat,
             $this->originLng,

@@ -57,6 +57,8 @@ document.addEventListener("click", async (event) => {
 
     for (const item of response) {
 
+      if (item.type !== "menu") continue;
+
       const menu = await secureFetch(
         `http://localhost:8082/menu/${item.id}`,
         { method: "GET" },
@@ -94,8 +96,6 @@ document.addEventListener("click", async (event) => {
     const response = await secureFetch("http://localhost:8082/cart", { 
       method: "GET" 
     }, ["client"]);
-
-    console.log("PANIER :", response);
 
     const tbody = document.getElementById("conditionsTableBody");
     tbody.innerHTML = '';

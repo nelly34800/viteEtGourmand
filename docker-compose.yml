@@ -1,9 +1,9 @@
-services:
+services: correction 
   front-vite-et-gourmand:
     container_name: front-vite-et-gourmand
     build:
-      context: .
-      dockerfile: Dockerfile.front
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "${FRONT_PORT}:80"
     depends_on:
@@ -14,8 +14,8 @@ services:
   back-vite-et-gourmand:
     container_name: back-vite-et-gourmand
     build:
-      context: .
-      dockerfile: Dockerfile.back
+      context: ./backend
+      dockerfile: Dockerfile 
     ports:
       - "${BACK_PORT}:80"
     environment:

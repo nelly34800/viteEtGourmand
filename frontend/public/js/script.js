@@ -146,7 +146,7 @@ function loadProfileByRole(role) {
     }, 2000);
   }
 }
-// 
+//  écoute le click sur le bouton de profil et redirige vers la page de profil en fonction du rôle
 document.addEventListener("click", (e) => {
   if (e.target.closest("#account")) {
     e.preventDefault();
