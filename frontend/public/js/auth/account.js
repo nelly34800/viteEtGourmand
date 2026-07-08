@@ -121,8 +121,6 @@ async function loadOrders() {
         }
       cardBody.appendChild(action);
       card.appendChild(cardBody);
-       console.log(order);
-      console.log("has_notice =", order.has_notice);
       // Ajout dans le DOM
       mobileContainer.appendChild(card);
     });

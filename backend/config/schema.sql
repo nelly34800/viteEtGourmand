@@ -182,7 +182,7 @@ CREATE TABLE drink_package(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `drink_package` (`drink_package_name`, `price_per_person`) VALUES
-('Forfait vin d’honneur (vin blanc, rosé et rouge, bière, pastis et whiskey)', 25),
+('Forfait vin d’honneur (vin blanc, rosé et rouge, bière, pastis et whisky)', 25),
 ('Forfait vin repas (blanc, rosé et rouge)', 12),
 ('Forfait soft (eau plates,  gazeuse, soda, jus de fruit)', 8),
 ('Forfait champagne', 20);
@@ -272,9 +272,9 @@ CREATE TABLE orders(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `orders` (`order_date`, `service_date`, `delivery_address`, `city`, `postal_code`, `latitude`, `longitude`, `distance_km`, `number_of_people`, `delivery_charges`, `total_amount`, `status`, `equipment_loan`, `equipment_return`, `id_user`) VALUES
-('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 44.837789, -0.579180, 0, 50, 120.00, 1750.00,  'terminée', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
-('2026-01-16', '2026-02-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000',  44.837789, -0.579180, 0, 30, 80.00, 900.00, 'terminée', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
-('2026-01-17', '2026-02-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 44.837789, -0.579180, 0, 25, 55.55, 655.55, 'terminée', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
+('2026-01-15', '2026-01-30 19:00:00', '123 Rue de la Paix', 'Bordeaux', '33000', 44.837789, -0.579180, 0, 50, 120.00, 1940.00,  'terminée', 1, 0, (SELECT id FROM user WHERE email = 'mathieu@test.com')),
+('2026-01-16', '2026-04-14 12:00:00', '456 Avenue des Champs', 'Bordeaux', '33000',  44.837789, -0.579180, 0, 30, 80.00, 1050.00, 'terminée', 0, 0, (SELECT id FROM user WHERE email = 'marie@test.com')),
+('2026-01-17', '2026-06-20 18:30:00', '789 Boulevard Saint-Michel', 'Bordeaux', '33888', 44.837789, -0.579180, 0, 25, 55.55, 875.00, 'terminée', 1, 1, (SELECT id FROM user WHERE email = 'elise@test.com'));
 
 CREATE TABLE notice(
   id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
@@ -319,6 +319,16 @@ CREATE TABLE order_menu(
   FOREIGN KEY(id_menu) REFERENCES menu(id)
   ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO order_menu (id_order, id_menu, number_people, price_person, discount_amount, subtotal) VALUES
+((SELECT id FROM orders WHERE order_date = '2026-01-15'),
+  (SELECT id FROM menu WHERE menu_name='Menu Classique (toute saison)'), 30, 32.00, 0.00, 960.00),
+((SELECT id FROM orders WHERE order_date = '2026-01-15'),
+  (SELECT id FROM menu WHERE menu_name='Menu Festif de Noël'), 20, 49.00, 0.00, 980.00),
+((SELECT id FROM orders WHERE order_date = '2026-01-16'),
+  (SELECT id FROM menu WHERE menu_name='Menu Printanier / Pâques'), 30, 35.00, 0.00, 1050.00),
+((SELECT id FROM orders WHERE order_date = '2026-01-17'),
+  (SELECT id FROM menu WHERE menu_name='Menu Mariage – Élégance & Raffinement'), 25, 35.00, 0.00, 875.00);
 
 CREATE TABLE menu_dish(
   id_menu CHAR(36) NOT NULL,

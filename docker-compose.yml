@@ -1,4 +1,4 @@
-services: correction 
+services:
   front-vite-et-gourmand:
     container_name: front-vite-et-gourmand
     build:
@@ -31,6 +31,8 @@ services: correction
       SMTP_PASS: ${SMTP_PASS}
       MAIL_FROM: ${MAIL_FROM}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
 
     volumes:
       - ./backend:/var/www/html

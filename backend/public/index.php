@@ -1,6 +1,13 @@
 <?php
-// Liste des domaines autorisés à faire des requêtes vers l'API (variable dans .env)
-$allowedOrigins = explode(',', $_ENV['ALLOWED_ORIGINS']);
+// Liste des domaines autorisés à faire des requêtes vers l'API (variable dans le .env)
+$allowedOrigins = [];
+
+if (!empty($_ENV['ALLOWED_ORIGINS'])) {
+    $allowedOrigins = array_map(
+        'trim',
+        explode(',', $_ENV['ALLOWED_ORIGINS'])
+    );
+}
 // Vérifie si la requête vient d’un domaine autorisé
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowedOrigins)) {
   // Autorise ce domaine à accéder à l'API
