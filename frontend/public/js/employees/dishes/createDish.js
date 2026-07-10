@@ -142,7 +142,7 @@ async function loadDiets() {
 async function loadDish(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/dish/${id}`,
+      `${API_URL}/dish/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -216,7 +216,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (dishId) {
       await secureFetch(
-        `http://localhost:8082/dish/${dishId}`,
+        `${API_URL}/dish/${dishId}`,
         {
           method: 'PUT',
           // envoie les données du formulaire dans le body de la requête
@@ -241,7 +241,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/dish`,
+        `${API_URL}/dish`,
         {
           method: 'POST',
           // envoie les données du formulaire dans le body de la requête

@@ -48,7 +48,7 @@ function validateForm(){
 async function loadPersonalPackage(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/personalPackage/${id}`,
+      `${API_URL}/personalPackage/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -79,7 +79,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (personalPackageId) {
       await secureFetch(
-        `http://localhost:8082/personalPackage/${personalPackageId}`,
+        `${API_URL}/personalPackage/${personalPackageId}`,
         {
           method: 'PUT',
           body: JSON.stringify({
@@ -100,7 +100,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/personalPackage`,
+        `${API_URL}/personalPackage`,
         {
           method: 'POST',
           body: JSON.stringify({

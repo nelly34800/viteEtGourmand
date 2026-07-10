@@ -125,7 +125,7 @@ function displayMenus(menus) {
 // charger les menus
 async function loadMenus() {
   try {
-    const response = await fetch("http://localhost:8082/menu");
+    const response = await fetch(`${API_URL}/menu`);
 
     const text = await response.text();
 

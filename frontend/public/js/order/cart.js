@@ -9,7 +9,7 @@ let cart = [];
 async function loadCart() {
   try {
     // Appel sécurisé vers l'API
-    cart = await secureFetch("http://localhost:8082/cart", {
+    cart = await secureFetch(`${API_URL}/cart`, {
       method: "GET"
     }, ["client"]);
 
@@ -134,7 +134,7 @@ function bindCartEvents() {
 // met à jour la quantité d'un article du panier
 async function updateCartItem(itemId, quantity) {
   try {
-    await secureFetch(`http://localhost:8082/cart/${itemId}`, {
+    await secureFetch(`${API_URL}/cart/${itemId}`, {
       method: "PUT",
       body: JSON.stringify({ quantity })
     }, ["client"]);
@@ -148,7 +148,7 @@ async function updateCartItem(itemId, quantity) {
 // supprime l'article du panier
 async function deleteCartItem(itemId) {
   try {
-    await secureFetch(`http://localhost:8082/cart/${itemId}`, {
+    await secureFetch(`${API_URL}/cart/${itemId}`, {
       method: "DELETE"
     }, ["client"]);
 

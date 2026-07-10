@@ -52,7 +52,7 @@ function validateForm(){
 async function loadSchedule(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/schedule/${id}`,
+      `${API_URL}/schedule/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -87,7 +87,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (scheduleId) {
       await secureFetch(
-        `http://localhost:8082/schedule/${scheduleId}`,
+        `${API_URL}/schedule/${scheduleId}`,
         {
           method: 'PUT',
           body: JSON.stringify({ 
@@ -110,7 +110,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/schedule`,
+        `${API_URL}/schedule`,
         {
           method: 'POST',
           body: JSON.stringify({ 

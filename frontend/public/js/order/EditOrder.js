@@ -29,7 +29,7 @@ async function loadOrder() {
       return;
     }
     // Appel sécurisé vers l'API (GET: fonction dans api.js)
-    order = await secureFetch(`http://localhost:8082/order/${orderId}`, {
+    order = await secureFetch(`${API_URL}/order/${orderId}`, {
       method: "GET"
     }, ["client"]);
 
@@ -156,7 +156,7 @@ async function calculateDeliveryCharges(event) {
   event.preventDefault();
 
     try {
-      const result = await secureFetch("http://localhost:8082/delivery_charges", {
+      const result = await secureFetch(`${API_URL}/delivery_charges`, {
         method: "POST",
         body: JSON.stringify({
           address: address.value.trim(),
@@ -184,7 +184,7 @@ async function updateOrder(event) {
     return;
   }
   try {
-    await secureFetch(`http://localhost:8082/order/${orderId}`, {
+    await secureFetch(`${API_URL}/order/${orderId}`, {
       method: "PUT",
       body: JSON.stringify({
         service_date: dateEvent.value,

@@ -4,7 +4,7 @@ let caMenuChart = null;
 async function loadOrdersByMenu() {
   try {
     const data = await secureFetch(
-        'http://localhost:8082/statistics/ordersByMenu', {
+        `${API_URL}/statistics/ordersByMenu`, {
              method: "GET"
     }, ["admin"]);
 
@@ -58,7 +58,7 @@ async function loadOrdersByMenu() {
 // récupérer les stats et afficher le graphique de
 async function loadRevenueByMenu(url = null) {
   try {
-    const finalUrl = url ?? 'http://localhost:8082/statistics/revenueByMenu';
+    const finalUrl = url ?? `${API_URL}/statistics/revenueByMenu`;
     const data = await secureFetch(finalUrl, {
       method: "GET"
     }, ["admin"]);
@@ -156,7 +156,7 @@ document.getElementById('filtrerCA').addEventListener('click', async () => {
     params.append('end_date', dateFin);
   }
 
-  const url = `http://localhost:8082/statistics/revenueByMenu?${params.toString()}`;
+  const url = `${API_URL}/statistics/revenueByMenu?${params.toString()}`;
   await loadRevenueByMenu(url);
 });
 

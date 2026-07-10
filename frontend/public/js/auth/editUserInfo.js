@@ -74,7 +74,7 @@ async function loadUserData() {
   const csrfToken = localStorage.getItem('csrf_token');
 
   try {
-    const response = await fetch(`http://localhost:8082/user/${userId}`, {
+    const response = await fetch(`${API_URL}/user/${userId}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -109,7 +109,7 @@ async function editUserInfo(e){
   };
 
   try {
-    const response = await fetch(`http://localhost:8082/user/${userId}`, {
+    const response = await fetch(`${API_URL}/user/${userId}`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -153,7 +153,7 @@ deleteAccount.addEventListener("click", async function() {
   const csrfToken = localStorage.getItem('csrf_token');
 
   try {
-    const response = await fetch(`http://localhost:8082/user/${userId}`, {
+    const response = await fetch(`${API_URL}/user/${userId}`, {
       method: 'DELETE',
       credentials: 'include',
       headers: {

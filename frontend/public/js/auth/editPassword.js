@@ -84,7 +84,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   try {
     const passwordValue = document.getElementById('password').value;
 
-    const response = await fetch('http://localhost:8082/passwordReset/update', {
+    const response = await fetch(`${API_URL}/passwordReset/update`, {
       method: 'POST',
       credentials: 'include',
       headers: {

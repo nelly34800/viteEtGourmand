@@ -17,7 +17,7 @@ let deliveryCharges = 0;
 async function loadOrder() {
   try {
     // Appel sécurisé vers l'API (GET: fonction dans api.js)
-    cart = await secureFetch("http://localhost:8082/cart", {
+    cart = await secureFetch(`${API_URL}/cart`, {
       method: "GET"
     }, ["client"]);
 
@@ -95,7 +95,7 @@ async function calculateDeliveryCharges(event) {
   event.preventDefault();
 
     try {
-      const result = await secureFetch("http://localhost:8082/delivery_charges", {
+      const result = await secureFetch(`${API_URL}/delivery_charges`, {
         method: "POST",
         body: JSON.stringify({
           address: address.value.trim(),

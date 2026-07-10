@@ -50,7 +50,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   // envoie au backend 
   try {
     await secureFetch(
-    `http://localhost:8082/notice`,
+    `${API_URL}/notice`,
     {
       method: "POST",
       body: JSON.stringify({

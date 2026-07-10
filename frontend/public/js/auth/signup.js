@@ -124,7 +124,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
 
   // envoie au backend pour l'entrer dans la bdd
   try {
-    const response = await fetch('http://localhost:8082/user', {
+    const response = await fetch(`${API_URL}/user`, {
       method: 'POST',
       credentials: 'include',
       headers: {

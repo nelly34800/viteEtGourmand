@@ -2,7 +2,7 @@
 async function loadNoticeValidate() {
   try {
     // Appel sécurisé vers l'API
-    const response = await fetch('http://localhost:8082/noticeValidate');
+    const response = await fetch(`${API_URL}/noticeValidate`);
 
     if (!response.ok) {
       throw new Error('Erreur API');

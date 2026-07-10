@@ -2,7 +2,7 @@ async function loadUsers() {
   try {
   //appel la route get/user
     const data = await secureFetch(
-      'http://localhost:8082/user', {
+      `${API_URL}/user`, {
       method: 'GET'},
       ['admin']
     );
@@ -111,7 +111,7 @@ document.addEventListener("click", async (e) => {
   try {
     // appel API DELETE
     await secureFetch(
-      `http://localhost:8082/user/${userId}`,
+      `${API_URL}/user/${userId}`,
        { method: 'DELETE', }
     );
 

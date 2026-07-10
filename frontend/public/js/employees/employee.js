@@ -3,7 +3,7 @@
 async function loadNoticeUnvalidated() {
   try {
     // Appel sécurisé vers l'API
-    const data = await secureFetch("http://localhost:8082/noticeUnvalidated", {
+    const data = await secureFetch(`${API_URL}/noticeUnvalidated`, {
         method: 'GET' }, 
         ['admin', 'employé']);
 
@@ -87,7 +87,7 @@ document.addEventListener("click", async (e) => {
   try {
     // Appel API DELETE
     await secureFetch(
-      `http://localhost:8082/notice/${noticeId}`,
+      `${API_URL}/notice/${noticeId}`,
       { method: 'DELETE' },
       ['employé', 'admin']
     );
@@ -111,7 +111,7 @@ document.addEventListener("click", async (e) => {
   try {
     // Appel API PUT pour valider
     await secureFetch(
-      `http://localhost:8082/notice/${noticeId}/updateStatus`, { 
+      `${API_URL}/notice/${noticeId}/updateStatus`, { 
         method: 'PUT',
         body: JSON.stringify({
           status: "validé"
@@ -408,7 +408,7 @@ if (status === "annulée" && (!contactMode || !reason)) {
 }
 
 try {
-  await secureFetch(`http://localhost:8082/order/${orderId}/updateStatus`, {
+  await secureFetch(`${API_URL}/order/${orderId}/updateStatus`, {
     method: "PUT",
     body: JSON.stringify({
       status,

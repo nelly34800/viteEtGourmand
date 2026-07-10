@@ -25,8 +25,14 @@ créer un fichier .env à la racine du projet, en suivant le .env.example fourni
 Les routes API ont été testées avec : Postman
 
 # déploiement
-Pour l’instant, le projet est prévu pour un déploiement local grâce à Docker.
-Le déploiement futur pourra se faire sur un hébergeur mutualisé (PHP/MariaDB) ou sur un serveur cloud (AWS, OVH, Azure) avec Apache/Nginx, PHP et MongoDB.
+En développement j'utilise Docker afin d'avoir un environnement reproductible.
+
+En production j'ai séparé chaque responsabilité :
+
+le front est servi par Vercel,
+l'API PHP tourne dans un conteneur Docker sur Heroku,
+les données relationnelles sont stockées dans Railway,
+les données NoSQL dans MongoDB Atlas.
 
 # Auteur
 Projet réalisé par Nelly Boussekhane dans le cadre de la formation DWWM.

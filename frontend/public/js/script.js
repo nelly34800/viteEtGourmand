@@ -1,5 +1,8 @@
 // Récupération du bouton de déconnexion
 const signoutBtn = document.getElementById("signout-btn");
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8082' 
+    : 'https://ton-app-heroku.herokuapp.com';
 
 // Si bouton
 if (signoutBtn) {
@@ -28,7 +31,7 @@ async function signout() {
   const csrfToken = localStorage.getItem('csrf_token');
 
   try {
-    const response = await fetch('http://localhost:8082/logout', {
+    const response = await fetch(`${API_URL}/logout`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -51,7 +54,7 @@ async function signout() {
 // vérifie la session php
 async function checkSession() {
     try {
-        const response = await fetch("http://localhost:8082/checkSession", {
+        const response = await fetch(`${API_URL}/checkSession`, {
             method: "GET",
             credentials: "include"
         });
@@ -167,7 +170,7 @@ async function updateCartNavbar() {
   }
 
   try {
-    const cart = await secureFetch("http://localhost:8082/cart", {
+    const cart = await secureFetch(`${API_URL}/cart`, {
       method: "GET"
     }, ["client"]);
 

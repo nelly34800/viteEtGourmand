@@ -175,7 +175,7 @@ async function loadConditions() {
 async function loadMenu(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/menu/${id}`,
+      `${API_URL}/menu/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -258,7 +258,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (menuId) {
       await secureFetch(
-        `http://localhost:8082/menu/${menuId}`,
+        `${API_URL}/menu/${menuId}`,
         {
           method: 'PUT',
           body: JSON.stringify({
@@ -285,7 +285,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/menu`,
+        `${API_URL}/menu`,
         {
           method: 'POST',
           body: JSON.stringify({

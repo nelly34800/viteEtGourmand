@@ -58,7 +58,7 @@ document.addEventListener("click", async (e) => {
   try {
     // Appel API DELETE
     await secureFetch(
-      `http://localhost:8082/diet/${dietId}`,
+      `${API_URL}/diet/${dietId}`,
       { method: 'DELETE' },
       ['employee', 'admin']
     );

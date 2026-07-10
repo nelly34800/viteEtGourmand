@@ -43,7 +43,7 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
 
    // envoie au backend pour récupérer l'adresse mail
   try {
-    const response = await fetch('http://localhost:8082/passwordReset', {
+    const response = await fetch(`${API_URL}/passwordReset`, {
       method: 'POST',
       credentials: 'include',
       headers: {

@@ -9,7 +9,7 @@ async function checkCredentials(e) {
   e.preventDefault();
 
   try {
-    const response = await fetch('http://localhost:8082/login', {
+    const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       credentials: 'include', // récupère la session
       headers: {

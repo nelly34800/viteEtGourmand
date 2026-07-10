@@ -42,7 +42,7 @@ function validateForm(){
 async function loadAllergen(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/allergen/${id}`,
+      `${API_URL}/allergen/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -69,7 +69,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (allergenId) {
       await secureFetch(
-        `http://localhost:8082/allergen/${allergenId}`,
+        `${API_URL}/allergen/${allergenId}`,
         {
           method: 'PUT',
           body: JSON.stringify({ allergen_name: name })
@@ -87,7 +87,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/allergen`,
+        `${API_URL}/allergen`,
         {
           method: 'POST',
           body: JSON.stringify({ allergen_name: name })

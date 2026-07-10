@@ -43,7 +43,7 @@ function validateForm(){
 async function loadDiet(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/diet/${id}`,
+      `${API_URL}/diet/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -70,7 +70,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (dietId) {
       await secureFetch(
-        `http://localhost:8082/diet/${dietId}`,
+        `${API_URL}/diet/${dietId}`,
         {
           method: 'PUT',
           body: JSON.stringify({ diet_name: name })
@@ -88,7 +88,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/diet`,
+        `${API_URL}/diet`,
         {
           method: 'POST',
           body: JSON.stringify({ diet_name: name })

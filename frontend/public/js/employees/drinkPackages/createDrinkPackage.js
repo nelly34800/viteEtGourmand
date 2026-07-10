@@ -46,7 +46,7 @@ function validateForm(){
 async function loadDrinkPackage(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/drinkPackage/${id}`,
+      `${API_URL}/drinkPackage/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -75,7 +75,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (drinkPackageId) {
       await secureFetch(
-        `http://localhost:8082/drinkPackage/${drinkPackageId}`,
+        `${API_URL}/drinkPackage/${drinkPackageId}`,
         {
           method: 'PUT',
           body: JSON.stringify({ 
@@ -95,7 +95,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/drinkPackage`,
+        `${API_URL}/drinkPackage`,
         {
           method: 'POST',
           body: JSON.stringify({ 

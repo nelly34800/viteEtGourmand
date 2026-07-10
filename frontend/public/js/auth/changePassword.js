@@ -98,7 +98,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   try {
     const csrfToken = localStorage.getItem('csrf_token');
 
-    const response = await fetch(`http://localhost:8082/user/${userId}/changePassword`, {
+    const response = await fetch(`${API_URL}/user/${userId}/changePassword`, {
       method: 'POST',
       credentials: 'include',
       headers: {

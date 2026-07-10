@@ -121,7 +121,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
   // envoie au backend pour l'entrer dans la bdd
   try {
     await secureFetch(
-      'http://localhost:8082/employee', 
+      `${API_URL}/employee`, 
       {
         method: 'POST',
         body: JSON.stringify({

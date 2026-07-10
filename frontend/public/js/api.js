@@ -1,6 +1,6 @@
 async function getAllergens() {
   return await secureFetch(
-    'http://localhost:8082/allergen',
+    `${API_URL}/allergen`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -8,7 +8,7 @@ async function getAllergens() {
 
 async function getDiets() {
   return await secureFetch(
-    'http://localhost:8082/diet',
+    `${API_URL}/diet`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -16,7 +16,7 @@ async function getDiets() {
 
 async function getDishes() {
   return await secureFetch(
-    'http://localhost:8082/dish',
+    `${API_URL}/dish`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -24,7 +24,7 @@ async function getDishes() {
 
 async function getMaterial() {
   return await secureFetch(
-    'http://localhost:8082/material',
+    `${API_URL}/material`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -32,7 +32,7 @@ async function getMaterial() {
 
 async function getDrinkPackages() {
   return await secureFetch(
-    'http://localhost:8082/drinkPackage',
+    `${API_URL}/drinkPackage`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -40,14 +40,14 @@ async function getDrinkPackages() {
 
 async function getPersonalPackages() {
   return await secureFetch(
-    'http://localhost:8082/personalPackage',
+    `${API_URL}/personalPackage`,
     { method: 'GET' },
     ['employé', 'admin']
   );
 }
 async function getConditions() {
   return await secureFetch(
-    'http://localhost:8082/condition',
+    `${API_URL}/condition`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -55,7 +55,7 @@ async function getConditions() {
 
 async function getSchedules() {
   return await secureFetch(
-    'http://localhost:8082/schedule',
+    `${API_URL}/schedule`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -63,7 +63,7 @@ async function getSchedules() {
 
 async function getMenus() {
   return await secureFetch(
-    'http://localhost:8082/menu',
+    `${API_URL}/menu`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -71,7 +71,7 @@ async function getMenus() {
 
 async function getCategoriesDish() {
   return await secureFetch(
-    'http://localhost:8082/categoryDish',
+    `${API_URL}/categoryDish`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -79,7 +79,7 @@ async function getCategoriesDish() {
 
 async function getCategoriesMaterial() {
   return await secureFetch(
-    'http://localhost:8082/materialCategory',
+    `${API_URL}/materialCategory`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -87,7 +87,7 @@ async function getCategoriesMaterial() {
 
 async function getNotices() {
   return await secureFetch(
-    'http://localhost:8082/notice',
+    `${API_URL}/notice`,
     { method: 'GET' },
     ['employé', 'admin']
   );
@@ -95,7 +95,7 @@ async function getNotices() {
 
 async function getOrders() {
   return await secureFetch(
-    'http://localhost:8082/order',
+    `${API_URL}/order`,
     { method: 'GET' },
   );
 }

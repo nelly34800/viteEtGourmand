@@ -138,7 +138,7 @@ document.addEventListener("click", async (event) => {
   const orderId = button.dataset.id;
 
   try {
-    const order = await secureFetch(`http://localhost:8082/order/${orderId}`, {
+    const order = await secureFetch(`${API_URL}/order/${orderId}`, {
       method: "GET"
     }, ["client", "employé", "admin"]);
 
@@ -248,7 +248,7 @@ document.addEventListener("click", async (e) => {
   try {
     // Appel API DELETE
     await secureFetch(
-      `http://localhost:8082/order/${orderId}`,
+      `${API_URL}/order/${orderId}`,
       { method: 'DELETE' },
       ['client']
     );

@@ -47,7 +47,7 @@ function validateForm(){
 async function loadCondition(id) {
   try {
     const data = await secureFetch(
-      `http://localhost:8082/condition/${id}`,
+      `${API_URL}/condition/${id}`,
       { method: 'GET' },
       ['employee', 'admin']
     );
@@ -76,7 +76,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     // vérifie si on a un id dans l'URL (si id = modification)
     if (conditionId) {
       await secureFetch(
-        `http://localhost:8082/condition/${conditionId}`,
+        `${API_URL}/condition/${conditionId}`,
         {
           method: 'PUT',
           body: JSON.stringify({
@@ -96,7 +96,7 @@ document.querySelector('form').addEventListener('submit', async (e) => {
     } else {
       // sinon pas d'id = création
       await secureFetch(
-        `http://localhost:8082/condition`,
+        `${API_URL}/condition`,
         {
           method: 'POST',
           body: JSON.stringify({

@@ -109,7 +109,7 @@ async function addPersonalPackageToCart(id) {
 
   // crée le forfait boisson dans panier  
   return await secureFetch(
-    'http://localhost:8082/cart', 
+    `${API_URL}/cart`, 
       {
         method: "POST", 
         body: JSON.stringify({ 

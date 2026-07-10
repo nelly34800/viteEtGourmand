@@ -21,7 +21,7 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
   event.preventDefault();
 
   try {
-    const response = await secureFetch("http://localhost:8082/order", {
+    const response = await secureFetch(`${API_URL}/order`, {
       method: "POST",
       body: JSON.stringify({
         service_date: localStorage.getItem("service_date")
@@ -46,7 +46,7 @@ document.addEventListener("click", async (event) => {
   if (!button) return;
 
   try {
-    const response = await secureFetch("http://localhost:8082/cart", { 
+    const response = await secureFetch(`${API_URL}/cart`, { 
       method: "GET" 
     }, ["client"]);
 
@@ -60,7 +60,7 @@ document.addEventListener("click", async (event) => {
       if (item.type !== "menu") continue;
 
       const menu = await secureFetch(
-        `http://localhost:8082/menu/${item.id}`,
+        `${API_URL}/menu/${item.id}`,
         { method: "GET" },
         ["client"]
       );
@@ -93,7 +93,7 @@ document.addEventListener("click", async (event) => {
   if (!button) return;
 
   try {
-    const response = await secureFetch("http://localhost:8082/cart", { 
+    const response = await secureFetch(`${API_URL}/cart`, { 
       method: "GET" 
     }, ["client"]);
 
@@ -105,7 +105,7 @@ document.addEventListener("click", async (event) => {
       if (item.type !== "menu") continue;
 
       const menu = await secureFetch(
-        `http://localhost:8082/menu/${item.id}`,
+        `${API_URL}//menu/${item.id}`,
         { method: "GET" },
         ["client"]
       );

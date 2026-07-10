@@ -3,7 +3,7 @@ const menuId = params.get("id");
 
 async function loadMenu(id) {
   try {
-    const response = await fetch(`http://localhost:8082/menu/${id}`);
+    const response = await fetch(`${API_URL}/menu/${id}`);
     const data = await response.json();
 
     renderMenu(data);
@@ -153,7 +153,7 @@ async function addToCart(menuId) {
 
   // envoie le menu au backend et ajoute le panier dans la session php  
   return await secureFetch(
-    'http://localhost:8082/cart', 
+    `${API_URL}/cart`, 
       {
         method: "POST", 
         body: JSON.stringify({ 
