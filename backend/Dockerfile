@@ -1,5 +1,5 @@
-# Image PHP 8.2 avec Apache
-FROM php:8.2-apache
+# Image CLI
+FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
     libicu-dev \
@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y \
         pdo \
         pdo_mysql \
         intl \
-        zip \
-    && a2enmod rewrite
+        zip
 
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
@@ -24,15 +23,12 @@ WORKDIR /var/www/html
 # Copie tout le backend
 COPY . /var/www/html
 
-# Installe les dépendances Composer (PHPMailer, etc.)
+# Installe les dépendances Composer
 RUN composer install --no-dev --optimize-autoloader
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+# Expose le port (purement indicatif pour Docker)
+EXPOSE 80
 
-RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf \
-    /etc/apache2/apache2.conf
-
-# Avant de lancer Apache, on remplace dynamiquement le port "80" configuré par défaut 
-# dans Apache par la variable $PORT fournie par Heroku.
-CMD sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf && apache2-foreground
+# Commande finale :  lance le serveur intégré de PHP qui écoute sur le port d'Heroku
+# et qui pointe directement sur le dossier public/index.php
+CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t public"]

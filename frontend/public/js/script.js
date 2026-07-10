@@ -2,7 +2,7 @@
 const signoutBtn = document.getElementById("signout-btn");
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8082' 
-    : 'https://ton-app-heroku.herokuapp.com';
+    : 'https://app-vite-et-gourmand-backend-dd4089b46e3e.herokuapp.com';
 
 // Si bouton
 if (signoutBtn) {
