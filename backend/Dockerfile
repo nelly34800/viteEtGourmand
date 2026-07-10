@@ -35,4 +35,4 @@ RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 
 # Avant de lancer Apache, on remplace dynamiquement le port "80" configuré par défaut 
 # dans Apache par la variable $PORT fournie par Heroku.
-CMD sed -i 's/Listen 80/Listen '${PORT}'/g' /etc/apache2/ports.conf && apache2-foreground
+CMD sed -i "s/Listen 80/Listen $PORT/g" /etc/apache2/ports.conf && apache2-foreground
