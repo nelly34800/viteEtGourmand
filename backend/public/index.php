@@ -2,10 +2,13 @@
 // Liste des domaines autorisés à faire des requêtes vers l'API (variable dans le .env)
 $allowedOrigins = [];
 
-if (!empty($_ENV['ALLOWED_ORIGINS'])) {
+// Vérifie dans $_ENV OU via getenv() pour être sûr de capter Heroku
+$originsRaw = $_ENV['ALLOWED_ORIGINS'] ?? getenv('ALLOWED_ORIGINS') ?? '';
+
+if (!empty($originsRaw)) {
     $allowedOrigins = array_map(
         'trim',
-        explode(',', $_ENV['ALLOWED_ORIGINS'])
+        explode(',', $originsRaw)
     );
 }
 // Vérifie si la requête vient d’un domaine autorisé
@@ -35,11 +38,12 @@ require_once '../config/mongodb.php';
 
 // gestion dynamique HTTPS
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-// Configuration du cookie de session PHP avec des options de sécurité
+
+// Configuration du cookie de session PHP avec des options de sécurité pour la production
 session_set_cookie_params([
     'httponly' => true,
-    'secure' =>  $isHttps, //mettre true en production
-    'samesite' => 'Lax'    // none en production si domaine séparé frontend/backend, sinon Lax
+    'secure'   => true,     // Force à true car Heroku et Vercel utilisent le HTTPS
+    'samesite' => 'None'   // OBLIGATOIRE en production pour les domaines séparés
 ]);
 
 session_start();
@@ -58,26 +62,26 @@ try {
     /**
      * On charge les fichiers de routes
      */
-    require_once '../routes/schedule.routes.php';
-    require_once '../routes/user.routes.php';
-    require_once '../routes/auth.routes.php';
-    require_once '../routes/dish.routes.php';
-    require_once '../routes/categoryDish.routes.php';
-    require_once '../routes/allergen.routes.php';
-    require_once '../routes/diet.routes.php';
-    require_once '../routes/menu.routes.php';
-    require_once '../routes/condition.routes.php';
-    require_once '../routes/materialCategory.routes.php';
-    require_once '../routes/material.routes.php';
-    require_once '../routes/notice.routes.php';
-    require_once '../routes/drinkPackage.routes.php';
-    require_once '../routes/personalPackage.routes.php';
-    require_once '../routes/order.routes.php';
-    require_once '../routes/cart.routes.php';
-    require_once '../routes/delivery.routes.php';
-    require_once '../routes/contact.routes.php';
-    require_once '../routes/passwordReset.routes.php';
-    require_once '../routes/statistic.routes.php';
+    require_once '../Routes/schedule.routes.php';
+    require_once '../Routes/user.routes.php';
+    require_once '../Routes/auth.routes.php';
+    require_once '../Routes/dish.routes.php';
+    require_once '../Routes/categoryDish.routes.php';
+    require_once '../Routes/allergen.routes.php';
+    require_once '../Routes/diet.routes.php';
+    require_once '../Routes/menu.routes.php';
+    require_once '../Routes/condition.routes.php';
+    require_once '../Routes/materialCategory.routes.php';
+    require_once '../Routes/material.routes.php';
+    require_once '../Routes/notice.routes.php';
+    require_once '../Routes/drinkPackage.routes.php';
+    require_once '../Routes/personalPackage.routes.php';
+    require_once '../Routes/order.routes.php';
+    require_once '../Routes/cart.routes.php';
+    require_once '../Routes/delivery.routes.php';
+    require_once '../Routes/contact.routes.php';
+    require_once '../Routes/passwordReset.routes.php';
+    require_once '../Routes/statistic.routes.php';
 
     $router->dispatch($method, $uri);
 

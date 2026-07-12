@@ -12,7 +12,12 @@ RUN apt-get update && apt-get install -y \
         pdo_mysql \
         intl \
         zip
+# Installation des dépendances nécessaires pour compiler l'extension
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
+# Installation de l'extension MongoDB officielle via PECL
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
