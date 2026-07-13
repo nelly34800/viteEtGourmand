@@ -13,9 +13,6 @@ class DeliveryController
 {
     public function __construct()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
     }
 
     public function calculate(): void
@@ -30,26 +27,15 @@ class DeliveryController
             if (!$address || !$postalCode || !$city) {
                 ResponseHelper::json(['error' => 'Adresse complète requise'], 400);
             }
-
+            // géocodage de l'adresse
             $geocoder = new GeocodingService();
             $coords = $geocoder->geocode($address, $postalCode, $city);
-
+            // Calcul de la distance et des frais
             $service = new DeliveryService();
             $result = $service->calculate(
                 (float) $coords['lat'],
                 (float) $coords['lng']
             );
-
-            // stocke en session
-            $_SESSION['delivery'] = [
-                'address' => $address,
-                'city' => $city,
-                'postal_code' => $postalCode,
-                'latitude' => $coords['lat'],
-                'longitude' => $coords['lng'],
-                'distance_km' => $result['distance_km'],
-                'delivery_charges' => $result['delivery_charges']
-            ];
 
             ResponseHelper::json([
                 'success' => true,

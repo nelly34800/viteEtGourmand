@@ -3,6 +3,9 @@ const acceptAllergens = document.getElementById("acceptAllergens");
 const acceptConditions = document.getElementById("acceptConditions");
 const confirmOrderBtn = document.getElementById("confirmOrderBtn");
 
+const RAW_CART_KEY = "vgc_cart_raw";
+const DELIVERY_KEY = "vgc_delivery";
+
 if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
 } else {
   function validateConfirmation() {
@@ -21,13 +24,25 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
   event.preventDefault();
 
   try {
+    // Extraction des données persistées localement
+    const localCart = JSON.parse(localStorage.getItem(RAW_CART_KEY)) || [];
+    const localDelivery = JSON.parse(localStorage.getItem(DELIVERY_KEY)) || null;
+    const serviceDate = localStorage.getItem("service_date");
+
     const response = await secureFetch(`${API_URL}/order`, {
       method: "POST",
       body: JSON.stringify({
-        service_date: localStorage.getItem("service_date")
+        cart: localCart,
+        delivery: localDelivery,
+        service_date: serviceDate
       })
     }, ["client"]);
     showMessage("Commande enregistrée avec succès", "success");
+
+    // Nettoyage du LocalStorage pour éviter les commandes doublons
+    localStorage.removeItem(RAW_CART_KEY);
+    localStorage.removeItem(DELIVERY_KEY);
+    localStorage.removeItem("service_date");
 
     setTimeout(() => {
       window.location.href = "/account";
@@ -46,19 +61,17 @@ document.addEventListener("click", async (event) => {
   if (!button) return;
 
   try {
-    const response = await secureFetch(`${API_URL}/cart`, { 
-      method: "GET" 
-    }, ["client"]);
+    const localCart = JSON.parse(localStorage.getItem(RAW_CART_KEY)) || [];
 
     const allergensList = document.getElementById("allergensList");
     allergensList.innerHTML = "";
 
     const allergensSet = new Set();
 
-    for (const item of response) {
-
+    for (const item of localCart) {
       if (item.type !== "menu") continue;
 
+      // Récupération des détails du menu
       const menu = await secureFetch(
         `${API_URL}/menu/${item.id}`,
         { method: "GET" },
@@ -93,15 +106,12 @@ document.addEventListener("click", async (event) => {
   if (!button) return;
 
   try {
-    const response = await secureFetch(`${API_URL}/cart`, { 
-      method: "GET" 
-    }, ["client"]);
+    const localCart = JSON.parse(localStorage.getItem(RAW_CART_KEY)) || [];
 
     const tbody = document.getElementById("conditionsTableBody");
     tbody.innerHTML = '';
 
-    for (const item of response) {
-
+    for (const item of localCart) {
       if (item.type !== "menu") continue;
 
       const menu = await secureFetch(

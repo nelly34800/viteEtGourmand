@@ -4,93 +4,165 @@ const cartTotal = document.getElementById("cart-total");
 const dateEvent = document.getElementById("dateEvent");
 const btnValidation = document.getElementById("btnValidation");
 
-let cart = [];
-// fonction pour charger le panier
+let localCart = [];
+
+// Clé unique pour stocker notre panier dans le LocalStorage
+const LOCAL_STORAGE_KEY = "vgc_cart"
+
+// fonction pour charger le panier brut local et demander les calculs au Backend PHP
 async function loadCart() {
   try {
-    // Appel sécurisé vers l'API
-    cart = await secureFetch(`${API_URL}/cart`, {
-      method: "GET"
+    localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+
+    if (localCart.length === 0) {
+      renderEmptyCart();
+      return;
+    }
+
+    // envoi du panier brut à PHP pour calcul des remises et ratios métiers
+    const response = await secureFetch(`${API_URL}/cart/details`, {
+      method: "POST",
+      body: JSON.stringify({ cart: localCart })
     }, ["client"]);
 
-    renderCart();
+    renderCart(response.detailed_cart, response.total_general);
 
   } catch (error) {
-    showMessage("Une erreur est survenue", "danger");
-
-    cart = [];
-
-    cartBody.innerHTML = `
-      <tr>
-        <td colspan="5" class="text-center text-danger">
-          Vous devez être connecté pour accéder au panier.
-        </td>
-      </tr>
-    `;
-
-    cartTotal.textContent = "0 €";
-    btnValidation.disabled = true;
+    showMessage("Une erreur est survenue lors du calcul du panier", "danger");
+    renderEmptyCart();
   }
 }
 
-function renderCart() {
-  cartBody.innerHTML = "";
+function renderCart(detailedCart, totalGeneral) {
+  cartBody.innerHTML = ""; // On vide le tableau avant de le reconstruire
 
-  let total = 0;
-
-  cart.forEach(item => {
-    total += Number(item.line_total);
-
+  detailedCart.forEach(item => {
     const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>
-        <strong>${item.name}</strong>
-        <br>
-        <small>${getTypeLabel(item.type)}</small>
-      </td>
+    //nom de l'article avec type en petit dessous
+    const tdName = document.createElement("td");
+    const strongName = document.createElement("strong");
+    strongName.textContent = item.name; 
+    tdName.appendChild(strongName);
 
-      <td>
-        <input 
-          type="number"
-          class="input-qty"
-          min="${item.minimum_people ?? 1}"
-          value="${item.quantity}"
-          data-id="${item.id}"
-          data-type="${item.type}"
-        >
-        <div class="invalid-feedback">
-          Quantité minimum : ${item.minimum_people ?? 1}
-        </div>
-        <label>personnes</label>
-      </td>
+    const br = document.createElement("br");
+    tdName.appendChild(br);
 
-      <td>${item.price_per_person} €</td>
-      <td>${item.discount > 0 
-        ? `<small class="text-success">Remise: -${item.discount.toFixed(2)} €</small>` 
-        : ""}<br>
-        ${item.line_total.toFixed(2)} €</td>
+    const smallType = document.createElement("small");
+    smallType.textContent = getTypeLabel(item.type);
+    tdName.appendChild(smallType);
+    tr.appendChild(tdName);
 
-      <td>
-        <button 
-          type="button"
-          class="btn btn-danger delete-btn"
-          data-id="${item.id}"
-          data-type="${item.type}"
-        >
-          X
-        </button>
-      </td>
-    `;
+     // quantité
+    const tdQty = document.createElement("td");
+    const inputQty = document.createElement("input");
+    inputQty.type = "number";
+    inputQty.className = "input-qty";
+    inputQty.min = item.minimum_people ?? 1;
+    inputQty.value = item.quantity;
+    inputQty.dataset.id = item.id;
+    inputQty.dataset.type = item.type
+    tdQty.appendChild(inputQty);
 
+    const feedbackDiv = document.createElement("div");
+    feedbackDiv.className = "invalid-feedback";
+    feedbackDiv.textContent = `Quantité minimum : ${item.minimum_people ?? 1}`;
+    tdQty.appendChild(feedbackDiv);
+
+    const labelQty = document.createElement("label");
+    labelQty.textContent = item.type === 'material' ? " unités" : " personnes";
+    tdQty.appendChild(labelQty);
+    tr.appendChild(tdQty);
+
+    // prix unitaire
+    const tdPrice = document.createElement("td");
+    tdPrice.textContent = `${item.price_per_person} €`;
+    tr.appendChild(tdPrice);
+
+    // total ligne avec remise si applicable
+    const tdLineTotal = document.createElement("td");
+    const discount = Number(item.discount) || 0;
+
+    if (discount > 0) {
+      const smallDiscount = document.createElement("small");
+      smallDiscount.className = "text-success";
+      smallDiscount.textContent = `Remise: -${discount.toFixed(2)} €`;
+      tdLineTotal.appendChild(smallDiscount);
+      tdLineTotal.appendChild(document.createElement("br"));
+    }
+
+    const textTotal = document.createTextNode(`${Number(item.line_total).toFixed(2)} €`);
+    tdLineTotal.appendChild(textTotal);
+    tr.appendChild(tdLineTotal);
+
+    // bouton supprimer
+    const tdDelete = document.createElement("td");
+    const btnDelete = document.createElement("button");
+    btnDelete.type = "button";
+    btnDelete.className = "btn btn-danger delete-btn";
+    btnDelete.textContent = "X";
+    btnDelete.dataset.id = item.id;
+
+    tdDelete.appendChild(btnDelete);
+    tr.appendChild(tdDelete);
+
+    // Ajout de la ligne complète au corps du tableau
     cartBody.appendChild(tr);
   });
 
-  cartTotal.textContent = `${total.toFixed(2)} €`;
+  cartTotal.textContent = `${Number(totalGeneral).toFixed(2)} €`;
 
   bindCartEvents();
   validateForm();
 }
+
+// gestion des événements sur le panier
+function bindCartEvents() {
+  document.querySelectorAll(".input-qty").forEach(input => {
+    input.addEventListener("change", async (event) => {
+      const itemId = event.target.dataset.id;
+      const quantity = parseInt(event.target.value, 10);  // 10 : convertir la valeur en nombre entier
+      const minPeople = parseInt(event.target.min, 10) || 1;  // || 1 : prend 1 par défaut
+
+      const item = localCart.find(i => i.id == itemId);
+      if (item) {
+        if (quantity >= minPeople) {
+          item.quantity = quantity;
+        } else {
+          event.target.value = minPeople;
+          item.quantity = minPeople;
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+        await loadCart();
+      }
+    });
+  });
+  document.querySelectorAll(".delete-btn").forEach(button => {
+    button.addEventListener("click", async (event) => {
+      const itemId = event.target.dataset.id;
+      // Supprime l'article du panier local, puis recharge le panier : si i correspond à itemId, on le supprime sinon on le garde
+      localCart = localCart.filter(i => i.id != itemId);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+      await loadCart();
+    });
+  });
+}
+// fonction pour afficher un message lorsque le panier est vide
+function renderEmptyCart() {
+  cartBody.innerHTML = "";
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 5;
+  td.className = "text-center text-muted";
+  td.textContent = "Votre panier est vide.";
+  
+  tr.appendChild(td);
+  cartBody.appendChild(tr);
+  
+  cartTotal.textContent = "0.00 €";
+  btnValidation.disabled = true;
+}
+
 // recupère le type d'article pour l'afficher dans le panier
 function getTypeLabel(type) {
   switch (type) {
@@ -110,80 +182,25 @@ function getTypeLabel(type) {
       return "Article";
   }
 }
-// lier les événements aux éléments du panier
-function bindCartEvents() {
-  document.querySelectorAll(".input-qty").forEach(input => {
-    input.addEventListener("change", async (event) => {
-      const itemId = event.target.dataset.id;
-      const quantity = parseInt(event.target.value, 10);
-
-      await updateCartItem(itemId, quantity);
-    });
-  });
-
-  document.querySelectorAll(".delete-btn").forEach(button => {
-    button.addEventListener("click", async (event) => {
-      event.preventDefault();
-
-      const itemId = event.target.dataset.id;
-
-      await deleteCartItem(itemId);
-    });
-  });
-}
-// met à jour la quantité d'un article du panier
-async function updateCartItem(itemId, quantity) {
-  try {
-    await secureFetch(`${API_URL}/cart/${itemId}`, {
-      method: "PUT",
-      body: JSON.stringify({ quantity })
-    }, ["client"]);
-
-    await loadCart();
-
-  } catch (error) {
-    showMessage("Une erreur est survenue", "danger");
-  }
-}
-// supprime l'article du panier
-async function deleteCartItem(itemId) {
-  try {
-    await secureFetch(`${API_URL}/cart/${itemId}`, {
-      method: "DELETE"
-    }, ["client"]);
-
-    await loadCart();
-
-  } catch (error) {
-    showMessage("Une erreur est survenue", "danger");
-  }
-}
-
+// écouteur d'événement pour valider le formulaire lorsque la date change
 dateEvent.addEventListener("change", validateForm);
 
+// fonction pour valider le formulaire
 function validateForm() {
   const dateOk = dateEvent.value !== "";
-  const cartOk = cart.length > 0;
-
+  const cartOk = localCart.length > 0;
   btnValidation.disabled = !(dateOk && cartOk);
 }
-
+// écouteur d'événement pour le bouton de validation
 btnValidation.addEventListener("click", (event) => {
   event.preventDefault();
-  if (cart.length === 0) {
-    showMessage("Votre panier est vide", "warning");
-  }
-
-  if (!dateEvent.value) {
-    showMessage("Veuillez choisir une date", "warning");
-  }
-
   localStorage.setItem("service_date", dateEvent.value);
-  showMessage("Votre panier est validé avec succès!", "success");
-
-  setTimeout(() => {
-    window.location.href = "/order";
-  }, 1000);
+  window.location.href = "/order";
 });
 
+// Chargement initial
+const savedDate = localStorage.getItem("service_date");
+if (savedDate) {
+  dateEvent.value = savedDate;
+}
 loadCart();

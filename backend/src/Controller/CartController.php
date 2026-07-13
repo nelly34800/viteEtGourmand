@@ -6,7 +6,7 @@ use App\Services\CartService;
 use App\Helper\RequestHelper;
 use App\Helper\ResponseHelper;
 /**
- * Contrôleur responsable de la gestion du panier.
+ * Contrôleur responsable de la gestion du panier (Architecture Stateless / LocalStorage).
  */
 class CartController
 {
@@ -14,23 +14,36 @@ class CartController
 
     public function __construct()
     {
-      if (session_status() === PHP_SESSION_NONE) {
-      session_start();
-      }
       $this->cartService = new CartService();
     }
     /**
-    * Lit panier de l'utilisateur
+    * Lit panier de l'utilisateur (reçoit le panier brut du LocalStorage et renvoie la version calculée)
     */
-    public function index(): void
+    public function getDetails(): void
     {
-        $cart = $_SESSION['cart'] ?? [];
-        $result = $this->cartService->getDetailedCart($cart);
+        try {
+            $data = RequestHelper::getJson();
+            // récupère le tableau brut envoyé par le JS, ou un tableau vide
+            $rawCart = $data['cart'] ?? [];
 
-        ResponseHelper::json($result);
+            // calcul (remises, ratios, etc. dans cartService)
+            $detailedCart = $this->cartService->getDetailedCart($rawCart);
+
+            // Calcul du total général
+            $totalGeneral = array_sum(array_column($detailedCart, 'line_total'));
+
+            ResponseHelper::json([
+                'detailed_cart' => $detailedCart,
+                'total_general' => $totalGeneral
+            ]);
+
+        } catch (\Throwable $e) {
+            ResponseHelper::json(['error' => $e->getMessage()], 400);
+        }
     }
     /**
-     * Crée un nouveau panier
+     * Reçoit le panier actuel + le nouvel item, et renvoie le nouveau panier brut combiné
+     * lorsque le client clique sur "Ajouter au panier" depuis les pages des options (matériel, forfaits)
      */
     public function store(): void
     {
@@ -40,51 +53,16 @@ class CartController
             if (!$data) {
                 ResponseHelper::json(['error' => 'JSON invalide'], 400);
             }
+            // Le JS envoie { cart: [...], type: '...', id: '...', quantity: ... }
+            $currentCart = $data['cart'] ?? [];
 
-            $cart = $_SESSION['cart'] ?? [];
-
-            $_SESSION['cart'] = $this->cartService->add($cart, $data);
-
-            ResponseHelper::json([
-                'success' => true,
-                'cart' => $_SESSION['cart']
-            ]);
-
-        } catch (\Throwable $e) {
-            ResponseHelper::json(['error' => $e->getMessage()], 400);
-        }
-    }
-    /**
-     * Modifier le panier
-     */
-    public function update(string $id): void
-    {
-        try {
-            $data = RequestHelper::getJson();
-            $cart = $_SESSION['cart'] ?? [];
-
-            $_SESSION['cart'] = $this->cartService->update($cart, $id, $data);
+            // cartService applique ses règles d'ajout (ex: vérification des stocks)
+            $updatedCart = $this->cartService->add($currentCart, $data);
 
             ResponseHelper::json([
                 'success' => true,
-                'cart' => $_SESSION['cart']
+                'cart' => $updatedCart // Le frontend écrase son localStorage
             ]);
-
-        } catch (\Throwable $e) {
-            ResponseHelper::json(['error' => $e->getMessage()], 400);
-        }
-    }
-    /**
-     * Supprimer le panier
-     */
-    public function delete(string $id): void
-    {
-        try {
-            $cart = $_SESSION['cart'] ?? [];
-
-            $_SESSION['cart'] = $this->cartService->delete($cart, $id);
-
-            ResponseHelper::json(['success' => true]);
 
         } catch (\Throwable $e) {
             ResponseHelper::json(['error' => $e->getMessage()], 400);

@@ -139,29 +139,27 @@ class OrderController
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
-
-            $data = RequestHelper::getJson();
-            // Vérification des infos de session
-            $cart = $_SESSION['cart'] ?? [];
-            $delivery = $_SESSION['delivery'] ?? null;
+            // Récupére l'utilisateur connecté via la session
             $user = $_SESSION['user'] ?? null;
+            if (!$user || empty($user['id'])) {
+                ResponseHelper::json(['error' => 'Utilisateur non connecté'], 401);
+            }
+            // Lit les données JSON transmises par orderConfirmation.js
+            $data = RequestHelper::getJson();
+            $cart = $data['cart'] ?? [];
+            $delivery = $data['delivery'] ?? null;
+            $serviceDate = $data['service_date'] ?? null;
 
             if (empty($cart)) {
                 ResponseHelper::json(['error' => 'Panier vide'], 400);
             }
-
             if (!$delivery) {
                 ResponseHelper::json(['error' => 'Frais de livraison non calculés'], 400);
             }
-
-            if (!$user || empty($user['id'])) {
-                ResponseHelper::json(['error' => 'Utilisateur non connecté'], 401);
-            }
-
-            if (empty($data['service_date'])) {
+            if (!$serviceDate) {
                 ResponseHelper::json(['error' => 'Date de service manquante'], 400);
             }
-            // récupère le panier détaillé dans CartService
+            // // Recalcul strict côté serveur à partir du panier brut reçu
             $cartService = new CartService();
             $detailedCart = $cartService->getDetailedCart($cart);
             // prépare les tableaux de produits
@@ -193,7 +191,7 @@ class OrderController
                 }
 
                 if ($item['type'] === 'material') {
-                  //  si il y a du matériel dans la commande mais location materiel à vrai
+                  //  si il y a du matériel dans la commande met location materiel à vrai
                     $equipmentLoan = true;
 
                     $materials[] = [
@@ -293,22 +291,14 @@ class OrderController
             } catch (\Throwable $e) {
                 error_log('Erreur MongoDB stats : ' . $e->getMessage());
             }
-            // vide le panier 
-            unset($_SESSION['cart'], $_SESSION['delivery']);
-            //  email client
+            // Envoi de l'email de confirmation au client
             $mailService = new MailService();
-
-            $mailService->sendOrderCreatedMail(
-                $user['email'],
-                $orderNumber
-            );
+            $mailService->sendOrderCreatedMail($user['email'], $orderNumber);
 
             ResponseHelper::json(['success' => true,'message' => 'Commande créée'], 201);
 
         } catch (\Throwable $e) {
-            ResponseHelper::json([
-                'error' => $e->getMessage()
-            ], 500);
+            ResponseHelper::json(['error' => $e->getMessage()], 500);
         }
     }
     /**
@@ -376,10 +366,7 @@ class OrderController
                 $newTotalAmount
             );
 
-            ResponseHelper::json([
-                'success' => true,
-                'message' => 'Commande modifiée'
-            ]);
+            ResponseHelper::json(['success' => true, 'message' => 'Commande modifiée']);
 
         } catch (\Throwable $e) {
             ResponseHelper::json(['error' => $e->getMessage()], 400);
