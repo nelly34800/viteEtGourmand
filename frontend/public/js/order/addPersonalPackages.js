@@ -35,9 +35,13 @@ async function loadPersonalsPackage() {
 
       addBtn.addEventListener("click", async () => {
         try {
-          await addPersonalPackageToCart(personalPackage.id);
-          showMessage("Forfait de personnel ajouté au panier", "success");
+          // récupère le résultat de l'ajout (true ou false)
+          const success = addPersonalPackageToCart(personalPackage.id);
 
+          // Si l'ajout a échoué (pas de menu ou doublon), on s'arrête là.
+          if (!success) return;
+
+          // lance directement la redirection ici après 2 secondes.
           setTimeout(() => {
             window.location.replace("/cart");
           }, 2000);
@@ -49,8 +53,7 @@ async function loadPersonalsPackage() {
       });
 
       tdAction.appendChild(buttonContainer);
-       tr.appendChild(tdAction);
-
+      tr.appendChild(tdAction);
       // Ajout dans le DOM
       tbody.appendChild(tr);
 
@@ -79,9 +82,13 @@ async function loadPersonalsPackage() {
 
       addCartBtn.addEventListener("click", async () => {
         try {
-          await addPersonalPackageToCart(personalPackage.id);
-          showMessage("Forfait de personnel ajouté au panier", "success");
+          // récupère le résultat de l'ajout (true ou false)
+          const success = addPersonalPackageToCart(personalPackage.id);
 
+          // Si l'ajout a échoué (pas de menu ou doublon), on s'arrête là.
+          if (!success) return;
+
+          // lance directement la redirection ici après 2 secondes.
           setTimeout(() => {
             window.location.replace("/cart");
           }, 2000);
@@ -99,27 +106,46 @@ async function loadPersonalsPackage() {
       mobileContainer.appendChild(card);
 
     });
-    } catch (error) {
-      // Affiche l'erreur si problème API
-      showMessage("Une erreur est survenue", "danger");
+  } catch (error) {
+    // Affiche l'erreur si problème API
+    showMessage("Une erreur est survenue lors du chargement des forfaits", "danger");
   }
 }
 
-async function addPersonalPackageToCart(id) {
+// ajout local du forfait de personnel
+function addPersonalPackageToCart(id) {
+   const LOCAL_STORAGE_KEY = "vgc_cart_raw";
 
-  // crée le forfait boisson dans panier  
-  return await secureFetch(
-    `${API_URL}/cart`, 
-      {
-        method: "POST", 
-        body: JSON.stringify({ 
-          type: "personal_package",
-          id: id,
-          quantity: 1
-        })
-    },
-    ['client']
-  );
+  // récupére le panier existant
+  let localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+
+  // vérifie s'il y a au moins un menu dans le panier
+  const hasMenu = localCart.some(item => item.type === "menu");
+
+  if (!hasMenu) {
+    showMessage("Vous devez d'abord ajouter un menu à votre panier avant de pouvoir choisir des options (forfaits ou matériel).", "warning");
+    return false;
+  }
+
+  // vérifie si le forfait de personnel est déjà dans le panier
+  const existingItem = localCart.find(item => item.id == id && item.type === "personal_package");
+
+  if (existingItem) {
+    showMessage("Ce forfait de personnel est déjà présent dans votre panier !", "warning");
+    return false; 
+  }
+    // si tout est ok on ajoute l'option
+  localCart.push({
+    type: "personal_package",
+    id: id,
+    quantity: 1
+  });
+
+  // sauvegarde dans le navigateur
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  
+  showMessage("Forfait de personnel ajouté au panier !", "success");
+  return true;
 }
 // se lance au chargement
 loadPersonalsPackage();

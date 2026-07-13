@@ -39,9 +39,13 @@ async function loadMaterial() {
 
       addBtn.addEventListener("click", async () => {
         try {
-          await addMaterialToCart(material.id);
-          showMessage("Matériel ajouté au panier", "success");
+          // récupère le résultat de l'ajout (true ou false)
+          const success = addMaterialToCart(material.id);
 
+          // Si l'ajout a échoué (pas de menu ou doublon), on s'arrête là.
+          if (!success) return;
+
+          // lance directement la redirection ici après 2 secondes.
           setTimeout(() => {
             window.location.replace("/cart");
           }, 2000);
@@ -54,7 +58,6 @@ async function loadMaterial() {
 
       tdAction.appendChild(buttonContainer);
        tr.appendChild(tdAction);
-
       // ajout dans le DOM
       tbody.appendChild(tr);
 
@@ -87,9 +90,13 @@ async function loadMaterial() {
 
       addCartBtn.addEventListener("click", async () => {
         try {
-          await addMaterialToCart(material.id);
-          showMessage("matériel ajouté au panier", "success");
+          // récupère le résultat de l'ajout (true ou false)
+          const success = addMaterialToCart(material.id);
 
+          // Si l'ajout a échoué (pas de menu ou doublon), on s'arrête là.
+          if (!success) return;
+
+          // lance directement la redirection ici après 2 secondes.
           setTimeout(() => {
             window.location.replace("/cart");
           }, 2000);
@@ -101,32 +108,51 @@ async function loadMaterial() {
       });
 
       action.appendChild(buttonCard);
-
       cardBody.appendChild(action);
       card.appendChild(cardBody);
+
       mobileContainer.appendChild(card);
     });
 
     } catch (error) {
       // affiche l'erreur si problème API
-      showMessage("Une erreur est survenue", "danger");
+      showMessage("Une erreur est survenue lors du chargement du matériel", "danger");
   }
 }
-async function addMaterialToCart(id) {
+// ajout local du matériel
+function addMaterialToCart(id) {
+   const LOCAL_STORAGE_KEY = "vgc_cart_raw";
 
-  // crée le matériel dans panier  
-  return await secureFetch(
-    `${API_URL}/cart`, 
-      {
-        method: "POST", 
-        body: JSON.stringify({ 
-          type: "material",
-          id: id,
-          quantity: 1
-        })
-    },
-    ['client']
-  );
+  // récupére le panier existant
+  let localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+
+  // vérifie s'il y a au moins un menu dans le panier
+  const hasMenu = localCart.some(item => item.type === "menu");
+
+  if (!hasMenu) {
+    showMessage("Vous devez d'abord ajouter un menu à votre panier avant de pouvoir choisir des options (forfaits ou matériel).", "warning");
+    return false;
+  }
+
+  // vérifie si le matériel est déjà dans le panier
+  const existingItem = localCart.find(item => item.id == id && item.type === "material");
+
+  if (existingItem) {
+    showMessage("Ce matériel est déjà présent dans votre panier !", "warning");
+    return false; 
+  }
+    // si tout est ok on ajoute l'option
+  localCart.push({
+    type: "material",
+    id: id,
+    quantity: 1
+  });
+
+  // sauvegarde dans le navigateur
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  
+  showMessage("Matériel ajouté au panier !", "success");
+  return true;
 }
 // se lance au chargement
 loadMaterial();

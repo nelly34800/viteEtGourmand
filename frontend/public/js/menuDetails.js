@@ -1,10 +1,16 @@
 const params = new URLSearchParams(window.location.search);
 const menuId = params.get("id");
 
+// Variable globale pour stocker le minimum de personnes requis pour ce menu
+let currentMenuMinPeople = 1;
+
 async function loadMenu(id) {
   try {
     const response = await fetch(`${API_URL}/menu/${id}`);
     const data = await response.json();
+
+    // Mémorise le nombre minimum de personnes requis pour ce menu
+    currentMenuMinPeople = parseInt(data.minimum_people, 10) || 1;
 
     renderMenu(data);
     renderCarousel(data.dishes);
@@ -151,19 +157,28 @@ async function addToCart(menuId) {
       return false;
     }
 
-  // envoie le menu au backend et ajoute le panier dans la session php  
-  return await secureFetch(
-    `${API_URL}/cart`, 
-      {
-        method: "POST", 
-        body: JSON.stringify({ 
-          type: "menu",
-          id: menuId,
-          quantity: 1
-        })
-    },
-    ['client']
-  );
+    const LOCAL_STORAGE_KEY = "vgc_cart_raw";
+
+  // récupére panier existant ou création d'un tableau vide
+  let localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+  // recherche si ce menu exact est déjà dans le panier
+  const existingItem = localCart.find(item => item.id == menuId && item.type === "menu");
+
+  if (existingItem) {
+    // si déjà présent, on ajoute un convive de plus
+    existingItem.quantity += 1;
+  } else {
+    // si 1er ajout, on l'initialise avec la contrainte nbr pers minimum du menu
+    localCart.push({
+      type: "menu",
+      id: menuId,
+      quantity: currentMenuMinPeople
+    });
+  }
+
+  // sauvegarde dans le navigateur 
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  return true;
 }
 
 function addOrderButton(menuId) {

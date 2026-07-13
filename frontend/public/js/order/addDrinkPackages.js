@@ -27,13 +27,16 @@ async function loadDrinksPackage() {
 
       addBtn.addEventListener("click", async () => {
         try {
-          await addDrinkPackageToCart(drinkPackage.id);
-          showMessage("Forfait boisson ajouté au panier", "success");
+          // récupère le résultat de l'ajout (true ou false)
+          const success = addDrinkPackageToCart(drinkPackage.id);
 
+          // Si l'ajout a échoué (pas de menu ou doublon), on s'arrête là.
+          if (!success) return;
+
+          // lance directement la redirection ici après 2 secondes.
           setTimeout(() => {
             window.location.replace("/cart");
           }, 2000);
-          return false;
 
         } catch (error) {
           console.error("Erreur ajout forfait boisson :", error);
@@ -42,32 +45,48 @@ async function loadDrinksPackage() {
       });
 
       tdAction.appendChild(buttonContainer);
-
       tr.appendChild(tdAction);
-
       // Ajout dans le DOM
       tbody.appendChild(tr);
     });
-    } catch (error) {
-      // Affiche l'erreur si problème API
-      showMessage("Une erreur est survenue", "danger");
+  } catch (error) {
+    showMessage("Une erreur est survenue lors du chargement des forfaits", "danger");
   }
 }
 
-async function addDrinkPackageToCart(id) {
+// ajout local du forfait boisson
+function addDrinkPackageToCart(id) {
+  const LOCAL_STORAGE_KEY = "vgc_cart_raw";
+  
+  // récupére le panier existant
+  let localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
 
-  // crée le forfait boisson dans panier  
-  return await secureFetch(
-    `${API_URL}/cart`, 
-      {
-        method: "POST", 
-        body: JSON.stringify({ 
-          type: "drink_package",
-          id: id,
-          quantity: 1
-        })
-    },
-    ['client']
-  );
+  // vérifie s'il y a au moins un menu dans le panier
+  const hasMenu = localCart.some(item => item.type === "menu");
+
+  if (!hasMenu) {
+    showMessage("Vous devez d'abord ajouter un menu à votre panier avant de pouvoir choisir des options (forfaits ou matériel).", "warning");
+    return false;
+  }
+
+  // vérifie si le forfait boisson est déjà dans le panier
+  const existingItem = localCart.find(item => item.id == id && item.type === "drink_package");
+
+  if (existingItem) {
+    showMessage("Ce forfait boisson est déjà présent dans votre panier !", "warning");
+    return false; 
+  }
+    // si tout est ok on ajoute l'option
+  localCart.push({
+    type: "drink_package",
+    id: id,
+    quantity: 1
+  });
+
+  // sauvegarde dans le navigateur
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  
+  showMessage("Forfait boisson ajouté au panier !", "success");
+  return true;
 }
 loadDrinksPackage();
