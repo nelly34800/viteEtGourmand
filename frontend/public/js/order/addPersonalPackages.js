@@ -143,9 +143,12 @@ function addPersonalPackageToCart(id) {
 
   // sauvegarde dans le navigateur
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  // force le rafraîchissement visuel de la barre de navigation
+  updateCartNavbar();
   
   showMessage("Forfait de personnel ajouté au panier !", "success");
   return true;
 }
 // se lance au chargement
 loadPersonalsPackage();
+updateCartNavbar();

@@ -13,18 +13,32 @@ let cart = [];
 let cartTotal = 0;
 let deliveryCharges = 0;
 
+const LOCAL_STORAGE_KEY = "vgc_cart_raw";
+
 // fonction pour charger le panier
 async function loadOrder() {
   try {
-    // Appel sécurisé vers l'API (GET: fonction dans api.js)
-    cart = await secureFetch(`${API_URL}/cart`, {
-      method: "GET"
+    const localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+
+    if (localCart.length === 0) {
+      showMessage("Votre panier est vide.", "warning");
+      setTimeout(() => {
+        window.location.href = "/cart";
+      }, 2000);
+      return;
+    }
+    // envoie le panier brut au backend pour récupérer les nom et les prix
+    const response = await secureFetch(`${API_URL}/cart/details`, {
+      method: "POST",
+      body: JSON.stringify({ cart: localCart })
     }, ["client"]);
 
+    // récupère le panier détaillé calculé par PHP
+    cart = response.detailed_cart || [];
     renderTable();
 
   } catch (error) {
-    showMessage("Une erreur est survenue", "danger");
+    showMessage("Une erreur est survenue lors de la récupération de votre panier.", "danger");
   }
 }
 
@@ -68,18 +82,21 @@ function renderTable() {
   const tdTotal = document.createElement("td");
   tr.appendChild(tdTotal);
 
-  if (item.discount > 0) {
-    const discount = document.createElement("small");
-    discount.className = "text-success";
-    discount.textContent = `Remise : -${item.discount.toFixed(2)} €`;
+  // formatage de la remise (au cas où elle est indéfinie)
+    const discount = Number(item.discount) || 0;
+    if (discount > 0) {
+      const discountEl = document.createElement("small");
+      discountEl.className = "text-success";
+      discountEl.textContent = `Remise : -${discount.toFixed(2)} €`;
 
-    tdTotal.appendChild(discount);
-    tdTotal.appendChild(document.createElement("br"));
-  }
+      tdTotal.appendChild(discountEl);
+      tdTotal.appendChild(document.createElement("br"));
+    }
 
-  tdTotal.append(`${item.line_total.toFixed(2)} €`);
+    const lineTotal = Number(item.line_total) || 0;
+    tdTotal.append(`${lineTotal.toFixed(2)} €`);
 
-  // Ajout des cellules à la ligne
+  // Ajout de la ligne au tableau
   orderBody.appendChild(tr);
 });
   updateTotals();
@@ -111,7 +128,7 @@ async function calculateDeliveryCharges(event) {
       btnGoConfirmation.disabled = false;
 
     } catch (error) {
-      showMessage("Une erreur est survenue",  "danger");
+      showMessage("Une erreur est survenue lors du calcul des frais", "danger");
     }
 }
 //écoute des événements
@@ -171,11 +188,20 @@ let deliveryCalculated = false;
 btnGoConfirmation.addEventListener("click", () => {
   if (!deliveryCalculated) {
     showMessage("Veuillez calculer les frais de livraison avant de continuer.", "success");
+    return;
   }
+
+  showMessage("Adresse de livraison enregistrée !", "success");
 
   setTimeout(() => {
       window.location.href = "/orderConfirmation";
     }, 2000);
   });
+
+  // Chargement initial
+const savedDate = localStorage.getItem("service_date");
+if (savedDate) {
+  document.getElementById("summary-date").textContent = savedDate;
+}
 
 loadOrder();

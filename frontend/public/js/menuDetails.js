@@ -178,6 +178,8 @@ async function addToCart(menuId) {
 
   // sauvegarde dans le navigateur 
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+  // force le rafraîchissement visuel de la barre de navigation
+  updateCartNavbar();
   return true;
 }
 

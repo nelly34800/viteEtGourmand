@@ -169,28 +169,23 @@ async function updateCartNavbar() {
     return;
   }
 
-  try {
-    const cart = await secureFetch(`${API_URL}/cart`, {
-      method: "GET"
-    }, ["client"]);
+  // lit le localStorage
+  const LOCAL_STORAGE_KEY = "vgc_cart_raw";
+  const localCart = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
 
-    if (!cart || cart.length === 0) {
-      cartContainer.innerHTML = `<i class="bi bi-cart-x"></i> Panier vide`;
-      cartContainer.removeAttribute("href");
-      cartContainer.style.cursor = "default";
-    } else {
-      cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
-      cartContainer.setAttribute("href", "/cart");
-      cartContainer.style.cursor = "pointer";
-    }
-
-  } catch (error) {
+  // Vérification si le panier local est vide
+  if (localCart.length === 0) {
+    cartContainer.innerHTML = `<i class="bi bi-cart-x"></i> Panier vide`;
+    cartContainer.removeAttribute("href");
+    cartContainer.style.cursor = "default";
+  } else {
     cartContainer.innerHTML = `<i class="bi bi-cart-plus"></i> Mon panier`;
     cartContainer.setAttribute("href", "/cart");
+    cartContainer.style.cursor = "pointer";
   }
 }
-// Attend la vérification de la session PHP avant
-// d'afficher ou masquer les éléments selon le rôle utilisateur
+
+// affiche ou masque les éléments selon le rôle utilisateur
 document.addEventListener("DOMContentLoaded", async () => {
     await checkSession();
     showAndHideElementForRole();

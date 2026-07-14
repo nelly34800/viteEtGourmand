@@ -7,7 +7,7 @@ const btnValidation = document.getElementById("btnValidation");
 let localCart = [];
 
 // Clé unique pour stocker notre panier dans le LocalStorage
-const LOCAL_STORAGE_KEY = "vgc_cart"
+const LOCAL_STORAGE_KEY = "vgc_cart_raw";
 
 // fonction pour charger le panier brut local et demander les calculs au Backend PHP
 async function loadCart() {
@@ -134,6 +134,8 @@ function bindCartEvents() {
         }
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
         await loadCart();
+        // force le rafraîchissement visuel de la barre de navigation
+        updateCartNavbar();
       }
     });
   });
@@ -142,8 +144,20 @@ function bindCartEvents() {
       const itemId = event.target.dataset.id;
       // Supprime l'article du panier local, puis recharge le panier : si i correspond à itemId, on le supprime sinon on le garde
       localCart = localCart.filter(i => i.id != itemId);
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
-      await loadCart();
+
+      // vérifie s'il reste au moins un menu dans le panier
+    const hasMenu = localCart.some(i => i.type === "menu");
+    
+    if (!hasMenu && localCart.length > 0) {
+      // S'il n'y a plus de menu mais qu'il reste des options, on vide tout
+      localCart = [];
+      showMessage("Le menu principal a été retiré. Les options associées ont également été supprimées.", "warning");
+    }
+    // sauvegarde et mise à jour
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+    await loadCart();
+    // force le rafraîchissement visuel de la barre de navigation
+    updateCartNavbar();
     });
   });
 }
@@ -204,3 +218,4 @@ if (savedDate) {
   dateEvent.value = savedDate;
 }
 loadCart();
+updateCartNavbar();

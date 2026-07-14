@@ -85,8 +85,11 @@ function addDrinkPackageToCart(id) {
 
   // sauvegarde dans le navigateur
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
-  
+  // force le rafraîchissement visuel de la barre de navigation
+  updateCartNavbar();
+
   showMessage("Forfait boisson ajouté au panier !", "success");
   return true;
 }
 loadDrinksPackage();
+updateCartNavbar();
