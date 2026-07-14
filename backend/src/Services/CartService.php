@@ -7,7 +7,6 @@ use App\Repository\DrinkPackageRepository;
 use App\Repository\PersonalPackageRepository;
 use App\Repository\MaterialRepository;
 use Database;
-use RuntimeException;
 
 class CartService
 {
@@ -27,10 +26,14 @@ class CartService
         $this->materialRepository = new MaterialRepository($pdo);
     }
     /**
-   * Transforme le panier session en panier détaillé (avec infos BDD)
+   * Transforme le panier brut reçu du LocalStorage en panier détaillé (avec validation, calculs et remises)
    */
     public function getDetailedCart(array $cart): array
     {
+        // valide et nettoie le panier brut selon les règles métiers (dessous)
+        $cart = $this->validateAndCleanCart($cart);
+        // force le recalcul des quantités (boissons, personnel) sur le panier brut reçu
+        $cart = $this->refreshPackagesQuantities($cart);
         $result = [];
 
         foreach ($cart as $cartItem) {
@@ -58,7 +61,7 @@ class CartService
                     ];
                 }
             }
-
+            // Gestion des forfaits de boissons
             if ($cartItem['type'] === 'drink_package') {
                 $drinkPackage = $this->drinkPackageRepository->findById($cartItem['id']);
 
@@ -74,7 +77,7 @@ class CartService
                     ];
                 }
             }
-
+            // Gestion des forfaits de personnel
             if ($cartItem['type'] === 'personal_package') {
                 $personalPackage = $this->personalPackageRepository->findById($cartItem['id']);
 
@@ -90,7 +93,7 @@ class CartService
                     ];
                 }
             }
-
+            // Gestion du matériel
             if ($cartItem['type'] === 'material') {
                 $material = $this->materialRepository->findById($cartItem['id']);
 
@@ -108,181 +111,38 @@ class CartService
                 }
             }
         }
-
         return $result;
     }
     /**
-   * Ajoute un produit dans le panier
-   * gère les règles spécifiques selon le type
-   */
-    public function add(array $cart, array $data): array
+     * Valide et nettoie le panier brut selon les règles métiers :
+     * - pas de forfaits/matériels sans menu
+     * - pas de quantité supérieure au stock disponible pour le matériel
+     */
+    private function validateAndCleanCart(array $cart): array
     {
-        $type = $data['type'] ?? null;
-        $id = $data['id'] ?? null;
-
-        if (!$type || !$id) {
-            throw new RuntimeException('Type ou référence manquant');
-        }
-        // calcule la quantité selon le type (menu, forfait ou matériel)
-        $quantity = $this->resolveQuantity($cart, $type, $id, $data);
-
-        foreach ($cart as &$item) {
-            if ($item['type'] === $type && $item['id'] === $id) {
-                if ($type === 'menu' || $type === 'material') {
-                    $item['quantity'] += $quantity;
-                } else {
-                    $item['quantity'] = $quantity;
-                }
-
-                return $this->refreshPackagesQuantities($cart);
-            }
-        }
-
-        $cart[] = [
-            'type' => $type,
-            'id' => $id,
-            'quantity' => $quantity
-        ];
-
-        return $this->refreshPackagesQuantities($cart);
-    }
-
-    public function update(array $cart, string $id, array $data): array
-    {
-        $quantity = (int) ($data['quantity'] ?? 0);
-
-        if ($quantity <= 0) {
-            throw new RuntimeException('Quantité invalide');
+        $hasMenu = $this->getTotalMenuPeople($cart) > 0;
+        // si aucun menu n'est présent dans le panier reçu, on le vide de tout le reste
+        if (!$hasMenu) {
+            return [];
         }
 
         foreach ($cart as &$item) {
-            if ($item['id'] === $id) {
-                if ($item['type'] === 'menu') {
-                    $menu = $this->menuRepository->findById($id);
-
-                    if (!$menu) {
-                        throw new RuntimeException('Menu introuvable');
+            if ($item['type'] === 'material') {
+                $material = $this->materialRepository->findById($item['id']);
+                if ($material) {
+                    $maxAvailable = (int) $material->getQuantityAvailable();
+                    // Si la quantité demandée dépasse le stock, on la bride au maximum disponible
+                    if ($item['quantity'] > $maxAvailable) {
+                        $item['quantity'] = $maxAvailable;
                     }
-
-                    $item['quantity'] = max($quantity, (int) $menu->getMinimumPeople());
                 }
-
-                if ($item['type'] === 'material') {
-                    $material = $this->materialRepository->findById($id);
-
-                    if (!$material) {
-                        throw new RuntimeException('Matériel introuvable');
-                    }
-
-                    if ($quantity > (int) $material->getQuantityAvailable()) {
-                        throw new RuntimeException(
-                            'Stock insuffisant. Quantité disponible : ' . $material->getQuantityAvailable()
-                        );
-                    }
-
-                    $item['quantity'] = $quantity;
-                }
-
-                return $this->refreshPackagesQuantities($cart);
             }
         }
-
-        throw new RuntimeException('Item non trouvé');
-    }
-
-    public function delete(array $cart, string $id): array
-    {
-        $cart = array_filter($cart, function ($item) use ($id) {
-            return $item['id'] !== $id;
-        });
-
-        $cart = array_values($cart);
-
-        return $this->refreshPackagesQuantities($cart);
+        return $cart;
     }
     /**
-    * Détermine quantité à ajouter selon le type de produit
-    * 
-    * - menu → minimum de personnes respecté
-    * - drink_package → basé sur total convives
-    * - personal_package → basé sur ratio personnel
-    * - material → limité par stock disponible
-    */
-    private function resolveQuantity(array $cart, string $type, string $id, array $data): int
-    {
-        // récupère les infos du produit
-        switch ($type) {
-            case 'menu':
-                $product = $this->menuRepository->findById($id);
-
-                if (!$product) {
-                    throw new RuntimeException('Menu introuvable');
-                }
-                // calcul quantité minimum
-                return max(
-                    (int) ($data['quantity'] ?? 1),
-                    (int) $product->getMinimumPeople()
-                );
-
-            case 'drink_package':
-                $product = $this->drinkPackageRepository->findById($id);
-
-                if (!$product) {
-                    throw new RuntimeException('Forfait boisson introuvable');
-                }
-
-                if ($this->getTotalMenuPeople($cart) <= 0) {
-                    throw new RuntimeException('Ajoutez d’abord un menu avant un forfait boisson');
-                }
-
-                return $this->getTotalMenuPeople($cart);
-
-            case 'personal_package':
-                $product = $this->personalPackageRepository->findById($id);
-
-                if (!$product) {
-                    throw new RuntimeException('Forfait de personnel introuvable');
-                }
-
-                if ($this->getTotalMenuPeople($cart) <= 0) {
-                    throw new RuntimeException('Ajoutez d’abord un menu avant un forfait personnel');
-                }
-
-                return $this->getStaffQuantity($cart, $id);
-
-            case 'material':
-                $product = $this->materialRepository->findById($id);
-
-                if (!$product) {
-                    throw new RuntimeException('Matériel introuvable');
-                }
-
-                if ($this->getTotalMenuPeople($cart) <= 0) {
-                    throw new RuntimeException('Ajoutez d’abord un menu avant un matériel');
-                }
-
-                $quantity = (int) ($data['quantity'] ?? 1);
-
-                if ($quantity <= 0) {
-                    throw new RuntimeException('Quantité invalide');
-                }
-
-                $alreadyInCart = $this->getItemQuantityInCart($cart, 'material', $id);
-                $totalRequested = $alreadyInCart + $quantity;
-
-                if ($totalRequested > (int) $product->getQuantityAvailable()) {
-                    throw new RuntimeException(
-                        'Stock insuffisant. Quantité disponible : ' . $product->getQuantityAvailable()
-                    );
-                }
-
-                return $quantity;
-
-            default:
-                throw new RuntimeException('Type invalide');
-        }
-    }
-    // calcul la remise s'il y en à une
+     * Calcule la remise de 10% si le nombre de convives requis est dépassé de 5
+     */
     private function calculateMenuDiscount(int $quantity, int $minimum, float $price): array
     {
         $lineTotal = $quantity * $price;
@@ -292,23 +152,24 @@ class CartService
             $discount = $lineTotal * 0.10;
             $lineTotal -= $discount;
         }
-
         return [$lineTotal, $discount];
     }
-    // Calcul nombre total de convives (somme des menus) pour les forfaits
+    /**
+     * Calcul le nombre total de convives (somme des quantités de tous les menus présents)
+     */
     private function getTotalMenuPeople(array $cart): int
     {
         $total = 0;
-
         foreach ($cart as $item) {
             if ($item['type'] === 'menu') {
                 $total += (int) $item['quantity'];
             }
         }
-
         return $total;
     }
-    // calcul ratio total pers/personnel (ceil: arrondis au dessus)
+    /**
+     * Calcule la quantité de personnel nécessaire selon le ratio configuré en BDD (arrondi au supérieur: ceil)
+     */
     private function getStaffQuantity(array $cart, string $personalPackageId): int
     {
         $totalPeople = $this->getTotalMenuPeople($cart);
@@ -318,16 +179,16 @@ class CartService
         if (!$personalPackage) {
             return 0;
         }
-
         $ratio = (int) $personalPackage->getStaffRatio();
 
         if ($ratio <= 0) {
             return 0;
         }
-
         return (int) ceil($totalPeople / $ratio);
     }
-    // recalcul du nombre de personnes pour les forfaits après modification du panier
+     /**
+     * Recalcule automatiquement les quantités des forfaits du panier brut reçu
+     */
     private function refreshPackagesQuantities(array $cart): array
     {
         $totalPeople = $this->getTotalMenuPeople($cart);
@@ -341,20 +202,6 @@ class CartService
                 $item['quantity'] = $this->getStaffQuantity($cart, $item['id']);
             }
         }
-
         return $cart;
-    }
-    // vérifier quantité materiel disponible
-    private function getItemQuantityInCart(array $cart, string $type, string $id): int
-    {
-        $quantity = 0;
-
-        foreach ($cart as $item) {
-            if ($item['type'] === $type && $item['id'] === $id) {
-                $quantity += (int) $item['quantity'];
-            }
-        }
-
-        return $quantity;
     }
 }

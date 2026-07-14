@@ -126,6 +126,7 @@ async function calculateDeliveryCharges(event) {
       updateTotals();
 
       btnGoConfirmation.disabled = false;
+      showMessage(`Adresse validée : ${result.address_found} (${result.distance_km} km)`, "success");
 
     } catch (error) {
       showMessage("Une erreur est survenue lors du calcul des frais", "danger");
@@ -191,6 +192,12 @@ btnGoConfirmation.addEventListener("click", () => {
     return;
   }
 
+  // stockage temporaire des infos de livraison validées pour orderConfirmation
+  localStorage.setItem("delivery_address", address.value.trim());
+  localStorage.setItem("delivery_postal_code", postalCode.value.trim());
+  localStorage.setItem("delivery_city", city.value.trim());
+  localStorage.setItem("delivery_charges", deliveryCharges);
+
   showMessage("Adresse de livraison enregistrée !", "success");
 
   setTimeout(() => {
@@ -201,7 +208,16 @@ btnGoConfirmation.addEventListener("click", () => {
   // Chargement initial
 const savedDate = localStorage.getItem("service_date");
 if (savedDate) {
-  document.getElementById("summary-date").textContent = savedDate;
+  // formatage date ex: transforme "2026-07-14T16:00" en  "14/07/2026 à 16:00"
+  try {
+    const dateObj = new Date(savedDate);
+    const formattedDate = dateObj.toLocaleDateString('fr-FR') + " à " + dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+    document.getElementById("summary-date").textContent = formattedDate;
+  } catch(e) {
+    document.getElementById("summary-date").textContent = savedDate;
+  }
 }
 
+// Lancement fonctions de démarrage
+validateForm(); // force le bouton Calculer à s'initialiser correctement (désactivé au début)
 loadOrder();

@@ -25,6 +25,16 @@ async function loadCart() {
       body: JSON.stringify({ cart: localCart })
     }, ["client"]);
 
+    // réaligne le panier local brut avec les quantités ajustées par CartService PHP
+    localCart = response.detailed_cart.map(item => ({
+      type: item.type,
+      id: item.id,
+      quantity: item.quantity // Prend la quantité recalculée (ex: ratio personnel ou boissons)
+    }));
+    
+    // enregistre la version corrigée localement
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(localCart));
+
     renderCart(response.detailed_cart, response.total_general);
 
   } catch (error) {
