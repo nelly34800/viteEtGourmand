@@ -121,7 +121,7 @@ function renderTable() {
 
   // Colonne prix
   const tdPrice = document.createElement("td");
-  tdPrice.textContent = `${item.price_per_person} €`;
+  tdPrice.textContent = `${Number(item.price).toFixed(2)} €`;
   tr.appendChild(tdPrice);
 
   // Colonne total/remise
@@ -137,7 +137,7 @@ function renderTable() {
     tdTotal.appendChild(document.createElement("br"));
   }
 
-  tdTotal.append(`${item.line_total.toFixed(2)} €`);
+  tdTotal.append(`${Number(item.subtotal).toFixed(2)} €`);
 
   // Ajout des cellules à la ligne
 
