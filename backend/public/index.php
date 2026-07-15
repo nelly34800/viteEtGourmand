@@ -39,14 +39,19 @@ require_once '../config/mongodb.php';
 // gestion dynamique HTTPS
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
 
-// Configuration du cookie de session PHP avec des options de sécurité pour la production
-session_set_cookie_params([
-    'httponly' => true,
-    'secure'   => true,     // Force à true car Heroku et Vercel utilisent le HTTPS
-    'samesite' => 'None'   // OBLIGATOIRE en production pour les domaines séparés
-]);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    // Configuration du cookie de session PHP avec des options de sécurité pour la production
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'domain' => '', // Laissé vide pour qu'il s'adapte au domaine Heroku
+        'secure' => true,     // Indispensable en HTTPS (Heroku)
+        'httponly' => true,   // Protection contre le vol de cookies en JS
+        'samesite' => 'None'  // Autorise la transmission si le front et le back sont sur deux URL Heroku différentes
+    ]);
+    session_start();
+} 
 
 use App\Helper\CsrfHelper;
 use App\Router\Router;

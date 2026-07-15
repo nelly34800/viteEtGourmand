@@ -9,7 +9,6 @@ $router->post('/login', function() {
 });
 
 $router->post('/logout', function() {
-    CsrfHelper::validate();
     AuthMiddleware::requireAuth();
     (new AuthController())->logout();
 });

@@ -115,7 +115,7 @@ document.addEventListener("click", async (event) => {
       if (item.type !== "menu") continue;
 
       const menu = await secureFetch(
-        `${API_URL}//menu/${item.id}`,
+        `${API_URL}/menu/${item.id}`,
         { method: "GET" },
         ["client"]
       );
