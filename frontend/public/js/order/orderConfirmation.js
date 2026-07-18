@@ -29,6 +29,10 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
     const localDelivery = JSON.parse(localStorage.getItem(DELIVERY_KEY)) || null;
     const serviceDate = localStorage.getItem("service_date");
 
+    console.log("Cart local:", localStorage.getItem(RAW_CART_KEY));
+    console.log("Delivery local:", localStorage.getItem(DELIVERY_KEY));
+    console.log("Service date local:", localStorage.getItem("service_date"));
+
     const response = await secureFetch(`${API_URL}/order`, {
       method: "POST",
       body: JSON.stringify({
