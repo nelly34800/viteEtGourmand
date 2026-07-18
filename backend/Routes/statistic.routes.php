@@ -5,12 +5,12 @@ use App\Middleware\AuthMiddleware;
 
 $allowedRoles = ['admin'];
 
-$router->get('/statistics/ordersbymenu', function() use ($allowedRoles) {
+$router->get('/statistics/orders-by-menu', function() use ($allowedRoles) {
     AuthMiddleware::requireRole(['admin']);
     (new StatisticsController())->ordersByMenu();
 });
 
-$router->get('/statistics/revenuebymenu', function() use ($allowedRoles) {
+$router->get('/statistics/revenue-by-menu', function() use ($allowedRoles) {
     AuthMiddleware::requireRole($allowedRoles);
     (new StatisticsController())->revenueByMenu();
 });
