@@ -352,20 +352,20 @@ class OrderRepository
                     $material['id'],
                     $material['number'] // vérification que la quantité disponible est suffisante pour la commande
                 ]);
-            }
-            if ($stmtUpdateMaterial->rowCount() === 0) {
-                throw new RuntimeException(
-                    "Stock insuffisant pour le matériel : " . $material['id']
-                );
-             }
-            $stmtMaterial->execute([
+                if ($stmtUpdateMaterial->rowCount() === 0) {
+                    throw new RuntimeException(
+                        "Stock insuffisant pour le matériel : " . $material['id']
+                    );
+                }
+                $stmtMaterial->execute([
                     $order->getId(),
                     $material['id'],
                     $material['number'],
                     $material['price'],
                     $material['subtotal']
                 ]);
-                // insertion dans table pivot order_drink_package
+            }
+            // insertion dans table pivot order_drink_package
             $stmtDrinkPackage = $this->pdo->prepare("
                 INSERT INTO order_drink_package (id_order, id_drink_package, number_people, price_person, subtotal) VALUES (?, ?, ?, ?, ?)
             ");

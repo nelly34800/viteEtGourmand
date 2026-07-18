@@ -26,7 +26,7 @@ if (!acceptCgv || !acceptAllergens || !acceptConditions || !confirmOrderBtn) {
   try {
     // Extraction des données persistées localement
     const localCart = JSON.parse(localStorage.getItem(RAW_CART_KEY)) || [];
-    const localDelivery = localStorage.getItem(DELIVERY_KEY) || null;
+    const localDelivery =JSON.parse(localStorage.getItem(DELIVERY_KEY)) || null;
     const serviceDate = localStorage.getItem("service_date");
 
     console.log("Cart local:", localStorage.getItem(RAW_CART_KEY));

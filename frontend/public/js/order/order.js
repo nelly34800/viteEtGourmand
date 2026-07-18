@@ -9,9 +9,10 @@ const cartTotalEl = document.getElementById("cart-total");
 const deliveryChargesEl = document.getElementById("delivery-charges");
 const orderTotalEl = document.getElementById("order-total");
 
-let cart = [];
-let cartTotal = 0;
+let localCart = [];
 let deliveryCharges = 0;
+let deliveryCalculated = false;
+let currentDeliveryInfo = null;
 
 const LOCAL_STORAGE_KEY = "vgc_cart_raw";
 const DELIVERY_KEY = "vgc_delivery";
@@ -123,6 +124,8 @@ async function calculateDeliveryCharges(event) {
       }, ["client"]);
 
       deliveryCharges = Number(result.delivery_charges);
+      // sauvegarde l'objet renvoyé par php (lat,lng, distance)
+      currentDeliveryInfo = result;
       deliveryCalculated = true;
       updateTotals();
 
@@ -193,13 +196,19 @@ btnGoConfirmation.addEventListener("click", () => {
     showMessage("Veuillez calculer les frais de livraison avant de continuer.", "success");
     return;
   }
+  // création d'un objet contenant TOUTES les informations attendues par PHP
+  const deliveryData = {
+    address: address.value.trim(),
+    postal_code: postalCode.value.trim(),
+    city: city.value.trim(),
+    delivery_charges: deliveryCharges,
+    latitude: Number(currentDeliveryInfo.latitude || currentDeliveryInfo.lat || 0), 
+    longitude: Number(currentDeliveryInfo.longitude || currentDeliveryInfo.lng || 0),
+    distance_km: Number(currentDeliveryInfo.distance_km || 0)
+  };
 
-  // stockage temporaire des infos de livraison validées pour orderConfirmation
-  localStorage.setItem("delivery_address", address.value.trim());
-  localStorage.setItem("delivery_postal_code", postalCode.value.trim());
-  localStorage.setItem("delivery_city", city.value.trim());
-  localStorage.setItem(DELIVERY_KEY, deliveryCharges);
-
+  // stockage de cet objet sous forme de chaîne JSON
+  localStorage.setItem(DELIVERY_KEY, JSON.stringify(deliveryData));
   showMessage("Adresse de livraison enregistrée !", "success");
 
   setTimeout(() => {
