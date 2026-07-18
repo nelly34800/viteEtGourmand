@@ -189,7 +189,6 @@ function getTypeLabel(type) {
 btnDeliveryCharges.addEventListener("click", calculateDeliveryCharges);
 
 const btnGoConfirmation = document.getElementById("btnGoConfirmation");
-let deliveryCalculated = false;
 
 btnGoConfirmation.addEventListener("click", () => {
   if (!deliveryCalculated) {
