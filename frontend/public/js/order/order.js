@@ -14,6 +14,7 @@ let cartTotal = 0;
 let deliveryCharges = 0;
 
 const LOCAL_STORAGE_KEY = "vgc_cart_raw";
+const DELIVERY_KEY = "vgc_delivery";
 
 // fonction pour charger le panier
 async function loadOrder() {
@@ -132,6 +133,7 @@ async function calculateDeliveryCharges(event) {
       showMessage("Une erreur est survenue lors du calcul des frais", "danger");
     }
 }
+
 //écoute des événements
 address.addEventListener("input", validateForm);
 postalCode.addEventListener("input", validateForm);
@@ -196,7 +198,7 @@ btnGoConfirmation.addEventListener("click", () => {
   localStorage.setItem("delivery_address", address.value.trim());
   localStorage.setItem("delivery_postal_code", postalCode.value.trim());
   localStorage.setItem("delivery_city", city.value.trim());
-  localStorage.setItem("delivery_charges", deliveryCharges);
+  localStorage.setItem(DELIVERY_KEY, deliveryCharges);
 
   showMessage("Adresse de livraison enregistrée !", "success");
 
