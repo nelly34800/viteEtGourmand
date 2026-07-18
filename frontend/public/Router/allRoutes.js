@@ -33,7 +33,7 @@ export const allRoutes = [
     new Route("/employee", "Espace employé", "/pages/employees/employee.html", ["admin", "employé"], "/js/employees/employee.js"),
               // allergènes
     new Route("/allergens", "Les allergènes", "/pages/employees/allergens/allergens.html", ["admin", "employé"], "/js/employees/allergens/allergens.js"),
-    new Route("/createAllergen", "Créer/modifier un allergène", "/pages/employees/allergens/createAllergen.html", ["admin", "employé"], "/js/employés/allergens/createAllergen.js"),
+    new Route("/createAllergen", "Créer/modifier un allergène", "/pages/employees/allergens/createAllergen.html", ["admin", "employé"], "/js/employees/allergens/createAllergen.js"),
               // régimes alimentaires
     new Route("/diets", "Les régimes alimentaires", "/pages/employees/diets/diets.html", ["admin", "employé"], "/js/employees/diets/diets.js"),
     new Route("/createDiet", "Créer/modifier un régime alimentaire", "/pages/employees/diets/createDiet.html", ["admin", "employé"], "/js/employees/diets/createDiet.js"),
