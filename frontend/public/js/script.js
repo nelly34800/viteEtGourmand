@@ -194,3 +194,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.sessionChecked = true;
     document.dispatchEvent(new Event("sessionChecked"));
 });
+
+// copiright: année qui change tous les ans
+document.getElementById("year").textContent = new Date().getFullYear();

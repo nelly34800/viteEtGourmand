@@ -258,7 +258,7 @@ class OrderRepository
         return $this->hydrate($rows)[0];
     }
      /**
-     * Insère un nouveau commande.
+     * Insère une nouvelle commande
      */
     public function create(Order $order): string
     {
@@ -420,7 +420,7 @@ class OrderRepository
         return $result ?: null;
     }
     /**
-     * Met à jour un commande existant.
+     * Met à jour une commande existant.
      */
     public function update(string $id, string $serviceDate, string $deliveryAddress, string $city,
         string $postalCode, float $latitude, float $longitude, float $distanceKm, float $deliveryCharges,

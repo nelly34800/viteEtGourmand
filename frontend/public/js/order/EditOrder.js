@@ -33,6 +33,8 @@ async function loadOrder() {
       method: "GET"
     }, ["client"]);
 
+    console.log("Données de la commande reçues :", order);
+
     fillForm(order);
     prepareItems(order);
     renderTable();
@@ -57,34 +59,34 @@ function prepareItems(order) {
     ...(order.menus || []).map(item => ({
       type: "menu",
       name: item.name,
-      quantity: item.number,
-      price: item.price,
-      discount: item.discount ?? 0,
-      subtotal: item.subtotal
+      quantity: Number(item.number ?? item.quantity ?? 0),
+      price: Number(item.price ?? 0),
+      discount: Number(item.discount ?? 0),
+      subtotal: Number(item.subtotal ?? 0)
     })),
     ...(order.drink_packages || []).map(item => ({
       type: "drink_package",
       name: item.name,
-      quantity: item.number,
-      price: item.price,
+      quantity: Number(item.number ?? item.quantity ?? 0),
+      price: Number(item.price ?? 0),
       discount: 0,
-      subtotal: item.subtotal
+      subtotal: Number(item.subtotal ?? 0)
     })),
     ...(order.personal_packages || []).map(item => ({
       type: "personal_package",
-      name: item.name,
-      quantity: item.number,
-      price: item.price,
+      name: item.name || item.event_type,
+      quantity: Number(item.number ?? item.quantity ?? 0),
+      price: Number(item.price ?? 0),
       discount: 0,
-      subtotal: item.subtotal
+      subtotal: Number(item.subtotal ?? 0)
     })),
     ...(order.materials || []).map(item => ({
       type: "material",
       name: item.name,
-      quantity: item.number,
-      price: item.price,
+      quantity: Number(item.number ?? item.quantity ?? 0),
+      price: Number(item.price ?? 0),
       discount: 0,
-      subtotal: item.subtotal
+      subtotal: Number(item.subtotal ?? 0)
     }))
   ];
 }
