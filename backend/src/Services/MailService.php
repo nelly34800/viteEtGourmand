@@ -172,7 +172,7 @@ class MailService
     // mail réinitialisation mot de passe
     public function sendResetPasswordMail(string $email, string $firstname, string $token): bool
     {
-        $resetLink = "http://localhost:8086/editPassword?token=" . urlencode($token);
+        $resetLink = $_ENV['FRONT_URL'] . "/editPassword?token=" . urlencode($token);
 
         return $this->sendMail(
             $email,

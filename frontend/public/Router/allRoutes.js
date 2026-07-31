@@ -24,7 +24,7 @@ export const allRoutes = [
     new Route("/addDrinkPackages", "Ajouter un forfait de boisson", "/pages/order/addDrinkPackages.html", ["client"], "/js/order/addDrinkPackages.js"),
     new Route("/order", "Livraison commande", "/pages/order/order.html", ["client"], "/js/order/order.js"), 
     new Route("/orderConfirmation", "Confirmation de commande", "/pages/order/orderConfirmation.html", ["client"], "/js/order/orderConfirmation.js"),
-    new Route("/editOrder", "Livraison commande", "/pages/order/editOrder.html", ["client"], "/js/order/editOrder.js"),
+    new Route("/editOrder", "Modification commande", "/pages/order/editOrder.html", ["client"], "/js/order/editOrder.js"),
     // admin
     new Route("/admin", "Admin","/pages/admin/admin.html", ["admin"], "/js/admin/admin.js"),
     new Route("/createEmployee", "Créer un compte employé", "/pages/admin/createEmployee.html", ["admin"], "/js/admin/createEmployee.js"),

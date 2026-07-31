@@ -33,8 +33,6 @@ async function loadOrder() {
       method: "GET"
     }, ["client"]);
 
-    console.log("Données de la commande reçues :", order);
-
     fillForm(order);
     prepareItems(order);
     renderTable();
