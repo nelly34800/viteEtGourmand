@@ -65,23 +65,32 @@ function renderCart(detailedCart, totalGeneral) {
 
      // quantité
     const tdQty = document.createElement("td");
-    const inputQty = document.createElement("input");
-    inputQty.type = "number";
-    inputQty.className = "input-qty";
-    inputQty.min = item.minimum_people ?? 1;
-    inputQty.value = item.quantity;
-    inputQty.dataset.id = item.id;
-    inputQty.dataset.type = item.type
-    tdQty.appendChild(inputQty);
 
-    const feedbackDiv = document.createElement("div");
-    feedbackDiv.className = "invalid-feedback";
-    feedbackDiv.textContent = `Quantité minimum : ${item.minimum_people ?? 1}`;
-    tdQty.appendChild(feedbackDiv);
+    if (item.type === "drink_package" || item.type === "personal_package") {
 
-    const labelQty = document.createElement("label");
-    labelQty.textContent = item.type === 'material' ? " unités" : " personnes";
-    tdQty.appendChild(labelQty);
+      // Affichage simple pour les forfaits
+      tdQty.textContent = `${item.quantity} personnes`;
+
+    } else {
+      // Input pour les menus et le matériel
+      const inputQty = document.createElement("input");
+      inputQty.type = "number";
+      inputQty.className = "input-qty";
+      inputQty.min = item.minimum_people ?? 1;
+      inputQty.value = item.quantity;
+      inputQty.dataset.id = item.id;
+      inputQty.dataset.type = item.type
+      tdQty.appendChild(inputQty);
+
+      const feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "invalid-feedback";
+      feedbackDiv.textContent = `Quantité minimum : ${item.minimum_people ?? 1}`;
+      tdQty.appendChild(feedbackDiv);
+
+      const labelQty = document.createElement("label");
+      labelQty.textContent = item.type === 'material' ? " unités" : " personnes";
+      tdQty.appendChild(labelQty);
+    }
     tr.appendChild(tdQty);
 
     // prix unitaire
