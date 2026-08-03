@@ -115,8 +115,15 @@ const formatTime = (time) => {
 
 // affichage des messages
 function showMessage(message, type = "info") {
-  const messageDiv = document.getElementById("messageDiv");
+  // cherche d'abord un conteneur local
+  let messageDiv = document.getElementById("showMessage");
 
+  // Sinon, utilise le conteneur global
+  if (!messageDiv) {
+    messageDiv = document.getElementById("messageDiv");
+  }
+
+    // Si aucun conteneur  on fait rien
   if (!messageDiv) return;
 
   messageDiv.textContent = message;
