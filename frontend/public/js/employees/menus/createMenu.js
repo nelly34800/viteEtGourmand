@@ -114,7 +114,7 @@ function renderDishesByCategory(dishes) {
         // stocke l'id du plat dans le radio, une seule illustration possible par menu
         radio.name = "menu-image";
         radio.value = dish.id;
-        radio.disabled = true;  // Maintenant ça fonctionne
+        radio.disabled = true; 
         checkbox.addEventListener("change", () => {
           radio.disabled = !checkbox.checked;
           if (!checkbox.checked) radio.checked = false;

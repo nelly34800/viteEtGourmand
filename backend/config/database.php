@@ -20,11 +20,16 @@ class Database {
             $dsn = "mysql:host=$host;dbname=$dbname;port=$port;charset=utf8mb4";
 
             try {
+                $caPath = __DIR__ . '/aiven-ca.pem';
+
                 self::$pdo = new PDO($dsn, $user, $pass, [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false, // sql plus strict que PHP pour les types de données
-                    PDO::ATTR_TIMEOUT => 3               // Timeout à 3 secondes 
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                    PDO::ATTR_TIMEOUT => 3,
+
+                    PDO::MYSQL_ATTR_SSL_CA => $caPath,
+                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true
                 ]);
             } catch (PDOException $e) {
                 // Ajoute le message d'origine dans les logs Heroku pour voir la vraie panne

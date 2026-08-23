@@ -13,3 +13,6 @@ mongo_data/
 # Autres fichiers
 doc
 test
+
+# Sauvegardes locales de la base de données
+*_railway_backup*.sql
